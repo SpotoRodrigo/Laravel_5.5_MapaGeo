@@ -1,5 +1,6 @@
-@extends('layouts.app')
+@extends('adminlte::page')
 
+@section('title', 'Entidade')
 @section('content')
  
 <div class="container">
@@ -7,7 +8,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">ENTIDADES CADASTRADAS   
-                    <a type="button" class="btn btn-primary" href="/entidade/novo" >NOVA</a> 
+                    <a type="button" class="btn btn-primary" href="entidade/novo" >NOVA</a> 
                 </div>
                 <table style="width:100%; vertical-align: center;   text-align: center;  padding: 5px;  vertical-align: center; " >
                     <thead>

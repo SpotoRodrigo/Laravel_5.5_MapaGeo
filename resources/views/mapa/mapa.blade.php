@@ -1,7 +1,18 @@
-<h1>WELCOME  {{$c}}</h1>
 
-@if($c == 'all')
-    <h3>Escolha a Entidade</h3>
-@else
-    <h3>Escolha o Mapa a Acessar</h3>
-@endif
+@extends('adminlte::page')
+
+@section('title', 'Mapa')
+
+@section('content')
+
+<iframe src="http://mapas.mitracidadesinteligentes.com.br/index_free.php" width="100%" height="700"></iframe>
+
+@stop
+
+@section('css')
+
+@stop
+
+@section('js')
+
+@stop

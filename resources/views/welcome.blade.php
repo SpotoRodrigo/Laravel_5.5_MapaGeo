@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Mapa Geo</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -80,15 +80,15 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Mapa Geo Mitra Sistemas
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="http://www.mitrasistemas.com.br/">A Empresa</a>
+                    <a href="www.mapas.mitracidadesinteligentes.com.br/">Outros Mapas</a>
+                    <!-- <a href="https://laravel-news.com">News</a> -->
+                    <a href="http://www.mitrasistemas.com.br/?m=Relacionamento&s=contato">Fale Conosco</a>
+                    <a href="https://github.com/SpotoRodrigo/Laravel_5.5_MapaGeo">GitHub</a>
                 </div>
             </div>
         </div>

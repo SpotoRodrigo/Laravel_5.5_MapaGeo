@@ -62,12 +62,35 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => 'ca800d52-3770-4a68-9f84-63a71b9b57c0',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
         ],
 
     ],
 
 ];
+
+/*
+
+
+            'key' => env('nZwcZUh8lVyTPTr6bAtI'),
+            'secret' => env('liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ'),
+
+
+                $client = S3Client::factory([
+                    'credentials' => [
+                        'key'    => 'nZwcZUh8lVyTPTr6bAtI',
+                        'secret'  => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+                        
+                    ],
+                    'region' => 'sao01',
+                    'version' => '2006-03-01',
+                    'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+                    'sslEnabled'=> true
+                ]);
+*/

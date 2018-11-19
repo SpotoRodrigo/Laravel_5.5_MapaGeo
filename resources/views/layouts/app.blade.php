@@ -13,7 +13,6 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-
 <body>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
@@ -31,13 +30,6 @@
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name', 'Laravel') }}
-                    </a>
-                    <a class="navbar-brand" href="/home" >
-                        Inicio
-                    </a>
-
-                    <a class="navbar-brand" href="{{ url('/entidade') }}">
-                        Entidades
                     </a>
                 </div>
 

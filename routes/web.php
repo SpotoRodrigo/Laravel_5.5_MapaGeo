@@ -35,3 +35,11 @@ Route::group(['prefix'=>'/mapa'],function(){
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('ups3', 'Ups3Controller')->only([
+    'index', 'show'
+]);
+
+Route::resource('ups3', 'Ups3Controller')->except([
+    'create', 'store', 'update', 'destroy'
+]);
