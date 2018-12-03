@@ -16,7 +16,7 @@ ini_set("max_execution_time",54000);
 ini_set("memory_limit","1024M");
 
 
-class ProcessUpFachada implements ShouldQueue
+class ProcessLorena implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -54,7 +54,7 @@ class ProcessUpFachada implements ShouldQueue
         //s3Lorena
 
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-      $lista = DB::connection('BDGeralSSebastiaoImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
+      $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY SUBSTRING(imagemNomeAnterior,1,16) " ,[$this->nome_arquivo] );
 //dd($this->nome_arquivo);
         if($lista){
             $dono = $lista[0]->inscricao;
@@ -79,20 +79,20 @@ class ProcessUpFachada implements ShouldQueue
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
-           $result =  Storage::disk('s3')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+           $result =  Storage::disk('s3Lorena')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             
             //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
-            $affected = DB::connection('BDGeralSSebastiaoImagem')->update("UPDATE dbo.Imagem  
+            $affected = DB::connection('BDGeralLorenaImagem')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
-                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/ca800d52-3770-4a68-9f84-63a71b9b57c0'
+                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/39f409a7-da21-4260-a07a-c469a22b707d'
                                                                             , UploadNuvemRenomeado = 1 
                                                                             , UploadNuvemArquivoNaoLocalizado = 0
                                                                             , UploadNuvemArquivoPublico = 1 
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
  //print_r( $affected);      
-        DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
+        DB::connection('pgsql_lorena')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
 
         
         //fclose($this->caminho);

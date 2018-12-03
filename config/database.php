@@ -92,6 +92,19 @@ return [
             'sslmode' => 'prefer',
         ],
 
+     'pgsql_lorena' => [
+            'driver' => 'pgsql',
+            'host' =>  '169.57.166.62',
+            'port' => env('DB_PORT', '5432'),
+            'database' => 'bd_mitra_lorena',
+            'username' => env('DB_USERNAME', 'postgres'),
+            'password' => 'VgQ1512p',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'apgv',
+            'sslmode' => 'prefer',
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),

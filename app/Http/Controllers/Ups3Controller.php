@@ -53,7 +53,9 @@ class Ups3Controller extends Controller
  //$directory = "F:\\Fachada\\" ;
  //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
 
- $directory = "E:\\fachada\\ssparaiso\\falhas\\" ;
+ //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
+ $directory = "/media/geoserver/web/lorena/img/fotoFachada/" ;
+
 
  if(!File::isDirectory($directory)) {
      $msg = 'Caminho não acessivél.';
@@ -73,7 +75,7 @@ class Ups3Controller extends Controller
     // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
 
     if(is_file($file->getRealPath()) ){
-        $this->dispatch(new ProcessUpFachada($file->getExtension() , $file->getFilename() , $file->getRealPath()  )); ;   // $file->getRealPath()     $conteudo
+        $this->dispatch(new ProcessLorena($file->getExtension() , $file->getFilename() , $file->getRealPath()  )); ;   // $file->getRealPath()     $conteudo
     }
  }
 
