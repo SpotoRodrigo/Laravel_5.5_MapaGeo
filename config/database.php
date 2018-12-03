@@ -66,7 +66,7 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
-        'pgsql_birigui' => [
+        'pgsql_mitra' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
@@ -76,6 +76,19 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'pgsql_paraiso' => [
+            'driver' => 'pgsql',
+            'host' =>  '169.57.166.62',
+            'port' => env('DB_PORT', '5432'),
+            'database' => 'bd_mitra_ssparaiso',
+            'username' => env('DB_USERNAME', 'postgres'),
+            'password' => 'VgQ1512p',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'apgv',
             'sslmode' => 'prefer',
         ],
 
@@ -90,7 +103,23 @@ return [
             'prefix' => '',
         ],
 
+        'BDGeralSSebastiaoImagem' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_MITRA_HOST', '192.168.1.5'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralSSebastiaoImagem',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false
+           // 'sticky'    => true,
+        ],
     ],
+
+            ///'charset'  => 'cp1252', //  and also latin1 and utf8
+            //'collation'=> 'Latin1_General_CI_AS', // both with this on/off 
 
     /*
     |--------------------------------------------------------------------------

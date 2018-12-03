@@ -43,3 +43,7 @@ Route::resource('ups3', 'Ups3Controller')->only([
 Route::resource('ups3', 'Ups3Controller')->except([
     'create', 'store', 'update', 'destroy'
 ]);
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -71,6 +71,16 @@ return [
             'region' => 'sao01',
         ],
 
+        's3Biri' => [
+            'driver' => 's3',
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => 'db156448-a8ea-41ec-a312-db835a94399b',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
     ],
 
 ];
