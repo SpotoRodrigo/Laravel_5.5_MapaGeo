@@ -53,7 +53,7 @@ class Ups3Controller extends Controller
  //$directory = "F:\\Fachada\\" ;
  //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
 
- $directory = "F:\\fachada\\ssparaiso\\falhas\\" ;
+ $directory = "E:\\fachada\\ssparaiso\\falhas\\" ;
 
  if(!File::isDirectory($directory)) {
      $msg = 'Caminho não acessivél.';

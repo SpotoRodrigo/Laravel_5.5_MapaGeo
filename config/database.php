@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'pgsql_mitra'),
 
     /*
     |--------------------------------------------------------------------------
@@ -108,6 +108,20 @@ return [
             'host' => env('DB_MITRA_HOST', '192.168.1.5'),
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralSSebastiaoImagem',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false
+           // 'sticky'    => true,
+        ],
+
+        'BDGeralLorenaImagem' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_MITRA_HOST', '192.168.1.5'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralLorenaImagem',
             'username' => env('DB_MITRA_USER', 'scaes'),
             'password' => env('DB_MITRA_PASS', 'sql08081972'),
             'charset' =>' cp1252',
