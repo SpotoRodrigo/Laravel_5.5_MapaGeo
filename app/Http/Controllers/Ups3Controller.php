@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 //use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 use App\Jobs\ProcessUpFachada;
+use App\Jobs\ProcessLorena;
 use App\Jobs\setPublicS3;
 
 ini_set("max_execution_time",54000);
