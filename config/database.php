@@ -94,7 +94,7 @@ return [
 
      'pgsql_lorena' => [
             'driver' => 'pgsql',
-            'host' =>  '169.57.166.62',
+            'host' =>  '127.0.0.1',
             'port' => env('DB_PORT', '5432'),
             'database' => 'bd_mitra_lorena',
             'username' => env('DB_USERNAME', 'postgres'),
