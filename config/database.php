@@ -167,8 +167,8 @@ return [
             'charset' =>' cp1252',
             'collation'=> 'Latin1_General_CI_AS',
             'prefix' => '',
-          //  'pooling' => false
-           // 'sticky'    => true,
+            'pooling' => false,
+           'sticky'    => true,
         ],
     ],
 

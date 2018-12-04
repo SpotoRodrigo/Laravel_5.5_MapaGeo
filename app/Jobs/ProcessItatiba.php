@@ -57,6 +57,7 @@ class ProcessItatiba implements ShouldQueue
         WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada' 
          GROUP BY CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
         ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END " ,[$this->nome_arquivo] );
+      
 dd($lista);
         if($lista){
             $dono = $lista[0]->inscricao;
