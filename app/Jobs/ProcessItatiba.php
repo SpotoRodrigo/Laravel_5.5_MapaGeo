@@ -50,7 +50,7 @@ class ProcessItatiba implements ShouldQueue
     {
 
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-      $lista = DB::connection('BDGeralItatiba')->select("SELECT top 1 keyfoto AS inscricao  , 0 as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada'" ,[$this->nome_arquivo] );
+      $lista = DB::connection('BDGeralItatiba')->select("SELECT top 1 CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END AS inscricao  , 0 as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada'" ,[$this->nome_arquivo] );
 dd($lista );
         if($lista){
             $dono = $lista[0]->inscricao;
@@ -59,7 +59,6 @@ dd($lista );
 //dd('true');
         }else{
             $go = false;
-//dd('false');
             $conteudo  =  file_get_contents($this->caminho) ;
              Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
              unlink($this->caminho);
