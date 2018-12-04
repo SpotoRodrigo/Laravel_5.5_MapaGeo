@@ -50,6 +50,7 @@ class ProcessItatiba implements ShouldQueue
     {
 
       // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
+      dd(DB::connection('BDGeralItatiba'));
       $lista = DB::connection('BDGeralItatiba')->select("SELECT  CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
         ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END AS inscricao   , COUNT(CodImagem) as qtde 
         FROM dbo.Imagem 
