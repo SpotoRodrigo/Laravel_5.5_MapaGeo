@@ -56,7 +56,7 @@ class ProcessItatiba implements ShouldQueue
         WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada' 
          GROUP BY CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
         ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END " ,[$this->nome_arquivo] );
-//dd($lista );
+dd($lista );
         if($lista){
             $dono = $lista[0]->inscricao;
             $qtde = $lista[0]->qtde;
@@ -95,8 +95,7 @@ class ProcessItatiba implements ShouldQueue
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
  //print_r( $affected);      
-        DB::connection('pgsql_itatiba')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '58b506c6-57e4-413e-8d24-ee7198b4355a/'.$novo_nome . '.' . $this->extensao  ] );
-
+    DB::connection('pgsql_itatiba')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '58b506c6-57e4-413e-8d24-ee7198b4355a/'.$novo_nome . '.' . $this->extensao  ] );
         
         //fclose($this->caminho);
         unset($conteudo);
