@@ -49,11 +49,7 @@ class ProcessItatiba implements ShouldQueue
     public function handle()
     {
 
-        // BDGeralLorenaImagem
-        //BDGeralLorenaImagem
-        //s3Lorena
-
-        // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
+      // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
       $lista = DB::connection('BDGeralItatiba')->select("SELECT  CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
         ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END AS incricao   , COUNT(CodImagem) as qtde 
         FROM dbo.Imagem 
@@ -86,7 +82,7 @@ class ProcessItatiba implements ShouldQueue
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
-           $result =  Storage::disk('s3Lorena')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+           $result =  Storage::disk('s3Itatiba')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             
             //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
