@@ -58,7 +58,9 @@ class ProcessItatiba implements ShouldQueue
          GROUP BY CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
         ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END " ,[$this->nome_arquivo] );
 */
-      $lista = DB::connection('BDGeralItatiba')->select("   SELECT top 1 keyfoto AS inscricao FROM dbo.Imagem WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada' " ,$this->nome_arquivo] );
+
+        dd($this->nome_arquivo );
+$lista = DB::connection('BDGeralItatiba')->select("SELECT top 1 keyfoto AS inscricao FROM dbo.Imagem WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada'",$this->nome_arquivo] );
 
 dd($lista);
         if($lista){
