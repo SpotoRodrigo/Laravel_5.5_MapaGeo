@@ -159,7 +159,7 @@ return [
 
      'BDGeralItatiba' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_MITRA_HOST', '192.168.1.5'),
+            'host' =>  '10.150.199.254',
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralItatiba',
             'username' => env('DB_MITRA_USER', 'scaes'),
