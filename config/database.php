@@ -105,6 +105,19 @@ return [
             'sslmode' => 'prefer',
         ],
 
+     'pgsql_itatiba' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => 'bd_mitra_itatiba',
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),
@@ -135,6 +148,20 @@ return [
             'host' => env('DB_MITRA_HOST', '192.168.1.5'),
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralLorenaImagem',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false
+           // 'sticky'    => true,
+        ],
+
+     'BDGeralItatiba' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_MITRA_HOST', '192.168.1.5'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralItatiba',
             'username' => env('DB_MITRA_USER', 'scaes'),
             'password' => env('DB_MITRA_PASS', 'sql08081972'),
             'charset' =>' cp1252',

@@ -92,6 +92,17 @@ return [
             'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'region' => 'sao01',
         ],
+
+        's3Itatiba' => [
+            'driver' => 's3',
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => '58b506c6-57e4-413e-8d24-ee7198b4355a',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
     ],
 
 ];

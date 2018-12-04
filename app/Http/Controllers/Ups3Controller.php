@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Jobs\ProcessUpFachada;
 use App\Jobs\ProcessLorena;
+use App\Jobs\ProcessItatiba;
 use App\Jobs\setPublicS3;
 
 ini_set("max_execution_time",54000);
@@ -55,7 +56,7 @@ class Ups3Controller extends Controller
  //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
 
  //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
- $directory = "/media/geoserver/web/lorena/img/fotoFachada/" ;
+ $directory = "/media/geoserver/web/itatiba/img/fotoFachada/" ;
 
 
  if(!File::isDirectory($directory)) {
@@ -76,7 +77,7 @@ class Ups3Controller extends Controller
     // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
 
     if(is_file($file->getRealPath()) ){
-        $this->dispatch(new ProcessLorena($file->getExtension() , $file->getFilename() , $file->getRealPath()  )); ;   // $file->getRealPath()     $conteudo
+        $this->dispatch(new ProcessItatiba($file->getExtension() , $file->getFilename() , $file->getRealPath()  )); ;   // $file->getRealPath()     $conteudo
     }
  }
 
