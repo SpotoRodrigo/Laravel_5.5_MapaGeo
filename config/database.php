@@ -94,14 +94,14 @@ return [
 
      'pgsql_lorena' => [
             'driver' => 'pgsql',
-            'host' =>  '127.0.0.1',
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => 'bd_mitra_lorena',
-            'username' => env('DB_USERNAME', 'postgres'),
-            'password' => 'VgQ1512p',
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'apgv',
+            'schema' => 'public',
             'sslmode' => 'prefer',
         ],
 
