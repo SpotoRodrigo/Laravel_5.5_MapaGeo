@@ -99,7 +99,7 @@ class ProcessItatiba implements ShouldQueue
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
  //print_r( $affected);      
-        DB::connection('pgsql_itatiba')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
+        DB::connection('pgsql_itatiba')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '58b506c6-57e4-413e-8d24-ee7198b4355a/'.$novo_nome . '.' . $this->extensao  ] );
 
         
         //fclose($this->caminho);
