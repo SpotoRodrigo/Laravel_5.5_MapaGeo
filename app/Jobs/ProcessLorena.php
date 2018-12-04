@@ -55,7 +55,7 @@ class ProcessLorena implements ShouldQueue
 
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
       $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY SUBSTRING(imagemNomeAnterior,1,16) " ,[$this->nome_arquivo] );
-dd($lista );
+//dd($lista );
         if($lista){
             $dono = $lista[0]->inscricao;
             $qtde = $lista[0]->qtde;
@@ -76,7 +76,7 @@ dd($lista );
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
         if(is_file($this->caminho) &&  $go ){
 
-   dd('agora VAI ');         
+            // dd('agora VAI ');         
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
