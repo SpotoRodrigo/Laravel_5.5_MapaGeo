@@ -56,7 +56,7 @@ class ProcessItatiba implements ShouldQueue
         WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada' 
          GROUP BY CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
         ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END " ,[$this->nome_arquivo] );
-dd($lista);
+
         if($lista){
             $dono = $lista[0]->inscricao;
             $qtde = $lista[0]->qtde;
@@ -77,7 +77,7 @@ dd($lista);
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
         if(is_file($this->caminho) &&  $go ){
 
-            // dd('agora VAI ');         
+dd('agora VAI ');         
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
