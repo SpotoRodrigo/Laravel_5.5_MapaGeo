@@ -48,19 +48,14 @@ class ProcessItatiba implements ShouldQueue
      */
     public function handle()
     {
-       dd( $this->nome_arquivo );
-      // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-/*
-      $lista = DB::connection('BDGeralItatiba')->select("SELECT  CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
-        ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END AS inscricao   , COUNT(CodImagem) as qtde 
-        FROM dbo.Imagem 
-        WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada' 
-         GROUP BY CASE WHEN CHARINDEX ('_',imagemnome) =0 THEN  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('.',imagemnome) ) 
-        ELSE  SUBSTRING (imagemnome , 0 ,  CHARINDEX ('_',imagemnome) )  END " ,[$this->nome_arquivo] );
-*/
-$lista = DB::connection('BDGeralItatiba')->select("SELECT top 1 keyfoto AS inscricao FROM dbo.Imagem WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada'",$this->nome_arquivo] );
 
-dd($lista);
+        // BDGeralLorenaImagem
+        //BDGeralLorenaImagem
+dd('ENTROYYYY ');
+
+        // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
+      $lista = DB::connection('BDGeralItatiba')->select("SELECT top 1 keyfoto AS inscricao  , 0 as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? AND TipoFoto = 'Foto Fachada'" ,[$this->nome_arquivo] );
+//dd($lista );
         if($lista){
             $dono = $lista[0]->inscricao;
             $qtde = $lista[0]->qtde;
@@ -81,7 +76,7 @@ dd($lista);
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
         if(is_file($this->caminho) &&  $go ){
 
-dd('agora VAI ');         
+            // dd('agora VAI ');         
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
@@ -99,8 +94,8 @@ dd('agora VAI ');
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
  //print_r( $affected);      
-    DB::connection('pgsql_itatiba')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '58b506c6-57e4-413e-8d24-ee7198b4355a/'.$novo_nome . '.' . $this->extensao  ] );
-        
+DB::connection('pgsql_itatiba')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono ,  '58b506c6-57e4-413e-8d24-ee7198b4355a/'.$novo_nome.'.'. $this->extensao  ] );
+       
         //fclose($this->caminho);
         unset($conteudo);
         unlink($this->caminho);
