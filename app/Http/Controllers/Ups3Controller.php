@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\File;
 use App\Jobs\ProcessUpFachada;
 use App\Jobs\ProcessLorena;
 use App\Jobs\ProcessItatiba;
+use App\Jobs\upVinhedoDoc;
 use App\Jobs\setPublicS3;
+
+use Illuminate\Support\Facades\DB;
 
 ini_set("max_execution_time",54000);
 ini_set("memory_limit","1024M");
@@ -25,64 +28,47 @@ class Ups3Controller extends Controller
      */
     public function index()
     {
-        //$retorno = Storage::disk('s3')->get('641a99d4-5186-4438-8326-e888098452ef.JPG');
-       // $retorno = Storage::disk('s3')->size('641a99d4-5186-4438-8326-e888098452ef.JPG');
-       // dd($retorno); 
-
-      // Storage::disk('local')->put('file.txt', 'Contents');
-      // Storage::disk('local')->put('file.txt', 'Contents');
-     // $retorno =  Storage::disk('local')->list();
-  
-    //      $retorno = Storage::disk('s3')->size('TESTE.png');
-
-   //        Storage::disk('s3')->setVisibility('TESTE.png', 'public') ;
 
 
-//       dd($retorno); 
+        // $images = loopPorPasta();
+        $count =0;
+        
+        $lista =  DB::connection('BDGeralVinhedo')->select("SELECT top 10 [cpfIdentificador] as idd
+                                                                    ,[cpfNumero]
+                                                                    ,[cpfFonteData]
+                                                                    ,[cpfImagem]
+                                                                    , 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+[cpfImagem]  as url_image
+                                                                    , peso.pessoaFisicaIdentificadorUnico  as dono
+                                                                FROM [BDServicoVinhedo].[documentos].[Cpf] as cpf
+                                                                , [BDServicoVinhedo].pessoa.Fisica  as peso
+   
+                                                                where [cpfImagem] is not null  
+                                                                AND cpf.cpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                AND cpf.cpfAtivo = 1
 
-/*
-      $files = Storage::disk('s3')->files();
-      foreach ($files as $file) {
-          $images[] = [
-              'name' => str_replace('images/', '', $file),
-              'src' => '$url' . $file
-          ];
-      }
-*/ 
- //     dd($files);
+                                                                order  by [cpfFonteData] asc  " );  // AND cpf.imagemS3 is null
+         foreach ($lista as $file) {
 
-//$directory = '\\\\192.168.1.4\\Operações\\Clientes\\São Sebastião do Paraiso\\[5] Matrizes de Dados\\Entregavel_02\\';
- //$directory = "F:\\Fachada\\" ;
- //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
+           //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
+            $id  = $file->idd; 
+            $dono = $file->dono;
+            $url_image = $file->url_image;
 
- //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
- $directory = "/media/geoserver/web/itatiba/img/fotoFachada/" ;
+            if(is_file($url_image ) ){
 
+                $count++;
+                $images[] = [
+                    'nome' =>  $file->cpfNumero ,
+                    'extensao'  => (string) $count,
+                    'caminho' => $url_image ,
+                    'up'      => true
+                ];
 
- if(!File::isDirectory($directory)) {
-     $msg = 'Caminho não acessivél.';
-    return view('ups3.index').compact($msg); 
-}
- $count= 0;
- $files = File::allFiles($directory);
- foreach ($files as $file) {
-     $count++;
-     $images[] = [
-        'nome' =>  $file->getFilename() ,
-        'extensao'  => (string) $count,
-        'caminho' => $file->getRealPath(),
-        'up'      => true
-    ];
+                $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+            }
 
-    // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
+         }
 
-    if(is_file($file->getRealPath()) ){
-        $this->dispatch(new ProcessItatiba($file->getExtension() , $file->getFilename() , $file->getRealPath()  )); ;   // $file->getRealPath()     $conteudo
-    }
- }
-
- //dd($images);
-//$this->dispatch(new setPublicS3( 'hoje', 'agora' ));
       return view('ups3.index',compact('images') ); //,compact('images')
 
     }
@@ -151,6 +137,42 @@ class Ups3Controller extends Controller
     public function destroy(Ups3 $ups3)
     {
         //
+    }
+
+
+    private function loopPorPasta ()
+    {
+
+        //$directory = '\\\\192.168.1.4\\Operações\\Clientes\\São Sebastião do Paraiso\\[5] Matrizes de Dados\\Entregavel_02\\';
+        //$directory = "F:\\Fachada\\" ;
+        //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
+
+        //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
+        $directory = "/media/geoserver/web/itatiba/img/fotoFachada/" ;
+
+
+        if(!File::isDirectory($directory)) {
+            $msg = 'Caminho não acessivél.';
+            return view('ups3.index').compact($msg); 
+        }
+        $count= 0;
+        $files = File::allFiles($directory);
+        foreach ($files as $file) {
+            $count++;
+            $images[] = [
+                'nome' =>  $file->getFilename() ,
+                'extensao'  => (string) $count,
+                'caminho' => $file->getRealPath(),
+                'up'      => true
+            ];
+
+            // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
+
+            if(is_file($file->getRealPath()) ){
+                $this->dispatch(new ProcessItatiba($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+            }
+        }
+        return $images ;
     }
 
     private function loopBucket(string $Bucket)

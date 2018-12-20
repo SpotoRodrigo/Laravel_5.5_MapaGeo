@@ -170,6 +170,20 @@ return [
             'pooling' => false,
            'sticky'    => true,
         ],
+
+        'BDGeralVinhedo' => [
+            'driver' => 'sqlsrv',  
+            'host' =>   env('DB_MITRA_HOST2', '169.57.159.46'),  // trocar por IP interno IBM
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralVinhedo',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+            'pooling' => false,
+           'sticky'    => true,
+        ],
     ],
 
             ///'charset'  => 'cp1252', //  and also latin1 and utf8

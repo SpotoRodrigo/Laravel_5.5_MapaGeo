@@ -103,6 +103,18 @@ return [
             'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'region' => 'sao01',
         ],
+
+        's3Vinhedo' => [
+            'driver' => 's3',
+            'key' => 'yjkOvSG4IVMdTinzsFI3',
+            'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
+            'version' => '2006-03-01',            
+            'bucket' =>  'upload-teste', // 'ba84f1b8-ee11-4c0c-ad77-8bf91c71a5ae',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
+
     ],
 
 ];
@@ -112,6 +124,7 @@ return [
 da65f4fe-e1c8-4aaa-a8df-ef17a7d03462 => Ibitinga
 db156448-a8ea-41ec-a312-db835a94399b => Birigui
 acdb0896-101b-4a9d-aa32-6d1b134f3961 => Vinhedo
+ba84f1b8-ee11-4c0c-ad77-8bf91c71a5ae => Vinhedo Pessoas documentos
 58b506c6-57e4-413e-8d24-ee7198b4355a => Itatiba
 3ef077e8-fd6f-4ad5-bfef-2a55570b6367 => Socorro
 39f409a7-da21-4260-a07a-c469a22b707d => Lorena
