@@ -74,7 +74,7 @@ class Ups3Controller extends Controller
 
               $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
 
-            dd($dono);
+            //dd($dono);
               dd($nome_completo);
 
               $conteudo  =  file_get_contents( $url_image ) ;
