@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 //use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-use App\Jobs\ProcessUpFachada;
-use App\Jobs\ProcessLorena;
-use App\Jobs\ProcessItatiba;
+//use App\Jobs\ProcessUpFachada;
+//use App\Jobs\ProcessLorena;
+//use App\Jobs\ProcessItatiba;
 use App\Jobs\upVinhedoDoc;
-use App\Jobs\setPublicS3;
+//use App\Jobs\setPublicS3;
 
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +49,7 @@ class Ups3Controller extends Controller
                                                                 AND cpf.cpfAtivo = 1
                                                                 order  by cpfFonteData asc  " );  // AND cpf.imagemS3 is null
 
-dd($lista );
+        //dd($lista );
          foreach ($lista as $file) {
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
@@ -67,7 +67,11 @@ dd($lista );
                     'up'      => true
                 ];
 
-                $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+               // $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+               $conteudo  =  file_get_contents($url_image) ;
+
+               $result =  Storage::disk('s3Vinhedo')->put(   $file->cpfImagem   , $conteudo );
+               dd($result);
             }
 
          }
