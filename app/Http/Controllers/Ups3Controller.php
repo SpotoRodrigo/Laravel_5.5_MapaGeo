@@ -41,7 +41,7 @@ class Ups3Controller extends Controller
                                                                     ,cpfFonteData
                                                                     ,cpfImagem
                                                                     , 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+cpfImagem  as url_image
-                                                                    , peso.pessoaFisicaIdentificadorUnico  as dono
+                                                                    , CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
                                                                 FROM documentos.Cpf as cpf
                                                                     , pessoa.Fisica  as peso
                                                                 where cpfImagem is not null  AND cpf.imagemS3 is null
