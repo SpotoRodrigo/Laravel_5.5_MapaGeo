@@ -57,6 +57,7 @@ class Ups3Controller extends Controller
             $dono = $file->dono;
             $url_image = $file->url_image;
 
+            dd( is_file($url_image) );
             if(is_file($url_image ) ){
 
                 $count++;
