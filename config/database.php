@@ -181,8 +181,8 @@ return [
             'charset' =>' cp1252',
             'collation'=> 'Latin1_General_CI_AS',
             'prefix' => '',
-            'pooling' => false,
-           'sticky'    => true,
+          //  'pooling' => false,
+          // 'sticky'    => true,
         ],
     ],
             // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral
