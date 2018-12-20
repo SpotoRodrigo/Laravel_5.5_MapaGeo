@@ -71,14 +71,16 @@ class Ups3Controller extends Controller
 
 
               $novo_nome = $this->uuid();
-              $nome_completo =  $this->dono . '/' . $novo_nome . '.jpg' ;
-              $conteudo  =  file_get_contents( $this->url_image ) ;
+
+              $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
+              $conteudo  =  file_get_contents( $url_image ) ;
+
               //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
   
               $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
               
               if ($result){
-                  DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = '?' WHERE [cpfIdentificador] = ? ", [ $nome_completo , $this->id ]); 
+                  DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = '?' WHERE [cpfIdentificador] = ? ", [ $nome_completo , $id ]); 
               }
 
 
