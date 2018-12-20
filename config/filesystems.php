@@ -111,7 +111,7 @@ return [
             'version' => '2006-03-01',            
             'bucket' =>  'ba84f1b8-ee11-4c0c-ad77-8bf91c71a5ae', 
             'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
-            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
             'region' => 'sao01',
         ],
 

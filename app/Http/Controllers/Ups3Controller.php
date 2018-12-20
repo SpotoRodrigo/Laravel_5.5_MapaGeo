@@ -73,8 +73,11 @@ class Ups3Controller extends Controller
               $novo_nome = $this->uuid();
 
               $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
-              $conteudo  =  file_get_contents( $url_image ) ;
 
+              dd($nome_completo);
+
+              $conteudo  =  file_get_contents( $url_image ) ;
+                
               //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
   
               $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
