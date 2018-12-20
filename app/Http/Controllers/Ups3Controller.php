@@ -36,7 +36,7 @@ class Ups3Controller extends Controller
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
-        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT top 10 cpfIdentificador as idd
+        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT cpfIdentificador as idd
                                                                     ,cpfNumero
                                                                     ,cpfFonteData
                                                                     ,cpfImagem
@@ -44,7 +44,7 @@ class Ups3Controller extends Controller
                                                                     , peso.pessoaFisicaIdentificadorUnico  as dono
                                                                 FROM documentos.Cpf as cpf
                                                                     , pessoa.Fisica  as peso
-                                                                where cpfImagem is not null  
+                                                                where cpfImagem is not null  AND cpf.imagemS3 is null
                                                                 AND cpf.cpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
                                                                 AND cpf.cpfAtivo = 1
                                                                 order  by cpfFonteData asc  " );  // AND cpf.imagemS3 is null
