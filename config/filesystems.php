@@ -109,7 +109,7 @@ return [
             'key' => 'yjkOvSG4IVMdTinzsFI3',
             'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
             'version' => '2006-03-01',            
-            'bucket' =>  'upload-teste', // 'ba84f1b8-ee11-4c0c-ad77-8bf91c71a5ae',
+            'bucket' =>  'ba84f1b8-ee11-4c0c-ad77-8bf91c71a5ae', 
             'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'region' => 'sao01',
