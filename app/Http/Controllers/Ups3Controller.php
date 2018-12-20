@@ -67,11 +67,7 @@ class Ups3Controller extends Controller
                     'up'      => true
                 ];
 
-               // $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
-               $conteudo  =  file_get_contents($url_image) ;
-
-               $result =  Storage::disk('s3Vinhedo')->put(   $file->cpfImagem   , $conteudo );
-               dd($result);
+             //  $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
             }
 
          }

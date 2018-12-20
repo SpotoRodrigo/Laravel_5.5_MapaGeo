@@ -39,12 +39,9 @@ class upVinhedoDoc implements ShouldQueue
 
             $result =  Storage::disk('s3Vinhedo')->put(   $nome_completo   , $conteudo );  // ['ACL' => 'public-read'] 
             
-            //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-
-            // $affected = DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = ? WHERE [cpfIdentificador] = ? ", [ $nome_completo , $this->id ]); 
-        
-            print_r( $result);   
-
+            if ($result){
+                DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = ? WHERE [cpfIdentificador] = ? ", [ $nome_completo , $this->id ]); 
+            }
     }
 
     private function uuid()
