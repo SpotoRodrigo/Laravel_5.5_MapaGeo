@@ -74,9 +74,6 @@ class Ups3Controller extends Controller
 
               $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
 
-            //dd($dono);
-              //dd($nome_completo);
-
               $conteudo  =  file_get_contents( $url_image ) ;
                 
               //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
@@ -84,7 +81,7 @@ class Ups3Controller extends Controller
               $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
               
               if ($result){
-                  DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = CAST('?' AS VARCHAR(MAX)) WHERE [cpfIdentificador] = ? ", [ $nome_completo , $id ]); 
+                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $id ]); 
               }
 
 
