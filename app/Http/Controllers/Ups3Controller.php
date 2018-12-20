@@ -36,18 +36,18 @@ class Ups3Controller extends Controller
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
-        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT top 10 [cpfIdentificador] as idd
-                                                                    ,[cpfNumero]
-                                                                    ,[cpfFonteData]
-                                                                    ,[cpfImagem]
-                                                                    , 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+[cpfImagem]  as url_image
+        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT top 10 cpfIdentificador as idd
+                                                                    ,cpfNumero
+                                                                    ,cpfFonteData
+                                                                    ,cpfImagem
+                                                                    , 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+cpfImagem  as url_image
                                                                     , peso.pessoaFisicaIdentificadorUnico  as dono
-                                                                FROM [BDServicoVinhedo].[documentos].[Cpf] as cpf
-                                                                , [BDServicoVinhedo].pessoa.Fisica  as peso
-                                                                where [cpfImagem] is not null  
+                                                                FROM documentos.Cpf as cpf
+                                                                    , pessoa.Fisica  as peso
+                                                                where cpfImagem is not null  
                                                                 AND cpf.cpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
                                                                 AND cpf.cpfAtivo = 1
-                                                                order  by [cpfFonteData] asc  " );  // AND cpf.imagemS3 is null
+                                                                order  by cpfFonteData asc  " );  // AND cpf.imagemS3 is null
 
 dd($lista );
          foreach ($lista as $file) {
