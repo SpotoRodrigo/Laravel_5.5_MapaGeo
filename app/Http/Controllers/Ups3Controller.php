@@ -67,7 +67,7 @@ class Ups3Controller extends Controller
                     'up'      => true
                 ];
 
-             //  $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+              $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
             }
 
          }
