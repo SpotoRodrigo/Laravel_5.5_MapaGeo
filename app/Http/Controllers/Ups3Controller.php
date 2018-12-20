@@ -40,8 +40,8 @@ class Ups3Controller extends Controller
                                                                     ,cpfNumero
                                                                     ,cpfFonteData
                                                                     ,cpfImagem
-                                                                    , 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+cpfImagem  as url_image
-                                                                    , CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                    ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+cpfImagem  as url_image
+                                                                    ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
                                                                 FROM documentos.Cpf as cpf
                                                                     , pessoa.Fisica  as peso
                                                                 where cpfImagem is not null  AND cpf.imagemS3 is null
@@ -75,7 +75,7 @@ class Ups3Controller extends Controller
               $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
 
             //dd($dono);
-              dd($nome_completo);
+              //dd($nome_completo);
 
               $conteudo  =  file_get_contents( $url_image ) ;
                 
