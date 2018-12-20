@@ -36,7 +36,7 @@ class Ups3Controller extends Controller
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
-        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT cpfIdentificador as idd
+        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT TOP 10 cpfIdentificador as idd
                                                                     ,cpfNumero
                                                                     ,cpfFonteData
                                                                     ,cpfImagem
@@ -61,13 +61,27 @@ class Ups3Controller extends Controller
 
                 $count++;
                 $images[] = [
-                    'nome' =>  $file->cpfNumero ,
+                    'nome' =>  $id ,
                     'extensao'  => (string) $count,
                     'caminho' => $url_image ,
                     'up'      => true
                 ];
 
-              $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+              //$this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+
+
+              $novo_nome = $this->uuid();
+              $nome_completo =  $this->dono . '/' . $novo_nome . '.jpg' ;
+              $conteudo  =  file_get_contents( $this->url_image ) ;
+              //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
+  
+              $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+              
+              if ($result){
+                  DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = '?' WHERE [cpfIdentificador] = ? ", [ $nome_completo , $this->id ]); 
+              }
+
+
             }
 
          }
@@ -202,5 +216,17 @@ class Ups3Controller extends Controller
 
         return $images ;
 
+    }
+
+    
+    private function uuid()
+    {
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
     }
 }
