@@ -8,6 +8,10 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+
+
 class upVinhedoDoc implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -40,7 +44,7 @@ class upVinhedoDoc implements ShouldQueue
             $result =  Storage::disk('s3Vinhedo')->put(   $nome_completo   , $conteudo );  // ['ACL' => 'public-read'] 
             
             if ($result){
-                DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = ? WHERE [cpfIdentificador] = ? ", [ $nome_completo , $this->id ]); 
+                DB::connection('BDServicoVinhedo')->update("  UPDATE  documentos.cpf SET imagemS3 = '?' WHERE [cpfIdentificador] = ? ", [ $nome_completo , $this->id ]); 
             }
     }
 
