@@ -171,9 +171,11 @@ return [
            'sticky'    => true,
         ],
 
+
+        
         'BDGeralVinhedo' => [
             'driver' => 'sqlsrv',  
-            'host' =>   env('DB_MITRA_HOST2', '169.57.159.46'),  // trocar por IP interno IBM
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.248'),  // 10.150.199.248 //169.57.159.46
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralVinhedo',
             'username' => env('DB_MITRA_USER', 'scaes'),
