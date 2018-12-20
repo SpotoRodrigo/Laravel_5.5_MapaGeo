@@ -33,8 +33,8 @@ class Ups3Controller extends Controller
         // $images = loopPorPasta();
         $count =0;
 
-        $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
-        dd($lista );
+     //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
+     //   dd($lista );
         
         $lista =  DB::connection('BDGeralVinhedo')->select("SELECT top 10 [cpfIdentificador] as idd
                                                                     ,[cpfNumero]
@@ -44,12 +44,12 @@ class Ups3Controller extends Controller
                                                                     , peso.pessoaFisicaIdentificadorUnico  as dono
                                                                 FROM [BDServicoVinhedo].[documentos].[Cpf] as cpf
                                                                 , [BDServicoVinhedo].pessoa.Fisica  as peso
-   
                                                                 where [cpfImagem] is not null  
                                                                 AND cpf.cpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
                                                                 AND cpf.cpfAtivo = 1
-
                                                                 order  by [cpfFonteData] asc  " );  // AND cpf.imagemS3 is null
+
+dd($lista );
          foreach ($lista as $file) {
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
