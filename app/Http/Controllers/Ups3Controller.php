@@ -33,18 +33,18 @@ class Ups3Controller extends Controller
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
-        $lista =  DB::connection('BDServicoVinhedo')->select(" SELECT CartaoCidadaoIdentificador as idd
-        ,CartaoCidadaoNumero
-        ,CartaoCidadaoFonteData
-        ,CartaoCidadaoImagem
-        ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+CartaoCidadaoImagem  as url_image
+        $lista =  DB::connection('BDServicoVinhedo')->select("  SELECT ReservistaIdentificador as idd
+        ,ReservistaNumero
+        ,ReservistaFonteData
+        ,ReservistaImagem
+        ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+ReservistaImagem  as url_image
         ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
-    FROM documentos.CartaoCidadao as CartaoCidadao
+    FROM documentos.CarteiraReservista as CarteiraReservista
         , pessoa.Fisica  as peso
-    where CartaoCidadaoImagem is not null  AND CartaoCidadao.imagemS3 is null
-    AND CartaoCidadao.CartaoCidadaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
-    AND CartaoCidadao.CartaoCidadaoAtivo = 1
-    order  by CartaoCidadaoFonteData asc  " );  // AND cpf.imagemS3 is null
+    where ReservistaImagem is not null  AND CarteiraReservista.imagemS3 is null
+    AND CarteiraReservista.ReservistaPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+    AND CarteiraReservista.ReservistaAtivo = 1
+    order  by ReservistaFonteData asc " );  // AND cpf.imagemS3 is null
 
         //dd($lista );
          foreach ($lista as $file) {
@@ -83,7 +83,7 @@ class Ups3Controller extends Controller
               $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
               
               if ($result!==false){
-                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $nome_completo , $id ]); 
+                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $nome_completo , $id ]); 
               }
 
               
