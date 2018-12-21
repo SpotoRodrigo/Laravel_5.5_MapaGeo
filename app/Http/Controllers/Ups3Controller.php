@@ -41,7 +41,7 @@ class Ups3Controller extends Controller
             , cnh.imagemS3
         FROM LOG_documentos.cnh as cnh
         , pessoa.Fisica  as peso
-        where cnhImagem is not null  AND cnh.imagemS3 is not null AND cnhImagem <> ''
+        where cnhImagem is not null  AND cnh.imagemS3 is  null AND cnhImagem <> ''
         AND cnh.cnhPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         
         UNION 
@@ -76,7 +76,7 @@ class Ups3Controller extends Controller
             , Rg.imagemS3
         FROM LOG_documentos.Rg as Rg
         , pessoa.Fisica  as peso
-        where RgImagem is not null  AND Rg.imagemS3 is not null AND RgImagem <> ''
+        where RgImagem is not null  AND Rg.imagemS3 is  null AND RgImagem <> ''
         AND Rg.RgPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
       
         UNION 
@@ -89,7 +89,7 @@ class Ups3Controller extends Controller
         from log_pessoa.PessoaEndereco  as emd
         , pessoa.fisica  as fi
         where emd.enderecoPessoaFisicaIdentificador = fi.pessoaFisicaIdentificador
-        and emd.enderecoImagem is not null and emd.enderecoImagem <> ''  and emd.imagemS3 is  not null  
+        and emd.enderecoImagem is not null and emd.enderecoImagem <> ''  and emd.imagemS3 is   null  
         union 
         Select   fi.pessoaFisicaIdentificador as idd 
             , fi.pessoaFisicaFoto   as imagem 
@@ -99,7 +99,7 @@ class Ups3Controller extends Controller
             , fi.imagemS3
         from  log_pessoa.fisica  as fi
         , pessoa.fisica as fiii
-        where fi.pessoaFisicaFoto is not null and fi.pessoaFisicaFoto <> ''  and fi.imagemS3 is not null  
+        where fi.pessoaFisicaFoto is not null and fi.pessoaFisicaFoto <> ''  and fi.imagemS3 is  null  
         AND fi.pessoaFisicaFisicaIdentificador = fiii.pessoaFisicaIdentificador
         UNION     
         SELECT CartaoCidadaoIdentificador as idd
@@ -110,7 +110,7 @@ class Ups3Controller extends Controller
             , cnh.imagemS3
         FROM LOG_documentos.CartaoCidadao as cnh
         , pessoa.Fisica  as peso
-        where CartaoCidadaoImagem is not null  AND cnh.imagemS3 is not null AND CartaoCidadaoImagem <> ''
+        where CartaoCidadaoImagem is not null  AND cnh.imagemS3 is  null AND CartaoCidadaoImagem <> ''
         AND cnh.CartaoCidadaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         UNION  
         SELECT ReservistaIdentificador as idd  
@@ -121,7 +121,7 @@ class Ups3Controller extends Controller
             , Titulo.imagemS3
         FROM LOG_documentos.CarteiraReservista as Titulo
         , pessoa.Fisica  as peso
-        where ReservistaImagem is not null  AND Titulo.imagemS3 is  not null AND ReservistaImagem <> ''
+        where ReservistaImagem is not null  AND Titulo.imagemS3 is   null AND ReservistaImagem <> ''
         AND Titulo.ReservistaPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         UNION 
         SELECT CnsIdentificador as idd
@@ -132,7 +132,7 @@ class Ups3Controller extends Controller
             , Certidao.imagemS3
         FROM LOG_documentos.Cns as Certidao
         , pessoa.Fisica  as peso
-        where CnsImagem is not null  AND Certidao.imagemS3 is  not null AND CnsImagem <> ''
+        where CnsImagem is not null  AND Certidao.imagemS3 is  null AND CnsImagem <> ''
         AND Certidao.CnsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         union  
         SELECT CpfIdentificador as idd
@@ -143,7 +143,7 @@ class Ups3Controller extends Controller
             , Rg.imagemS3
         FROM LOG_documentos.Cpf as Rg
         , pessoa.Fisica  as peso
-        where CpfImagem is not null  AND Rg.imagemS3 is not null AND CpfImagem <> ''
+        where CpfImagem is not null  AND Rg.imagemS3 is  null AND CpfImagem <> ''
         AND Rg.CpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         union 
         SELECT CtpsIdentificador as idd
@@ -154,7 +154,7 @@ class Ups3Controller extends Controller
             , Rg.imagemS3
         FROM LOG_documentos.Ctps as Rg
         , pessoa.Fisica  as peso
-        where CtpsImagem is not null  AND Rg.imagemS3 is  not null AND CtpsImagem <> ''
+        where CtpsImagem is not null  AND Rg.imagemS3 is  null AND CtpsImagem <> ''
         AND Rg.CtpsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
          " );  // AND cpf.imagemS3 is null
 
@@ -190,9 +190,9 @@ class Ups3Controller extends Controller
 
                 $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
 
-                Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+                // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
 
-                // $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image , strval($file->tabela) ));  
+                 $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image , strval($file->tabela) ));  
 
 /*
               $novo_nome = $this->uuid();
