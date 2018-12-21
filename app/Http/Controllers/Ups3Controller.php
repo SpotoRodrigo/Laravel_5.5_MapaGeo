@@ -63,7 +63,25 @@ class Ups3Controller extends Controller
                     'caminho' => $url_image ,
                     'up'      => true
                 ];
-              $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+              //$this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+
+
+              $novo_nome = $this->uuid();
+
+              $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
+      
+              $conteudo  =  file_get_contents( $url_image ) ;
+                
+              //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
+      
+              $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+              
+              if ($result!==false){
+                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $id ]); 
+              }
+
+              
+
             }
 
          }
