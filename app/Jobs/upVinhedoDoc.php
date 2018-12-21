@@ -21,7 +21,7 @@ class upVinhedoDoc implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(integer $id , string $dono , string $url_image  )
+    public function __construct( $id , $dono , $url_image  )
     {
         $this->id = $id;
         $this->dono = $dono;
