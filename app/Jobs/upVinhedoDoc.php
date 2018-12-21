@@ -63,6 +63,12 @@ class upVinhedoDoc implements ShouldQueue
                 case 'CERTIDAO':
                 DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
                     break;
+                case 'ENDERECO':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'PESSOA':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
             }
         }
     }

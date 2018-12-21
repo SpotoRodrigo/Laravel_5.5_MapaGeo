@@ -33,57 +33,28 @@ class Ups3Controller extends Controller
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
-        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT cnhIdentificador as idd
-            ,cnhNumero
-            ,cnhFonteData
-            ,cnhImagem
-            ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+cnhImagem  as url_image
-            ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
-            , 'CNH' as tabela
-        FROM documentos.cnh as cnh
-            , pessoa.Fisica  as peso
-        where cnhImagem is not null  AND cnh.imagemS3 is null AND cnhImagem <> ''
-        AND cnh.cnhPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
-        AND cnh.cnhAtivo = 1
-        UNION 
-     SELECT TituloIdentificador as idd
-            ,TituloNumero
-            ,TituloFonteData
-            ,TituloImagem
-            ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+TituloImagem  as url_image
-            ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
-            , 'TITULO' as tabela
-        FROM documentos.TituloEleitor as Titulo
-            , pessoa.Fisica  as peso
-        where TituloImagem is not null  AND Titulo.imagemS3 is null AND TituloImagem <> ''
-        AND Titulo.TituloPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
-        AND Titulo.TituloAtivo = 1
-    UNION 
-     SELECT CertidaoIdentificador as idd
-            ,CertidaoNumero
-            ,CertidaoFonteData
-            ,CertidaoImagem
-            ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+CertidaoImagem  as url_image
-            ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
-            , 'CERTIDAO' as tabela
-        FROM documentos.Certidao as Certidao
-            , pessoa.Fisica  as peso
-        where CertidaoImagem is not null  AND Certidao.imagemS3 is null AND CertidaoImagem <> ''
-        AND Certidao.CertidaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
-        AND Certidao.CertidaoAtivo = 1
-    union 
-     SELECT RgIdentificador as idd
-            ,RgNumero
-            ,RgFonteData
-            ,RgImagem
-            ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+RgImagem  as url_image
-            ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
-            , 'RG' as tabela
-        FROM documentos.Rg as Rg
-            , pessoa.Fisica  as peso
-        where RgImagem is not null  AND Rg.imagemS3 is null AND RgImagem <> ''
-        AND Rg.RgPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
-        AND Rg.RgAtivo = 1
+        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT  emd.enderecoIdentificador as idd 
+        , enderecoImagem   as imagem 
+        ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+enderecoImagem  as url_image
+        ,CAST( fi.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+        , 'ENDERECO' as tabela
+        
+        from pessoa.PessoaEndereco  as emd
+           , pessoa.fisica  as fi
+       where emd.enderecoPessoaFisicaIdentificador = fi.pessoaFisicaIdentificador
+         and emd.enderecoImagem is not null and emd.enderecoImagem <> ''  and emd.imagemS3 is  null  and emd.enderecoAtivo = 1 
+       
+         union 
+        
+         Select   fi.pessoaFisicaIdentificador as idd 
+        , pessoaFisicaFoto   as imagem 
+        ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+pessoaFisicaFoto  as url_image
+        ,CAST( fi.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+        , 'PESSOA' as tabela
+        
+         from  pessoa.fisica  as fi
+       where fi.pessoaFisicaFoto is not null and fi.pessoaFisicaFoto <> ''  and fi.imagemS3 is  null  
+         
      " );  // AND cpf.imagemS3 is null
 
         //dd($lista );
