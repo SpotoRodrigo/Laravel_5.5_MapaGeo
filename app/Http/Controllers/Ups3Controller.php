@@ -50,9 +50,9 @@ class Ups3Controller extends Controller
          foreach ($lista as $file) {
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
-            $id  = $file->idd.parseInt() ; 
-            $dono = $file->dono.toString();
-            $url_image = $file->url_image.toString();
+            $id  = intval($file->idd) ; 
+            $dono = strval ($file->dono);
+            $url_image = strval ($file->url_image);
 
             if($url_image !== null ){
 
