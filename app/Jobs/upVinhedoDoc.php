@@ -18,7 +18,7 @@ class upVinhedoDoc implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $id;
-    protected $dono;
+    protected $nome_completo;
     protected $url_image;
 
     public $timeout = 300;
@@ -31,10 +31,10 @@ class upVinhedoDoc implements ShouldQueue
      *
      * @return void
      */
-    public function __construct( $id , $dono , $url_image  )
+    public function __construct( $id , $nome_completo , $url_image  )
     {
         $this->id = $id;
-        $this->dono = $dono;
+        $this->nome_completo = $nome_completo;
         $this->url_image = $url_image;
     }
 
@@ -45,19 +45,11 @@ class upVinhedoDoc implements ShouldQueue
      */
     public function handle()
     {
-   
-        $novo_nome = $this->uuid();
-
-        $nome_completo =  $this->dono . '/' . $novo_nome . '.jpg' ;
-
         $conteudo  =  file_get_contents( $this->url_image ) ;
-          
-        //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
-
-        $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+        $result =  Storage::disk('s3Vinhedo')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
         
         if ($result!==false){
-            DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $this->id ]); 
+            DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
         }
 
     }

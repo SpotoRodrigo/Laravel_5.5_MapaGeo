@@ -63,9 +63,15 @@ class Ups3Controller extends Controller
                     'caminho' => $dono ,
                     'up'      => true
                 ];
-          //    $this->dispatch(new upVinhedoDoc($id, $dono ,$url_image ));  
+
+                $novo_nome = $this->uuid();
+
+                $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
 
 
+            $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image ));  
+
+/*
               $novo_nome = $this->uuid();
 
               $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
@@ -79,7 +85,7 @@ class Ups3Controller extends Controller
               if ($result!==false){
                   DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $id ]); 
               }
-
+*/
               
 
             }
