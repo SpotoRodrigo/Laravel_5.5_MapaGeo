@@ -73,7 +73,7 @@ class Ups3Controller extends Controller
 
                 $nome_completo =  $file->dono . '/' . $novo_nome . '.jpg' ;
 
-             DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST('?' AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $file->id ]);
+             DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST('?' AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $id ]);
 
             }
 
