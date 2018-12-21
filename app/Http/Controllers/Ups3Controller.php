@@ -29,7 +29,7 @@ class Ups3Controller extends Controller
     public function index()
     {
 
-
+/*
         // $images = loopPorPasta();
         $count =0;
 
@@ -78,7 +78,10 @@ class Ups3Controller extends Controller
             }
 
          }
+*/
 
+    $images = loopBucket('s3Vinhedo');
+    
       return view('ups3.index',compact('images') ); //,compact('images')
 
     }
@@ -195,7 +198,7 @@ class Ups3Controller extends Controller
              //Storage::disk('s3')->delete($file);
              // Storage::disk('s3Biri')->setVisibility($file, 'public');
 
-            if ( /*Storage::disk('s3Biri')->exists($file) && */ Storage::disk($Bucket)->getVisibility($file) !=='public'  ){
+            if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                 $count++;
                 $this->dispatch(new setPublicS3( $Bucket , $file )); 
                 $images[] = [
@@ -204,7 +207,8 @@ class Ups3Controller extends Controller
                     'caminho' => 's3Biri',
                     'up'      => $count
                 ];
-            }  
+            } 
+            Storage::disk($Bucket)->delete($file);
         }
 
         return $images ;
