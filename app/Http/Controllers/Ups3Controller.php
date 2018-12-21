@@ -64,7 +64,7 @@ class Ups3Controller extends Controller
             $id  = intval($file->idd) ; 
             $dono = strval ($file->dono);
             $url_image = strval ($file->url_image);
-
+/*
             $file_headers = @get_headers($url_image);
             if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
                 $exists = false;
@@ -72,7 +72,9 @@ class Ups3Controller extends Controller
             else {
                 $exists = true;
             }
-
+*/
+            $exists = true;
+            
             if($exists){
 
                 $count++;
