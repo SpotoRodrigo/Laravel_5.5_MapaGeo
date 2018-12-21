@@ -28,11 +28,8 @@ class Ups3Controller extends Controller
      */
     public function index()
     {
-
-/*
-        // $images = loopPorPasta();
+      // $images = loopPorPasta();
         $count =0;
-
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
@@ -53,9 +50,9 @@ class Ups3Controller extends Controller
          foreach ($lista as $file) {
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
-            $id  = $file->idd; 
-            $dono = $file->dono;
-            $url_image = $file->url_image;
+            $id  = $file->idd.parseInt() ; 
+            $dono = $file->dono.toString();
+            $url_image = $file->url_image.toString();
 
             if($url_image !== null ){
 
@@ -66,21 +63,10 @@ class Ups3Controller extends Controller
                     'caminho' => $url_image ,
                     'up'      => true
                 ];
-
-             // $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
-
-             $novo_nome = $this->uuid();
-
-                $nome_completo =  $file->dono . '/' . $novo_nome . '.jpg' ;
-
-             DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $id ]);
-
+              $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
             }
 
          }
-*/
-
-    $images = $this->loopBucket('s3Vinhedo');
 
       return view('ups3.index',compact('images') ); //,compact('images')
 
