@@ -102,7 +102,7 @@ class Ups3Controller extends Controller
                 $exists = true;
             }
 
-            dd($exists) ;
+            dd( $url_image . ' - > ' . strval($exists) ) ;
             if($url_image !== null ){
 
                 $count++;
