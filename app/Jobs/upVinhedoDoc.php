@@ -69,6 +69,42 @@ class upVinhedoDoc implements ShouldQueue
                 case 'PESSOA':
                 DB::connection('BDServicoVinhedo')->update(" UPDATE  pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
                 break;
+
+
+                case 'LOG_RG':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'LOG_CNH':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                    break;
+                case 'LOG_TITULO':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                    break;
+                case 'LOG_CERTIDAO':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                    break;
+                case 'LOG_ENDERECO':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'LOG_PESSOA':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+
+                case 'LOG_CIDADAO':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'LOG_RESERVISTA':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'LOG_CNS':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'LOG_CPF':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'LOG_CTPS':
+                DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
             }
         }
     }
@@ -78,7 +114,14 @@ class upVinhedoDoc implements ShouldQueue
     			 documentos.cnh			cnhIdentificador    CNH
 		 documentos.TituloEleitor	TituloIdentificador     TITULO
 		 documentos.Certidao		CertidaoIdentificador   CERTIDAO
-		 documentos.Rg				RgIdentificador         RG
+         documentos.Rg				RgIdentificador         RG
+         
+         SELECT * FROM log_documentos.CartaoCidadao   -- SIM 
+            SELECT * FROM log_documentos.CarteiraReservista
+            SELECT * FROM log_documentos.Cns
+            SELECT * FROM log_documentos.Cpf
+            SELECT * FROM log_documentos.Ctps
+
     */
 
 }
