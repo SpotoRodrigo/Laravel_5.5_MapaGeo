@@ -33,7 +33,7 @@ class Ups3Controller extends Controller
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
-        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT top 2000 cpfIdentificador as idd
+        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT cpfIdentificador as idd
                                                                     ,cpfNumero
                                                                     ,cpfFonteData
                                                                     ,cpfImagem
