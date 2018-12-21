@@ -42,7 +42,7 @@ class Ups3Controller extends Controller
             , 'CNH' as tabela
         FROM documentos.cnh as cnh
             , pessoa.Fisica  as peso
-        where cnhImagem is not null  AND cnh.imagemS3 is null
+        where cnhImagem is not null  AND cnh.imagemS3 is null AND cnhImagem <> ''
         AND cnh.cnhPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         AND cnh.cnhAtivo = 1
         UNION 
@@ -55,7 +55,7 @@ class Ups3Controller extends Controller
             , 'TITULO' as tabela
         FROM documentos.TituloEleitor as Titulo
             , pessoa.Fisica  as peso
-        where TituloImagem is not null  AND Titulo.imagemS3 is null
+        where TituloImagem is not null  AND Titulo.imagemS3 is null AND TituloImagem <> ''
         AND Titulo.TituloPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         AND Titulo.TituloAtivo = 1
     UNION 
@@ -68,7 +68,7 @@ class Ups3Controller extends Controller
             , 'CERTIDAO' as tabela
         FROM documentos.Certidao as Certidao
             , pessoa.Fisica  as peso
-        where CertidaoImagem is not null  AND Certidao.imagemS3 is null
+        where CertidaoImagem is not null  AND Certidao.imagemS3 is null AND CertidaoImagem <> ''
         AND Certidao.CertidaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         AND Certidao.CertidaoAtivo = 1
     union 
@@ -81,7 +81,7 @@ class Ups3Controller extends Controller
             , 'RG' as tabela
         FROM documentos.Rg as Rg
             , pessoa.Fisica  as peso
-        where RgImagem is not null  AND Rg.imagemS3 is null
+        where RgImagem is not null  AND Rg.imagemS3 is null AND RgImagem <> ''
         AND Rg.RgPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         AND Rg.RgAtivo = 1
      " );  // AND cpf.imagemS3 is null
