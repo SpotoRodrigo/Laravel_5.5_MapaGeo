@@ -46,7 +46,7 @@ class upVinhedoDoc implements ShouldQueue
 
         $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
         
-        if ($result){
+        if ($result!==false){
             DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $this->id ]); 
         }
 

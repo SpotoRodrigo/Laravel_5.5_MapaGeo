@@ -36,7 +36,7 @@ class Ups3Controller extends Controller
      //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
      //   dd($lista );
         
-        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT cpfIdentificador as idd
+        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT top 10 cpfIdentificador as idd
                                                                     ,cpfNumero
                                                                     ,cpfFonteData
                                                                     ,cpfImagem
@@ -67,7 +67,13 @@ class Ups3Controller extends Controller
                     'up'      => true
                 ];
 
-              $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+             // $this->dispatch(new upVinhedoDoc( $id ,  $dono , $url_image ));  
+
+             $novo_nome = $this->uuid();
+
+                $nome_completo =  $file->dono . '/' . $novo_nome . '.jpg' ;
+
+             DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST('?' AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $nome_completo , $file->id ]);
 
             }
 
