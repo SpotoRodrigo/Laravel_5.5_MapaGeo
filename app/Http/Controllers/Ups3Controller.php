@@ -80,8 +80,8 @@ class Ups3Controller extends Controller
          }
 */
 
-    $images = loopBucket('s3Vinhedo');
-    
+    $images = $this->loopBucket('s3Vinhedo');
+
       return view('ups3.index',compact('images') ); //,compact('images')
 
     }
