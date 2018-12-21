@@ -94,6 +94,7 @@ class Ups3Controller extends Controller
             $dono = strval ($file->dono);
             $url_image = strval ($file->url_image);
 
+            dd(getimagesize($url_image)) ;
             if($url_image !== null ){
 
                 $count++;
