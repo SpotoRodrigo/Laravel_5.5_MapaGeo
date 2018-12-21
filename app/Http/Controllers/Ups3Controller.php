@@ -94,7 +94,15 @@ class Ups3Controller extends Controller
             $dono = strval ($file->dono);
             $url_image = strval ($file->url_image);
 
-            dd(getimagesize($url_image)) ;
+            $file_headers = @get_headers($url_image);
+            if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
+                $exists = false;
+            }
+            else {
+                $exists = true;
+            }
+
+            dd($exists) ;
             if($url_image !== null ){
 
                 $count++;
