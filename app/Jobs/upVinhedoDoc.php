@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
-
 class upVinhedoDoc implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -23,8 +22,6 @@ class upVinhedoDoc implements ShouldQueue
 
     public $timeout = 300;
     public $memory_limit = 1024;
-
-
 
     /**
      * Create a new job instance.
@@ -51,18 +48,7 @@ class upVinhedoDoc implements ShouldQueue
         if ($result!==false){
             DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cpfIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
         }
-
     }
 
-    private function uuid()
-    {
-        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
-        );
-    }
 
 }
