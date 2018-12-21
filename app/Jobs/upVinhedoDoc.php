@@ -17,6 +17,15 @@ class upVinhedoDoc implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $id;
+    protected $dono;
+    protected $url_image;
+
+    public $timeout = 300;
+    public $memory_limit = 1024;
+
+
+
     /**
      * Create a new job instance.
      *
