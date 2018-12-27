@@ -164,7 +164,7 @@ class Ups3Controller extends Controller
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
             $id  = intval($file->idd) ; 
             $dono = strval ($file->dono);
-            $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. urlencode($file->imagem); 
+            $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. str_replace(  ' ' , '%20' , $file->imagem); 
             $url_image = strval ( $aux ); //$file->url_image
 /*
             $file_headers = @get_headers($url_image);
