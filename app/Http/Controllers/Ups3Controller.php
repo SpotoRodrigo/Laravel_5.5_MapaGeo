@@ -53,7 +53,7 @@ class Ups3Controller extends Controller
             , Titulo.imagemS3
         FROM LOG_documentos.TituloEleitor as Titulo
         , pessoa.Fisica  as peso
-        where TituloImagem is not null  AND Titulo.imagemS3 is not null AND TituloImagem <> ''
+        where TituloImagem is not null  AND Titulo.imagemS3 is null AND TituloImagem <> ''
         AND Titulo.TituloPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         UNION 
         SELECT CertidaoIdentificador as idd
@@ -64,7 +64,7 @@ class Ups3Controller extends Controller
             , Certidao.imagemS3
         FROM LOG_documentos.Certidao as Certidao
         , pessoa.Fisica  as peso
-        where CertidaoImagem is not null  AND Certidao.imagemS3 is not null AND CertidaoImagem <> ''
+        where CertidaoImagem is not null  AND Certidao.imagemS3 is null AND CertidaoImagem <> ''
         AND Certidao.CertidaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         
         union 
