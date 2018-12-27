@@ -44,8 +44,21 @@ class upVinhedoDoc implements ShouldQueue
      */
     public function handle()
     {
-        $conteudo  =  file_get_contents( $this->url_image ) ;
-        $result =  Storage::disk('s3VinhedoLOG')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+
+        $file_headers = @get_headers($this->url_image);
+        if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
+            $exists = false;
+            $result = false;
+        }
+        else {
+            $exists = true;
+        }
+
+        if($exists){
+            $conteudo  =  file_get_contents( $this->url_image ) ;
+            $result =  Storage::disk('s3VinhedoLOG')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+        }
+        
         
         if ($result!==false){
             
@@ -106,6 +119,8 @@ class upVinhedoDoc implements ShouldQueue
                     DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
                 break;
             }
+        }else{
+            
         }
     }
 
