@@ -115,6 +115,17 @@ return [
             'region' => 'sao01',
         ],
 
+        's3VinhedoLOG' => [
+            'driver' => 's3',
+            'key' => 'yjkOvSG4IVMdTinzsFI3',
+            'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
+            'version' => '2006-03-01',            
+            'bucket' =>  '67596c42-7326-4575-8481-5b2e3651ee24', 
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
+            'region' => 'sao01',
+        ],
+
     ],
 
 ];
