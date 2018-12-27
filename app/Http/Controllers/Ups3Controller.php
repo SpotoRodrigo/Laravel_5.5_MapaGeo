@@ -76,7 +76,7 @@ class Ups3Controller extends Controller
         , Rg.imagemS3
     FROM documentos.Rg as Rg
     , pessoa.Fisica  as peso
-    where RgImagem is not null  AND Rg.imagemS3 is  null AND RgImagem <> '' AND  (Rg.imagemS3 is  null  or  RIGHT ( Rg.imagemS3 , 4 ) !=  RIGHT ( RgImagem , 4 )  )
+    where RgImagem is not null  AND  RgImagem <> '' AND  (Rg.imagemS3 is  null  or  RIGHT ( Rg.imagemS3 , 4 ) !=  RIGHT ( RgImagem , 4 )  )
     AND Rg.RgPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
   
     UNION 
