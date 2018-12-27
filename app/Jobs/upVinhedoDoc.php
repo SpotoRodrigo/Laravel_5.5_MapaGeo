@@ -128,7 +128,7 @@ class upVinhedoDoc implements ShouldQueue
                 break;
             }
         }else{
-            $conteudo  =  file_get_contents( $this->url_image ) ;
+           // $conteudo  =  file_get_contents( $this->url_image ) ;
         }
     }
 
