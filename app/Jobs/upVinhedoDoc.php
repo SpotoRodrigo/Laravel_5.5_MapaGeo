@@ -45,17 +45,25 @@ class upVinhedoDoc implements ShouldQueue
     public function handle()
     {
 
+        $streamSSL = stream_context_create(array(
+            "ssl"=>array(
+                "verify_peer"=> false,
+                "verify_peer_name"=> false
+            )
+        ));
+
+/*
         $file_headers = @get_headers($this->url_image);
         if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
             $exists = false;
             $result = false;
-        }
-        else {
+        }*/
+  //      else {
             $exists = true;
-        }
+   //     }
 
         if($exists){
-            $conteudo  =  file_get_contents( $this->url_image ) ;
+            $conteudo  =  file_get_contents( $this->url_image , false, $streamSSL  ) ;
             $result =  Storage::disk('s3VinhedoLOG')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
         }
         
