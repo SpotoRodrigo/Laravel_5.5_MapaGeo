@@ -64,7 +64,7 @@ class upVinhedoDoc implements ShouldQueue
 
         if($exists){
             $conteudo  =  file_get_contents( $this->url_image , false, $streamSSL  ) ;
-            $result =  Storage::disk('s3VinhedoLOG')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+            $result =  Storage::disk('s3Vinhedo')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
         }
         
         
@@ -91,6 +91,21 @@ class upVinhedoDoc implements ShouldQueue
                     DB::connection('BDServicoVinhedo')->update(" UPDATE  pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
                 break;
 
+                case 'CIDADAO':
+                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'RESERVISTA':
+                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'CNS':
+                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'CPF':
+                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
+                case 'CTPS':
+                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
+                break;
 
                 case 'LOG_RG':
                     DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
