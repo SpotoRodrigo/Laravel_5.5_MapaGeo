@@ -34,7 +34,7 @@ class Ups3Controller extends Controller
      //   dd($lista );
         
         $lista =  DB::connection('BDServicoVinhedo')->select(" SELECT cnhIdentificador as idd
-            ,cnhImagem
+            ,cnhImagem  as imagem 
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+cnhImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_CNH' as tabela
@@ -46,7 +46,7 @@ class Ups3Controller extends Controller
         
         UNION 
         SELECT TituloIdentificador as idd
-            ,TituloImagem
+            ,TituloImagem as imagem 
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+TituloImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_TITULO' as tabela
@@ -57,7 +57,7 @@ class Ups3Controller extends Controller
         AND Titulo.TituloPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         UNION 
         SELECT CertidaoIdentificador as idd
-            ,CertidaoImagem
+            ,CertidaoImagem as imagem 
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+CertidaoImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_CERTIDAO' as tabela
@@ -69,7 +69,7 @@ class Ups3Controller extends Controller
         
         union 
         SELECT RgIdentificador as idd
-            ,RgImagem
+            ,RgImagem as imagem 
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+RgImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_RG' as tabela
@@ -103,7 +103,7 @@ class Ups3Controller extends Controller
         AND fi.pessoaFisicaFisicaIdentificador = fiii.pessoaFisicaIdentificador
         UNION     
         SELECT CartaoCidadaoIdentificador as idd
-            ,CartaoCidadaoImagem
+            ,CartaoCidadaoImagem as imagem
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+CartaoCidadaoImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_CIDADAO' as tabela
@@ -114,7 +114,7 @@ class Ups3Controller extends Controller
         AND cnh.CartaoCidadaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         UNION  
         SELECT ReservistaIdentificador as idd  
-            ,ReservistaImagem
+            ,ReservistaImagem as imagem
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+ReservistaImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_RESERVISTA' as tabela
@@ -125,7 +125,7 @@ class Ups3Controller extends Controller
         AND Titulo.ReservistaPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         UNION 
         SELECT CnsIdentificador as idd
-            ,CnsImagem
+            ,CnsImagem as imagem
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+CnsImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_CNS' as tabela
@@ -136,7 +136,7 @@ class Ups3Controller extends Controller
         AND Certidao.CnsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         union  
         SELECT CpfIdentificador as idd
-            ,CpfImagem
+            ,CpfImagem as imagem
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+CpfImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_CPF' as tabela
@@ -147,7 +147,7 @@ class Ups3Controller extends Controller
         AND Rg.CpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
         union 
         SELECT CtpsIdentificador as idd
-            ,CtpsImagem
+            ,CtpsImagem as imagem
             ,'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'+CtpsImagem  as url_image
             ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
             , 'LOG_CTPS' as tabela
@@ -164,7 +164,8 @@ class Ups3Controller extends Controller
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
             $id  = intval($file->idd) ; 
             $dono = strval ($file->dono);
-            $url_image = strval ($file->url_image);
+            $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. urlencode($file->imagem); 
+            $url_image = strval ( $aux ); //$file->url_image
 /*
             $file_headers = @get_headers($url_image);
             if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {

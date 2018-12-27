@@ -63,7 +63,7 @@ class upVinhedoDoc implements ShouldQueue
    //     }
 
         if($exists){
-            $conteudo  =  file_get_contents( urlencode($this->url_image) , false, $streamSSL  ) ;
+            $conteudo  =  file_get_contents( $this->url_image , false, $streamSSL  ) ;
             $result =  Storage::disk('s3VinhedoLOG')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
         }
         
