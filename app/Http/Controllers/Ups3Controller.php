@@ -188,10 +188,12 @@ class Ups3Controller extends Controller
 
                 $novo_nome = $this->uuid();
 
-                $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
+                $extensao = strtolower(substr($url_image, -4 ));
+
+                $nome_completo =  $dono . '/' . $novo_nome . $extensao ;
 
                 // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
-
+                
                  $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image , strval($file->tabela) ));  
 
 /*
