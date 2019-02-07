@@ -29,12 +29,12 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        //$images = $this->loopPorPasta();
+        $images = $this->loopPorPasta();
 
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
-        $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
+       // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
 
-        dd($lista);
+        //dd($lista);
 
         return view('ups3.index',compact('images') ); //,compact('images')
 
