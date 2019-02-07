@@ -29,7 +29,11 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
+        //$images = $this->loopPorPasta();
+
+        $lista =  DB::connection('BDServicoVinhedo')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
+
+        dd($lista);
 
         return view('ups3.index',compact('images') ); //,compact('images')
 
