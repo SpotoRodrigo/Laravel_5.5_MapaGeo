@@ -60,7 +60,7 @@ return [
             'visibility' => 'public',
         ],
 
-        's3' => [
+        's3Paraiso' => [
             'driver' => 's3',
             'key' => 'nZwcZUh8lVyTPTr6bAtI',
             'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
@@ -104,7 +104,7 @@ return [
             'region' => 'sao01',
         ],
 
-        's3Vinhedo' => [
+        's3VinhedoDoc' => [
             'driver' => 's3',
             'key' => 'yjkOvSG4IVMdTinzsFI3',
             'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
@@ -126,12 +126,35 @@ return [
             'region' => 'sao01',
         ],
 
+        's3Artur' => [
+            'driver' => 's3',
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => '70e17193-8514-4acb-8dee-9f57170debfc',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
+
+        's3Registro' => [
+            'driver' => 's3',
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => '89b230d3-12a6-4db4-ae32-7426a3953ea8',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
+
     ],
 
 ];
 
-
 /*
+70e17193-8514-4acb-8dee-9f57170debfc => Artur Nogueira
+89b230d3-12a6-4db4-ae32-7426a3953ea8 => Registro
 da65f4fe-e1c8-4aaa-a8df-ef17a7d03462 => Ibitinga
 db156448-a8ea-41ec-a312-db835a94399b => Birigui
 acdb0896-101b-4a9d-aa32-6d1b134f3961 => Vinhedo
@@ -141,24 +164,4 @@ ba84f1b8-ee11-4c0c-ad77-8bf91c71a5ae => Vinhedo Pessoas documentos
 39f409a7-da21-4260-a07a-c469a22b707d => Lorena
 ca800d52-3770-4a68-9f84-63a71b9b57c0 => São Sebastião do Paraíso
 2d5bc2e9-4fb2-431b-92ad-a0a572714979 => Pidamonhangaba
-*/
-
-/*
-
-
-            'key' => env('nZwcZUh8lVyTPTr6bAtI'),
-            'secret' => env('liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ'),
-
-
-                $client = S3Client::factory([
-                    'credentials' => [
-                        'key'    => 'nZwcZUh8lVyTPTr6bAtI',
-                        'secret'  => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
-                        
-                    ],
-                    'region' => 'sao01',
-                    'version' => '2006-03-01',
-                    'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
-                    'sslEnabled'=> true
-                ]);
 */

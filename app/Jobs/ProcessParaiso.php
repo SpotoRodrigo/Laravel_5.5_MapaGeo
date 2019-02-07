@@ -81,7 +81,7 @@ class ProcessParaiso implements ShouldQueue
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
-           $result =  Storage::disk('s3')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+           $result =  Storage::disk('s3Paraiso')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             
             //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
