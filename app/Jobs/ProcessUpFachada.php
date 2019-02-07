@@ -91,7 +91,7 @@ class ProcessUpFachada implements ShouldQueue
                                                                             , UploadNuvemArquivoPublico = 1 
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
- //print_r( $affected);      
+ //print_r( $affected);       
         DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
 
         
