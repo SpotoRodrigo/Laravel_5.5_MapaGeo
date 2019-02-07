@@ -197,6 +197,55 @@ return [
           //  'pooling' => false,
           // 'sticky'    => true,
         ],
+
+        
+        
+        'BDGeralRegistroImagem' => [
+            'driver' => 'sqlsrv',  
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.200'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralRegistro',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false,
+          // 'sticky'    => true,
+        ],
+
+        
+        
+        'BDGeralSocorroImagem' => [
+            'driver' => 'sqlsrv',  
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.200'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralSocorro',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false,
+          // 'sticky'    => true,
+        ],
+
+        
+        
+        'BDGeralArturNogueiraImagem' => [
+            'driver' => 'sqlsrv',  
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.200'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralArturNogueira',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false,
+          // 'sticky'    => true,
+        ],
+
     ],
             // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral
             ///'charset'  => 'cp1252', //  and also latin1 and utf8
