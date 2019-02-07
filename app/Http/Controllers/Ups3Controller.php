@@ -29,14 +29,37 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
+        //$images = $this->loopPorPasta();
 
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
 
         //dd($lista);
 
-        return view('ups3.index',compact('images') ); //,compact('images')
+
+        $exemplo = '01_01_001_0025_001.jpg';
+        $caminho = '/media/geoserver/web/ssparaiso/img/Entregavel_04/';
+
+        $lista = DB::connection('BDGeralSSebastiaoImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$exemplo] );
+
+        print_r($lista);
+
+        $affected = DB::connection('BDGeralSSebastiaoImagem')->update("UPDATE dbo.Imagem  
+        SET  ImagemNome = ?
+        , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/ca800d52-3770-4a68-9f84-63a71b9b57c0'
+        , UploadNuvemRenomeado = 1 
+        , UploadNuvemArquivoNaoLocalizado = 0
+        , UploadNuvemArquivoPublico = 1 
+        , idUnico = ? 
+        WHERE  imagemNomeAnterior = ?", ['teste' , 'teste'  , $exemplo ]); 
+     
+        DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
+
+        print_r($affected);
+
+        dd('PASSOU TUDO');
+
+        //return view('ups3.index',compact('images') ); //,compact('images')
 
     }
     
