@@ -31,8 +31,6 @@ class Ups3Controller extends Controller
     {
         $images = $this->loopPorPasta();
 
-        // $this->dispatch(new ProcessUpFachada($id, $nome_completo ,$url_image ) ));  
-
         return view('ups3.index',compact('images') ); //,compact('images')
 
     }
@@ -335,9 +333,9 @@ class Ups3Controller extends Controller
 
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
 
-            // if(is_file($file->getRealPath()) ){
-            //     $this->dispatch(new ProcessItatiba($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-            // }
+             if(is_file($file->getRealPath()) ){
+                 $this->dispatch(new ProcessUpFachada($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+             }
         }
         return $images ;
     }
