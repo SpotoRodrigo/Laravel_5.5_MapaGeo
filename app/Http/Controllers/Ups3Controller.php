@@ -29,7 +29,7 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = loopPorPasta();
+        $images = $this->loopPorPasta();
 
         // $this->dispatch(new ProcessUpFachada($id, $nome_completo ,$url_image ) ));  
 
@@ -307,7 +307,7 @@ class Ups3Controller extends Controller
     }
 
 
-    private function loopPorPasta ()
+    private function loopPorPasta()
     {
 
         //$directory = '\\\\192.168.1.4\\Operações\\Clientes\\São Sebastião do Paraiso\\[5] Matrizes de Dados\\Entregavel_02\\';
