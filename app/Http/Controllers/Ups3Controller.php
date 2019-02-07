@@ -52,7 +52,7 @@ class Ups3Controller extends Controller
         , UploadNuvemArquivoPublico = 1 
         WHERE  imagemNomeAnterior = ?", ['teste'   , $exemplo ]); 
      
-        DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
+        //DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
 
         print_r($affected);
 
