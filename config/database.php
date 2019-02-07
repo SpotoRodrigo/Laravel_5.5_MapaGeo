@@ -131,7 +131,7 @@ return [
 
         'BDGeralSSebastiaoImagem' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_MITRA_HOST1', '192.168.1.5'),
+            'host' => env('DB_MITRA_HOST1', '10.150.199.226'),
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralSSebastiaoImagem',
             'username' => env('DB_MITRA_USER', 'scaes'),
