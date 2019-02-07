@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 //use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-//use App\Jobs\ProcessUpFachada;
+use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
 //use App\Jobs\ProcessItatiba;
-use App\Jobs\upVinhedoDoc;
+//use App\Jobs\upVinhedoDoc;
 //use App\Jobs\setPublicS3;
 
 use Illuminate\Support\Facades\DB;
@@ -26,7 +26,23 @@ class Ups3Controller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
+    {
+        $images = loopPorPasta();
+
+        // $this->dispatch(new ProcessUpFachada($id, $nome_completo ,$url_image ) ));  
+
+        return view('ups3.index',compact('images') ); //,compact('images')
+
+    }
+    
+    
+    
+    
+    
+    
+     public function indexVinhedo()
     {
       // $images = loopPorPasta();
         $count =0;
@@ -166,8 +182,6 @@ class Ups3Controller extends Controller
             $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. str_replace(  ' ' , '%20' , $file->imagem); 
             $url_image = strval ( $aux ); //$file->url_image
 
-
-
 /*
             $file_headers = @get_headers($url_image);
             if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
@@ -218,8 +232,6 @@ class Ups3Controller extends Controller
                   DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $nome_completo , $id ]); 
               }
 */
-              
-
             }
 
          }
@@ -303,7 +315,7 @@ class Ups3Controller extends Controller
         //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
 
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
-        $directory = "/media/geoserver/web/itatiba/img/fotoFachada/" ;
+        $directory = "/media/geoserver/web/ssparaiso/img/Entregavel_04/" ;
 
 
         if(!File::isDirectory($directory)) {
