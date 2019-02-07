@@ -50,8 +50,7 @@ class Ups3Controller extends Controller
         , UploadNuvemRenomeado = 1 
         , UploadNuvemArquivoNaoLocalizado = 0
         , UploadNuvemArquivoPublico = 1 
-        , idUnico = ? 
-        WHERE  imagemNomeAnterior = ?", ['teste' , 'teste'  , $exemplo ]); 
+        WHERE  imagemNomeAnterior = ?", ['teste'   , $exemplo ]); 
      
         DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , $novo_nome . '.' . $this->extensao  ] );
 
