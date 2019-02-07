@@ -31,7 +31,7 @@ class Ups3Controller extends Controller
     {
         //$images = $this->loopPorPasta();
 
-        $lista =  DB::connection('BDGeralLorenaImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
+        $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
 
         dd($lista);
 
