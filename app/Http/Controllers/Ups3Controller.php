@@ -413,7 +413,7 @@ if(is_file($file->getRealPath()) ){
                     unlink($this->caminho);
                 }
             }
-
+        }
 /*
              if(is_file($file->getRealPath()) ){
 
