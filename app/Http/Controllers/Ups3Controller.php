@@ -412,7 +412,11 @@ if(is_file($file->getRealPath()) ){
 
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ]); 
 
-dd('BDGeralRegistro' , $affected);
+dd('BDGeralRegistro' , $affected  , "UPDATE dbo.Imagem  
+SET  ImagemNome =  CAST( ?  AS nvarchar) 
+, LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' AS nvarchar) 
+
+WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ] );
                 DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
                 unset($conteudo);
                 if ($affected){
