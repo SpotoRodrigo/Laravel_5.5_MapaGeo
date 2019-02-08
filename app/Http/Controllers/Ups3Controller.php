@@ -34,8 +34,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
-        //$images = $this->loopBucket('s3Socorro');
+        // $images = $this->loopPorPasta();
+        $images = $this->loopBucket('s3Artur');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -369,7 +369,7 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
              if(is_file($file->getRealPath()) ){
-                 $this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 //$this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 /*
 use App\Jobs\ProcessRegistro;
@@ -462,7 +462,7 @@ if(is_file($file->getRealPath()) ){
             }
         }
 */
-/*
+
 //      ARTUR NOGUEIRA 
              if(is_file($file->getRealPath()) ){
 
@@ -495,8 +495,8 @@ if(is_file($file->getRealPath()) ){
                     //return false;
                     //dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
                 }
-             } 
-             */
+             }
+             
         }
         return $images ;
     }
