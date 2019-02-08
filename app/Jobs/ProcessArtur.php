@@ -9,8 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 use Illuminate\Support\Facades\Storage;
-//use Illuminate\Database\Schema\DB;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 ini_set("max_execution_time",54000);
 ini_set("memory_limit","1024M");
@@ -48,45 +48,35 @@ class ProcessArtur implements ShouldQueue
      */
     public function handle()
     {
-      // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-        $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao   
-                                                                    FROM dbo.Imagem 
-                                                                   WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
-//dd($lista );
+        // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
+        $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
         if($lista){
             $go = true;
         }else{
             $go = false;
-            $conteudo  =  file_get_contents($this->caminho) ;
-             Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
-             unlink($this->caminho);
-             unset($conteudo);
+            //$conteudo  =  file_get_contents($this->caminho) ;
+            //Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
+            //unlink($this->caminho);
+            //unset($conteudo);
             //rename($this->caminho , "F:\\Fachada\\nao_localizado\\".$this->nome_arquivo );
             //dd('naoFeito'.$this->nome_arquivo);
-             return true;
+            return true;
         }
-
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-        if(is_file($this->caminho) &&  $go ){    
+        if(is_file($this->caminho) &&  $go ){
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
-            //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
             $result =  Storage::disk('s3Artur')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             $affected = DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
-                                                                            SET  ImagemNome = ?
-                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/70e17193-8514-4acb-8dee-9f57170debfc'
-                                                                            , idUnico = ? 
-                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
+                                    SET  ImagemNome = ?
+                                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/70e17193-8514-4acb-8dee-9f57170debfc'
+                                    , idUnico = ? 
+                                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
 
-        
-            //fclose($this->caminho);
             unset($conteudo);
             if ($affected){
                 unlink($this->caminho);
             }
-        
-            //ob_flush();
-            //dd('feito');
             return true;
         }else{
             return false;

@@ -365,7 +365,7 @@ class Ups3Controller extends Controller
              }
              if($count>2){
 
-                $this->extensao = $file->getExtension();
+              /*  $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
                 //$this->conteudo = $conteudo;
                 $this->caminho = $file->getRealPath();
@@ -383,15 +383,12 @@ class Ups3Controller extends Controller
                     //rename($this->caminho , "F:\\Fachada\\nao_localizado\\".$this->nome_arquivo );
                     //dd('naoFeito'.$this->nome_arquivo);
                     return true;
-                    }
+                }
 
                     // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-                    if(is_file($this->caminho) &&  $go ){    
-
-                      
+                if(is_file($this->caminho) &&  $go ){
                     $novo_nome = $this->uuid();
                     $conteudo  =  file_get_contents($this->caminho) ;
-                    //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
                     $result =  Storage::disk('s3Artur')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
                     $affected = DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
                                             SET  ImagemNome = ?
@@ -399,21 +396,15 @@ class Ups3Controller extends Controller
                                             , idUnico = ? 
                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
 
-dd($affected);
-                    //fclose($this->caminho);
                     unset($conteudo);
                     if ($affected){
-                    unlink($this->caminho);
+                        unlink($this->caminho);
                     }
-
-                    //ob_flush();
-                    //dd('feito');
                     return true;
-                    }else{
+                }else{
                     return false;
                     dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
-                    }
-                    dd('fim');
+                }*/
                 exit();
              }
         }
