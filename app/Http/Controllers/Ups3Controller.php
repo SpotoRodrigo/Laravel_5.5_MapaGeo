@@ -382,7 +382,7 @@ if(is_file($file->getRealPath()) ){
     $this->nome_arquivo = $file->getFilename();
     $this->caminho = $file->getRealPath();
 
-    $lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
+    $lista = DB::connection('BDGeralSocorro')->select("SELECT keyfoto  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
 
     if($lista){
         $go = true;
