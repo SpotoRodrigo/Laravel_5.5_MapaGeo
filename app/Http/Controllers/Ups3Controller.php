@@ -381,6 +381,8 @@ if(is_file($file->getRealPath()) ){
 
 
                 $lista = DB::connection('BDGeralRegistro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = '?'  " ,[$this->nome_arquivo] );
+
+                dd($lista);
                 if($lista){
                     $dono = $lista[0]->inscricao;
                     $go = true;
