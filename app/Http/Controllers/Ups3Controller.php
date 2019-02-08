@@ -374,6 +374,47 @@ use App\Jobs\ProcessArtur;
 use App\Jobs\ProcessSocorro;
 */
 
+
+if(is_file($file->getRealPath()) ){
+    $this->extensao = $file->getExtension();
+    $this->nome_arquivo = $file->getFilename();
+    $this->caminho = $file->getRealPath();
+
+    $lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
+
+    if($lista){
+        $go = true;
+    //dd('true');
+    }else{
+        $go = false;
+       // return true;
+    }
+    //dd($go);
+    // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
+    if(is_file($this->caminho) &&  $go ){
+
+        // dd('agora VAI ');         
+        $novo_nome = $this->uuid();
+        $conteudo  =  file_get_contents($this->caminho) ;
+
+      $result =  Storage::disk('s3Socorro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+        
+        //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+
+        $affected = DB::connection('BDGeralSocorro')->update("UPDATE dbo.Imagem  
+                                                                        SET  ImagemNome =  CAST( ?  AS nvarchar) 
+                                                                        , LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/077e8-fd6f-4ad5-bfef-2a55570b6367' AS nvarchar) 
+                                                                        WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
+
+    unset($conteudo);
+    if ($affected){
+        unlink($this->caminho);
+    }
+}
+}
+
+
+/*      REGISTRO 
 if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
@@ -417,8 +458,9 @@ if(is_file($file->getRealPath()) ){
                 }
             }
         }
+*/
 
-/*
+/*      ARTUR NOGUEIRA 
              if(is_file($file->getRealPath()) ){
 
                 $this->extensao = $file->getExtension();
