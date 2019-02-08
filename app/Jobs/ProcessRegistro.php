@@ -8,6 +8,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
+use Illuminate\Support\Facades\Storage;
+//use Illuminate\Database\Schema\DB;
+use Illuminate\Support\Facades\DB;
+
+ini_set("max_execution_time",54000);
+ini_set("memory_limit","1024M");
+
+
 class ProcessRegistro implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;

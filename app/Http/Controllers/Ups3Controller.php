@@ -374,6 +374,12 @@ class Ups3Controller extends Controller
         return $images ;
     }
 
+/*
+use App\Jobs\ProcessRegistro;
+use App\Jobs\ProcessArtur;
+use App\Jobs\ProcessSocorro;
+*/
+
     private function loopBucket(string $Bucket)
     {
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
