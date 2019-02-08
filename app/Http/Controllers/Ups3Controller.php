@@ -366,14 +366,14 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
              if(is_file($file->getRealPath()) ){
-                // $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 /*
 use App\Jobs\ProcessRegistro;
 use App\Jobs\ProcessArtur;
 use App\Jobs\ProcessSocorro;
 */
-
+/*
 if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
@@ -384,7 +384,6 @@ if(is_file($file->getRealPath()) ){
                 $lista = DB::connection('BDGeralRegistro')->select("SELECT cast(SUBSTRING(imagemNomeAnterior,1,13) as text)  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?   " ,[$this->nome_arquivo] );
 
                  
-
               
                 if($lista){
                     $dono = $lista[0]->inscricao;
@@ -402,7 +401,7 @@ if(is_file($file->getRealPath()) ){
                     $novo_nome = $this->uuid();
                     $conteudo  =  file_get_contents($this->caminho) ;
 
-               // $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                  $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
                     
                     //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
@@ -410,13 +409,8 @@ if(is_file($file->getRealPath()) ){
                                                                                     SET  ImagemNome =  CAST( ?  AS nvarchar) 
                                                                                     , LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' AS nvarchar) 
 
-                                                                                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ]); 
+                                                                                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
-dd('BDGeralRegistro' , $affected  , "UPDATE dbo.Imagem  
-SET  ImagemNome =  CAST( ?  AS nvarchar) 
-, LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' AS nvarchar) 
-
-WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ] );
                 DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
                 unset($conteudo);
                 if ($affected){
@@ -424,6 +418,7 @@ WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome
                 }
             }
         }
+        */
 /*
              if(is_file($file->getRealPath()) ){
 
