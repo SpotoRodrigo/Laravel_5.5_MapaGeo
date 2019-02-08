@@ -340,8 +340,12 @@ class Ups3Controller extends Controller
     private function loopPorPasta()
     {
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
-        $directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
-        //$directory = "/media/geoserver/web/lorena/img/fotoFachada/" ;
+        //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
+        $directory = "/media/geoserver/transferencias/socorro/fotos/" ;
+
+        
+///media/geoserver/transferencias/socorro/fotos
+///media/geoserver/transferencias/registro/fotos 
 
         if(!File::isDirectory($directory)) {
             $msg = 'Caminho não acessivél.';
@@ -361,9 +365,16 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
              if(is_file($file->getRealPath()) ){
-                 //$this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 $this->dispatch(new ProcessSocorro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
-             if(true){
+/*
+use App\Jobs\ProcessRegistro;
+use App\Jobs\ProcessArtur;
+use App\Jobs\ProcessSocorro;
+*/
+
+/*
+             if(is_file($file->getRealPath()) ){
 
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
@@ -395,7 +406,7 @@ class Ups3Controller extends Controller
                     //return false;
                     //dd( 'ARQUIVO N�?O ENCONTRADO -> '.$this->caminho  );
                 }
-             }
+             } */
         }
         return $images ;
     }

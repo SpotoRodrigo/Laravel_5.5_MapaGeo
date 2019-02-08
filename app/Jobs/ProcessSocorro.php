@@ -55,23 +55,14 @@ class ProcessSocorro implements ShouldQueue
         //s3Lorena
 
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-        $lista = DB::connection('BDGeralSocorro')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
+        $lista = DB::connection('BDGeralSocorro')->select("SELECT  COUNT(keyfoto) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
 //dd($lista );
         if($lista){
-            $dono = $lista[0]->inscricao;
-            $qtde = $lista[0]->qtde;
             $go = true;
 //dd('true');
         }else{
             $go = false;
-//dd('false');
-            $conteudo  =  file_get_contents($this->caminho) ;
-             Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
-             unlink($this->caminho);
-             unset($conteudo);
-            //rename($this->caminho , "F:\\Fachada\\nao_localizado\\".$this->nome_arquivo );
-            //dd('naoFeito'.$this->nome_arquivo);
-             return true;
+            return true;
         }
 //dd($go);
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
@@ -80,44 +71,20 @@ class ProcessSocorro implements ShouldQueue
             // dd('agora VAI ');         
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
-            //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
            $result =  Storage::disk('s3Socorro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-            
-            //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-
             $affected = DB::connection('BDGeralSocorro')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
                                                                             , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/3ef077e8-fd6f-4ad5-bfef-2a55570b6367'
-                                                                            , UploadNuvemRenomeado = 1 
-                                                                            , UploadNuvemArquivoNaoLocalizado = 0
-                                                                            , UploadNuvemArquivoPublico = 1 
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
- //print_r( $affected);       
-      //  DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '3ef077e8-fd6f-4ad5-bfef-2a55570b6367/'. $novo_nome . '.' . $this->extensao  ] );
-
-        
-        //fclose($this->caminho);
         unset($conteudo);
         if ($affected){
             unlink($this->caminho);
         }
-       // ob_flush();
-        //dd('feito');
         return true;
-
-        } /*else if(!$go ){
-             return false;
-             dd('NAO LOCALIZADO NO BANCO');
-            
-            
-        }else{
-            return false;
-            dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
-        }*/
+        }
     }
-
 
     private function uuid()
     {
@@ -129,7 +96,6 @@ class ProcessSocorro implements ShouldQueue
             mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
-
 }
 
 ///media/geoserver/transferencias/socorro/fotos
