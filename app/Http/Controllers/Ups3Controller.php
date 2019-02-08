@@ -366,14 +366,14 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
              if(is_file($file->getRealPath()) ){
-                 $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+               //  $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 /*
 use App\Jobs\ProcessRegistro;
 use App\Jobs\ProcessArtur;
 use App\Jobs\ProcessSocorro;
 */
-/*
+
 if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
@@ -408,7 +408,6 @@ if(is_file($file->getRealPath()) ){
                     $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
                                                                                     SET  ImagemNome =  CAST( ?  AS nvarchar) 
                                                                                     , LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' AS nvarchar) 
-
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
                 DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
@@ -418,7 +417,7 @@ if(is_file($file->getRealPath()) ){
                 }
             }
         }
-        */
+
 /*
              if(is_file($file->getRealPath()) ){
 
