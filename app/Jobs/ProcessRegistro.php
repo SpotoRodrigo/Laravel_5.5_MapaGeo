@@ -49,7 +49,7 @@ class ProcessRegistro implements ShouldQueue
     public function handle()
     {
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-        $lista = DB::connection('BDGeralRegistro')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
+        $lista = DB::connection('BDGeralRegistro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY SUBSTRING(imagemNomeAnterior,1,13) " ,[$this->nome_arquivo] );
         if($lista){
             $dono = $lista[0]->inscricao;
             $qtde = $lista[0]->qtde;
@@ -66,7 +66,6 @@ class ProcessRegistro implements ShouldQueue
             // dd('agora VAI ');         
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
-            //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
            $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             
@@ -75,16 +74,10 @@ class ProcessRegistro implements ShouldQueue
             $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
                                                                             , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8'
-                                                                            , UploadNuvemRenomeado = 1 
-                                                                            , UploadNuvemArquivoNaoLocalizado = 0
-                                                                            , UploadNuvemArquivoPublico = 1 
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
- //print_r( $affected);       
+     
         DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
-
-        
-        //fclose($this->caminho);
         unset($conteudo);
         if ($affected){
             unlink($this->caminho);
