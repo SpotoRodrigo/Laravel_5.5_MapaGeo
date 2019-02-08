@@ -402,7 +402,7 @@ if(is_file($file->getRealPath()) ){
                     $novo_nome = $this->uuid();
                     $conteudo  =  file_get_contents($this->caminho) ;
 
-                $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+               // $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
                     
                     //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
