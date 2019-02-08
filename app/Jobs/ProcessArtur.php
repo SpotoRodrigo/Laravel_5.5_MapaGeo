@@ -40,7 +40,6 @@ class ProcessArtur implements ShouldQueue
         $this->caminho = $caminho;
 
     }
-
     /**
      * Execute the job.
      *
@@ -50,6 +49,7 @@ class ProcessArtur implements ShouldQueue
     {
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
         $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
+        dd($lista);
         if($lista){
             $go = true;
         }else{
