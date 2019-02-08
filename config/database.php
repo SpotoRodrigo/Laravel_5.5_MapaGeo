@@ -242,8 +242,6 @@ return [
           // 'sticky'    => true,
         ],
 
-        
-        
         'BDGeralArturNogueira' => [
             'driver' => 'sqlsrv',  
             'host' =>   env('DB_MITRA_HOST2', '10.150.199.200'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
