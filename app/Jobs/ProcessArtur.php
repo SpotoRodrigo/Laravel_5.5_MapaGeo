@@ -49,8 +49,7 @@ class ProcessArtur implements ShouldQueue
     public function handle()
     {
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-        $lista = \DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
-        dd($lista);
+        $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
         if($lista){
             $go = true;
         }else{
