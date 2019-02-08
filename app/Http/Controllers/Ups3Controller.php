@@ -376,7 +376,7 @@ use App\Jobs\ProcessArtur;
 use App\Jobs\ProcessSocorro;
 */
 
-
+/*  SOCORRO 
 if(is_file($file->getRealPath()) ){
     $this->extensao = $file->getExtension();
     $this->nome_arquivo = $file->getFilename();
@@ -414,7 +414,7 @@ if(is_file($file->getRealPath()) ){
     }
 }
 }
-
+*/
 
 /*      REGISTRO 
 if(is_file($file->getRealPath()) ){
@@ -462,7 +462,7 @@ if(is_file($file->getRealPath()) ){
         }
 */
 
-/*      ARTUR NOGUEIRA 
+//      ARTUR NOGUEIRA 
              if(is_file($file->getRealPath()) ){
 
                 $this->extensao = $file->getExtension();
@@ -483,8 +483,7 @@ if(is_file($file->getRealPath()) ){
                     $affected = DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
                                             SET  ImagemNome = ?
                                             , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/70e17193-8514-4acb-8dee-9f57170debfc'
-                                            , idUnico = ? 
-                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
+                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao   , $this->nome_arquivo ]); 
 
                     unset($conteudo);
                     if ($affected){
@@ -495,7 +494,7 @@ if(is_file($file->getRealPath()) ){
                     //return false;
                     //dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
                 }
-             } */
+             } 
         }
         return $images ;
     }

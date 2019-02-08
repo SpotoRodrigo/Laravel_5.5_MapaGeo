@@ -54,12 +54,6 @@ class ProcessArtur implements ShouldQueue
             $go = true;
         }else{
             $go = false;
-            //$conteudo  =  file_get_contents($this->caminho) ;
-            //Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
-            //unlink($this->caminho);
-            //unset($conteudo);
-            //rename($this->caminho , "F:\\Fachada\\nao_localizado\\".$this->nome_arquivo );
-            //dd('naoFeito'.$this->nome_arquivo);
             return true;
         }
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
@@ -70,8 +64,7 @@ class ProcessArtur implements ShouldQueue
             $affected = \DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
                                                                             , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/70e17193-8514-4acb-8dee-9f57170debfc'
-                                                                            , idUnico = ? 
-                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
+                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo ]); 
 
             unset($conteudo);
             if ($affected){

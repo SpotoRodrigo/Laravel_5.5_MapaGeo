@@ -90,4 +90,4 @@ class ProcessSocorro implements ShouldQueue
     }
 }
 
-///media/geoserver/transferencias/socorro/fotos  7888
+///media/geoserver/transferencias/socorro/  7888
