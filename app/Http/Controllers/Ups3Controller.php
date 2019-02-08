@@ -339,15 +339,9 @@ class Ups3Controller extends Controller
 
     private function loopPorPasta()
     {
-
-        //$directory = '\\\\192.168.1.4\\Operações\\Clientes\\São Sebastião do Paraiso\\[5] Matrizes de Dados\\Entregavel_02\\';
-        //$directory = "F:\\Fachada\\" ;
-        //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
-
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
         $directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
         //$directory = "/media/geoserver/web/lorena/img/fotoFachada/" ;
-
 
         if(!File::isDirectory($directory)) {
             $msg = 'Caminho não acessivél.';
@@ -369,6 +363,10 @@ class Ups3Controller extends Controller
              if(is_file($file->getRealPath()) ){
                  //$this->dispatch(new ProcessUpFachada($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
                  $this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+             }
+             if($count>2){
+                dd($file->getRealPath());
+                exit();
              }
         }
         return $images ;
