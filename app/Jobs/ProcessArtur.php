@@ -48,31 +48,15 @@ class ProcessArtur implements ShouldQueue
      */
     public function handle()
     {
-
-        // BDGeralLorenaImagem
-        //BDGeralLorenaImagem
-        //s3Lorena
-
-        // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
+      // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
         $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao   
-                                                                        , COUNT(CodImagem) as qtde 
                                                                     FROM dbo.Imagem 
-                                                                   WHERE imagemNomeAnterior = ? 
-                                                                GROUP BY keyfoto  " ,[$this->nome_arquivo] );
-
-                                                                                                      /*SUBSTRING(imagemNomeAnterior,1,(CASE 
-                                                                                                            WHEN CHARINDEX ('_', imagemNomeAnterior ) != 0 THEN CHARINDEX ('_', imagemNomeAnterior ) -1
-                                                                                                            ELSE CHARINDEX ('.', imagemNomeAnterior ) -1 
-                                                                                                        END ))*/ 
+                                                                   WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
 //dd($lista );
         if($lista){
-            $dono = $lista[0]->inscricao;
-            $qtde = $lista[0]->qtde;
             $go = true;
-//dd('true');
         }else{
             $go = false;
-//dd('false');
             $conteudo  =  file_get_contents($this->caminho) ;
              Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
              unlink($this->caminho);
@@ -81,47 +65,34 @@ class ProcessArtur implements ShouldQueue
             //dd('naoFeito'.$this->nome_arquivo);
              return true;
         }
-//dd($go);
-        // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-        if(is_file($this->caminho) &&  $go ){
 
-            // dd('agora VAI ');         
+        // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
+        if(is_file($this->caminho) &&  $go ){    
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
-
-           $result =  Storage::disk('s3Artur')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-            
-            //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-
+            $result =  Storage::disk('s3Artur')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             $affected = DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
                                                                             , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/70e17193-8514-4acb-8dee-9f57170debfc'
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
- //print_r( $affected);       
-      //  DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '70e17193-8514-4acb-8dee-9f57170debfc/'. $novo_nome . '.' . $this->extensao  ] );
 
         
-        //fclose($this->caminho);
-        unset($conteudo);
-        if ($affected){
-            unlink($this->caminho);
-        }
+            //fclose($this->caminho);
+            unset($conteudo);
+            if ($affected){
+                unlink($this->caminho);
+            }
         
-       // ob_flush();
-        //dd('feito');
-        return true;
-
-        } /*else if(!$go ){
-             return false;
-             dd('NAO LOCALIZADO NO BANCO');
-            
-            
+            //ob_flush();
+            //dd('feito');
+            return true;
         }else{
             return false;
             dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
-        }*/
+        }
+
     }
 
 
