@@ -402,8 +402,8 @@ if(is_file($file->getRealPath()) ){
                     //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
                     $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
-                                                                                    SET  ImagemNome = ?
-                                                                                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8'
+                                                                                    SET  ImagemNome =  CAST( ?  AS nvarchar) 
+                                                                                    , LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' AS nvarchar) 
 
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ]); 
 
