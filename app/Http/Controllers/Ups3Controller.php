@@ -342,7 +342,7 @@ class Ups3Controller extends Controller
     {
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
-        $directory = "/media/geoserver/transferencias/registro/fotos/" ;
+        $directory = "/media/geoserver/transferencias/registro/fotos/1/" ;
 
         
 ///media/geoserver/transferencias/socorro/fotos
@@ -366,13 +366,53 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
              if(is_file($file->getRealPath()) ){
-                 $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                // $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 /*
 use App\Jobs\ProcessRegistro;
 use App\Jobs\ProcessArtur;
 use App\Jobs\ProcessSocorro;
 */
+
+if(is_file($file->getRealPath()) ){
+                $this->extensao = $file->getExtension();
+                $this->nome_arquivo = $file->getFilename();
+                $this->caminho = $file->getRealPath();
+
+
+                $lista = DB::connection('BDGeralRegistro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY SUBSTRING(imagemNomeAnterior,1,13) " ,[$this->nome_arquivo] );
+                if($lista){
+                    $dono = $lista[0]->inscricao;
+                    $go = true;
+                //dd('true');
+                }else{
+                    $go = false;
+                   // return true;
+                }
+                //dd($go);
+                // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
+                if(is_file($this->caminho) &&  $go ){
+
+                    // dd('agora VAI ');         
+                    $novo_nome = $this->uuid();
+                    $conteudo  =  file_get_contents($this->caminho) ;
+
+                $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                    
+                    //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+
+                    $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
+                                                                                    SET  ImagemNome = ?
+                                                                                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8'
+
+                                                                                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ]); 
+
+                DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
+                unset($conteudo);
+                if ($affected){
+                    unlink($this->caminho);
+                }
+            }
 
 /*
              if(is_file($file->getRealPath()) ){
