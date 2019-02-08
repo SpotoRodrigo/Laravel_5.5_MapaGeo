@@ -385,7 +385,7 @@ if(is_file($file->getRealPath()) ){
 
                  
 
-                dd('BDGeralRegistro' , $lista);
+              
                 if($lista){
                     $dono = $lista[0]->inscricao;
                     $go = true;
@@ -412,6 +412,7 @@ if(is_file($file->getRealPath()) ){
 
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ]); 
 
+dd('BDGeralRegistro' , $affected);
                 DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
                 unset($conteudo);
                 if ($affected){
