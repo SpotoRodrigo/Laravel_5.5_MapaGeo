@@ -434,7 +434,7 @@ use App\Jobs\ProcessSocorro;
                 $images[] = [
                     'nome' =>  $file,
                     'extensao'  => (string) $count ,
-                    'caminho' => 's3Biri',
+                    'caminho' => $Bucket ,
                     'up'      => $count
                 ];
             } 
