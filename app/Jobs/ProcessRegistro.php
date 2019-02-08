@@ -74,8 +74,8 @@ class ProcessRegistro implements ShouldQueue
             $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
                                                                             , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8'
-                                                                            , idUnico = ? 
-                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
+
+                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  ]); 
      
         DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
         unset($conteudo);
