@@ -430,7 +430,7 @@ use App\Jobs\ProcessSocorro;
 
             if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                 $count++;
-                $this->dispatch(new setPublicS3( $Bucket , $file )); 
+               // $this->dispatch(new setPublicS3( $Bucket , $file )); 
                 $images[] = [
                     'nome' =>  $file,
                     'extensao'  => (string) $count ,
