@@ -369,7 +369,7 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
              if(is_file($file->getRealPath()) ){
-               //  $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 $this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 /*
 use App\Jobs\ProcessRegistro;
@@ -462,7 +462,7 @@ if(is_file($file->getRealPath()) ){
             }
         }
 */
-
+/*
 //      ARTUR NOGUEIRA 
              if(is_file($file->getRealPath()) ){
 
@@ -496,6 +496,7 @@ if(is_file($file->getRealPath()) ){
                     //dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
                 }
              } 
+             */
         }
         return $images ;
     }
