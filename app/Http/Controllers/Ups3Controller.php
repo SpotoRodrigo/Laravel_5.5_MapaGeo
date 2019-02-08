@@ -10,10 +10,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
-use App\Jobs\ProcessParaiso;
+//use App\Jobs\ProcessParaiso;
 //use App\Jobs\ProcessItatiba;
 //use App\Jobs\upVinhedoDoc;
 //use App\Jobs\setPublicS3;
+
+use App\Jobs\ProcessRegistro;
+use App\Jobs\ProcessArtur;
+use App\Jobs\ProcessSocorro;
 
 use Illuminate\Support\Facades\DB;
 
@@ -364,7 +368,7 @@ class Ups3Controller extends Controller
 
              if(is_file($file->getRealPath()) ){
                  //$this->dispatch(new ProcessUpFachada($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-                 $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 $this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
         }
         return $images ;
