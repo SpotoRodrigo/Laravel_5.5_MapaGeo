@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 use Illuminate\Support\Facades\Storage;
-use \Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 //use Illuminate\Support\Facades\File;
 
 ini_set("max_execution_time",54000);
@@ -48,7 +48,7 @@ class ProcessArtur implements ShouldQueue
     public function handle()
     {
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-        $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
+        $lista = \DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
         dd($lista);
         if($lista){
             $go = true;
@@ -67,7 +67,7 @@ class ProcessArtur implements ShouldQueue
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
             $result =  Storage::disk('s3Artur')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-            $affected = DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
+            $affected = \DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
                                                                             , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/70e17193-8514-4acb-8dee-9f57170debfc'
                                                                             , idUnico = ? 
