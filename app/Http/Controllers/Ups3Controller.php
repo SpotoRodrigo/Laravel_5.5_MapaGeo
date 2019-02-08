@@ -341,7 +341,7 @@ class Ups3Controller extends Controller
         //$directory = "F:\\ssparaiso\\Entregavel_02\\" ;
 
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
-        $directory = "/media/geoserver/web/ssparaiso/img/Entregavel_04/" ;
+        $directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
         //$directory = "/media/geoserver/web/lorena/img/fotoFachada/" ;
 
 

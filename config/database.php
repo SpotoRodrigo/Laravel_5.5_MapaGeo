@@ -118,6 +118,18 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'pgsql_registro' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => 'bd_mitra_registro',
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),
@@ -200,7 +212,7 @@ return [
 
         
         
-        'BDGeralRegistroImagem' => [
+        'BDGeralRegistro' => [
             'driver' => 'sqlsrv',  
             'host' =>   env('DB_MITRA_HOST2', '10.150.199.200'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
             'port' => env('DB_MITRA_PORT', '1433'),
@@ -216,7 +228,7 @@ return [
 
         
         
-        'BDGeralSocorroImagem' => [
+        'BDGeralSocorro' => [
             'driver' => 'sqlsrv',  
             'host' =>   env('DB_MITRA_HOST2', '10.150.199.200'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
             'port' => env('DB_MITRA_PORT', '1433'),
@@ -232,7 +244,7 @@ return [
 
         
         
-        'BDGeralArturNogueiraImagem' => [
+        'BDGeralArturNogueira' => [
             'driver' => 'sqlsrv',  
             'host' =>   env('DB_MITRA_HOST2', '10.150.199.200'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
             'port' => env('DB_MITRA_PORT', '1433'),
