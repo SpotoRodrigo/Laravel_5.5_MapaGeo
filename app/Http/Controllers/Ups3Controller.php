@@ -381,12 +381,11 @@ if(is_file($file->getRealPath()) ){
   
 
                 //$lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
-                //$lista = DB::connection('BDGeralSocorro')->select("SELECT imagemNomeAnterior   AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = '?'   " ,[$this->nome_arquivo] );
-                $lista = DB::connection('BDGeralSocorro')->select("SELECT cast(SUBSTRING(imagemNomeAnterior,1,13) as text)  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?   " ,[$this->nome_arquivo] );
+                $lista = DB::connection('BDGeralRegistro')->select("SELECT cast(SUBSTRING(imagemNomeAnterior,1,13) as text)  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?   " ,[$this->nome_arquivo] );
 
                  
 
-                dd('BDGeralSocorro' , $lista);
+                dd('BDGeralRegistro' , $lista);
                 if($lista){
                     $dono = $lista[0]->inscricao;
                     $go = true;
