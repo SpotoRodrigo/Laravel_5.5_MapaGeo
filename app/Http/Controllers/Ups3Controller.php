@@ -370,12 +370,11 @@ class Ups3Controller extends Controller
                 //$this->conteudo = $conteudo;
                 $this->caminho = $file->getRealPath();
                 $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao   
-                FROM dbo.Imagem 
-               WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
-                    dd($lista );
-                    if($lista){
+                    FROM dbo.Imagem 
+                    WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
+                if($lista){
                     $go = true;
-                    }else{
+                }else{
                     $go = false;
                     $conteudo  =  file_get_contents($this->caminho) ;
                     Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
@@ -388,6 +387,8 @@ class Ups3Controller extends Controller
 
                     // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
                     if(is_file($this->caminho) &&  $go ){    
+
+                        dd('file existe');
                     $novo_nome = $this->uuid();
                     $conteudo  =  file_get_contents($this->caminho) ;
                     //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
