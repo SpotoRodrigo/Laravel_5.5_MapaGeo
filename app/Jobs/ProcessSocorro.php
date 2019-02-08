@@ -49,22 +49,14 @@ class ProcessSocorro implements ShouldQueue
      */
     public function handle()
     {
-
-        // BDGeralLorenaImagem
-        //BDGeralLorenaImagem
-        //s3Lorena
-
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
         $lista = DB::connection('BDGeralSocorro')->select("SELECT  COUNT(keyfoto) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
-//dd($lista );
         if($lista){
             $go = true;
-//dd('true');
         }else{
             $go = false;
             return true;
         }
-//dd($go);
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
         if(is_file($this->caminho) &&  $go ){
 
@@ -98,4 +90,4 @@ class ProcessSocorro implements ShouldQueue
     }
 }
 
-///media/geoserver/transferencias/socorro/fotos
+///media/geoserver/transferencias/socorro/fotos  7888

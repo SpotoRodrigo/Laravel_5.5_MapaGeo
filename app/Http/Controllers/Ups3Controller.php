@@ -34,7 +34,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
+        //$images = $this->loopPorPasta();
+        $images = $this->loopBucket('3ef077e8-fd6f-4ad5-bfef-2a55570b6367');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -341,7 +342,7 @@ class Ups3Controller extends Controller
     {
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
-        $directory = "/media/geoserver/transferencias/socorro/fotos/" ;
+        $directory = "/media/geoserver/transferencias/registro/fotos/" ;
 
         
 ///media/geoserver/transferencias/socorro/fotos
@@ -365,7 +366,7 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
              if(is_file($file->getRealPath()) ){
-                 $this->dispatch(new ProcessSocorro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 $this->dispatch(new ProcessRegistro($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 /*
 use App\Jobs\ProcessRegistro;
