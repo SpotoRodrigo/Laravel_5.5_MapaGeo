@@ -378,9 +378,9 @@ if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
+                dd($this->nome_arquivo);
 
-
-                $lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = '?'  " ,[$this->nome_arquivo] );
+                $lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
 
                 dd($lista);
                 if($lista){
