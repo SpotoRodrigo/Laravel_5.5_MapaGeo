@@ -388,7 +388,7 @@ class Ups3Controller extends Controller
                     // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
                     if(is_file($this->caminho) &&  $go ){    
 
-                        dd('file existe');
+                      
                     $novo_nome = $this->uuid();
                     $conteudo  =  file_get_contents($this->caminho) ;
                     //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
@@ -399,7 +399,7 @@ class Ups3Controller extends Controller
                                             , idUnico = ? 
                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
 
-
+dd($affected);
                     //fclose($this->caminho);
                     unset($conteudo);
                     if ($affected){
