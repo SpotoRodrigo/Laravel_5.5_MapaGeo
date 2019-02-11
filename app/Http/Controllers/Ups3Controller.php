@@ -34,8 +34,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        //$images = $this->loopPorPasta();
-        $images = $this->loopBucket('s3Socorro');
+        $images = $this->loopPorPasta();
+        //$images = $this->loopBucket('s3Socorro');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -404,8 +404,8 @@ if(is_file($file->getRealPath()) ){
         //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
         $affected = DB::connection('BDGeralSocorro')->update("UPDATE dbo.Imagem  
-                                                                        SET  ImagemNome =  CAST( ?  AS nvarchar) 
-                                                                        , LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/077e8-fd6f-4ad5-bfef-2a55570b6367' AS nvarchar) 
+                                                                        SET  ImagemNome =   ? 
+                                                                        , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/3ef077e8-fd6f-4ad5-bfef-2a55570b6367' 
                                                                         WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
         unset($conteudo);
@@ -529,7 +529,7 @@ use App\Jobs\ProcessSocorro;
             //Storage::disk($Bucket)->delete($file);
 
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
-             DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
+             // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
 
         return $images ;
