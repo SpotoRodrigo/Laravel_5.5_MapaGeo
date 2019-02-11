@@ -424,18 +424,19 @@ if(is_file($file->getRealPath()) ){
   
 
                 //$lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
-                $lista = DB::connection('BDGeralRegistro')->select("SELECT cast(SUBSTRING(imagemNomeAnterior,1,13) as text)  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ?   " ,[$this->nome_arquivo] );
+                $lista = DB::connection('BDGeralRegistro')->select("SELECT cast(SUBSTRING(imagemNomeAnterior,1,13) as text)  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ? and len(ImagemNome)   = 40 and len(LocalArquivo) = 80   " ,[$this->nome_arquivo] );
 
-                 
               
                 if($lista){
-                    $dono = $lista[0]->inscricao;
+                    //$dono = $lista[0]->inscricao;
                     $go = true;
+                    unlink($this->caminho);
                 //dd('true');
                 }else{
                     $go = false;
+                    
                    // return true;
-                }
+                }/*
                 //dd($go);
                 // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
                 if(is_file($this->caminho) &&  $go ){
@@ -458,6 +459,7 @@ if(is_file($file->getRealPath()) ){
                 if ($affected){
                     unlink($this->caminho);
                 }
+                */
             }
         }
 
@@ -529,7 +531,7 @@ use App\Jobs\ProcessSocorro;
             } 
             //Storage::disk($Bucket)->delete($file);
 
-             DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
+            // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
         }
 
         return $images ;
