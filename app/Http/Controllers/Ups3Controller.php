@@ -434,9 +434,8 @@ if(is_file($file->getRealPath()) ){
                 //dd('true');
                 }else{
                     $go = false;
-                    
-                   // return true;
-                }/*
+                }
+/*
                 //dd($go);
                 // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
                 if(is_file($this->caminho) &&  $go ){
@@ -459,8 +458,8 @@ if(is_file($file->getRealPath()) ){
                 if ($affected){
                     unlink($this->caminho);
                 }
-                */
             }
+            */
         }
 
 /* 
