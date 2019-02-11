@@ -34,8 +34,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
-        //$images = $this->loopBucket('s3Registro');
+        //$images = $this->loopPorPasta();
+        $images = $this->loopBucket('s3Socorro');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -342,8 +342,8 @@ class Ups3Controller extends Controller
     {
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
-        $directory = "/media/geoserver/transferencias/registro/fotos/" ;
-        //$directory = "/media/geoserver/transferencias/socorro/" ;
+        //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
+        $directory = "/media/geoserver/transferencias/socorro/" ;
         //$directory = "/media/geoserver/transferencias/arturnogueira/" ;
 
         
@@ -376,7 +376,7 @@ use App\Jobs\ProcessArtur;
 use App\Jobs\ProcessSocorro;
 */
 
-/*  SOCORRO 
+//  SOCORRO 
 if(is_file($file->getRealPath()) ){
     $this->extensao = $file->getExtension();
     $this->nome_arquivo = $file->getFilename();
@@ -399,8 +399,8 @@ if(is_file($file->getRealPath()) ){
         $novo_nome = $this->uuid();
         $conteudo  =  file_get_contents($this->caminho) ;
 
-      $result =  Storage::disk('s3Socorro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-        
+        $result =  Storage::disk('s3Socorro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+
         //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
         $affected = DB::connection('BDGeralSocorro')->update("UPDATE dbo.Imagem  
@@ -408,14 +408,14 @@ if(is_file($file->getRealPath()) ){
                                                                         , LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/077e8-fd6f-4ad5-bfef-2a55570b6367' AS nvarchar) 
                                                                         WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
-    unset($conteudo);
-    if ($affected){
-        unlink($this->caminho);
+        unset($conteudo);
+        if ($affected){
+            unlink($this->caminho);
+        }
     }
 }
-}
-*/
 
+/*
  //      REGISTRO 
 if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
@@ -435,7 +435,6 @@ if(is_file($file->getRealPath()) ){
                 }else{
                     $go = false;
                 }
-/*
                 //dd($go);
                 // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
                 if(is_file($this->caminho) &&  $go ){
@@ -459,9 +458,8 @@ if(is_file($file->getRealPath()) ){
                     unlink($this->caminho);
                 }
             }
-            */
         }
-
+*/
 /* 
 //      ARTUR NOGUEIRA 
              if(is_file($file->getRealPath()) ){
@@ -531,6 +529,7 @@ use App\Jobs\ProcessSocorro;
             //Storage::disk($Bucket)->delete($file);
 
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
+             DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
 
         return $images ;
