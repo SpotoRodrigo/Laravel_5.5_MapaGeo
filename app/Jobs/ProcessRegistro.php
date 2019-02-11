@@ -113,3 +113,53 @@ class ProcessRegistro implements ShouldQueue
 
 
 ///media/geoserver/transferencias/registro/fotos 
+
+
+
+
+/*
+ //      REGISTRO 
+ //      ESTE SCRIPT FOI RODADO DIRETO NO CONTROLLER POR ERRO DE DATABASE NOS JOBS
+if(is_file($file->getRealPath()) ){
+                $this->extensao = $file->getExtension();
+                $this->nome_arquivo = $file->getFilename();
+                $this->caminho = $file->getRealPath();
+  
+
+                //$lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
+                $lista = DB::connection('BDGeralRegistro')->select("SELECT cast(SUBSTRING(imagemNomeAnterior,1,13) as text)  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ? and len(ImagemNome)   = 40 and len(LocalArquivo) = 80   " ,[$this->nome_arquivo] );
+
+              
+                if($lista){
+                    //$dono = $lista[0]->inscricao;
+                    $go = true;
+                    unlink($this->caminho);
+                //dd('true');
+                }else{
+                    $go = false;
+                }
+                //dd($go);
+                // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
+                if(is_file($this->caminho) &&  $go ){
+
+                    // dd('agora VAI ');         
+                    $novo_nome = $this->uuid();
+                    $conteudo  =  file_get_contents($this->caminho) ;
+
+                  $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                    
+                    //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+
+                    $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
+                                                                                    SET  ImagemNome =   ?  
+                                                                                    , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' 
+                                                                                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
+
+                DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
+                unset($conteudo);
+                if ($affected){
+                    unlink($this->caminho);
+                }
+            }
+        }
+*/

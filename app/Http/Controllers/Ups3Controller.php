@@ -34,8 +34,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
-        //$images = $this->loopBucket('s3Socorro');
+        //$images = $this->loopPorPasta();
+        $images = $this->loopBucket('s3Socorro');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -67,13 +67,183 @@ class Ups3Controller extends Controller
         return view('ups3.index',compact('images') ); //,compact('images')
 
     }
+
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Ups3  $ups3
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Ups3 $ups3)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Ups3  $ups3
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Ups3 $ups3)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Ups3  $ups3
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Ups3 $ups3)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Ups3  $ups3
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Ups3 $ups3)
+    {
+        //
+    }
+
+
+    private function loopPorPasta()
+    {
+        //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
+        //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
+        //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
+        $directory = "/media/geoserver/transferencias/socorro/" ;
+        //$directory = "/media/geoserver/transferencias/arturnogueira/" ;
+
+        
+///media/geoserver/transferencias/socorro/fotos
+///media/geoserver/transferencias/registro/fotos 
+
+        if(!File::isDirectory($directory)) {
+            $msg = 'Caminho não acessivél.';
+            return view('ups3.index').compact($msg); 
+        }
+        $count= 0;
+        $files = File::allFiles($directory);
+        foreach ($files as $file) {
+            $count++;
+            $images[] = [
+                'nome' =>  $file->getFilename() ,
+                'extensao'  => (string) $count,
+                'caminho' => $file->getRealPath(),
+                'up'      => true
+            ];
+
+            // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
+           
+             if(is_file($file->getRealPath()) ){
+                 //$this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+             }
+
+            //  SOCORRO   
+            if(is_file($file->getRealPath()) ){
+                $this->extensao = $file->getExtension();
+                $this->nome_arquivo = $file->getFilename();
+                $this->caminho = $file->getRealPath();
+
+                $lista = DB::connection('BDGeralSocorro')->select("SELECT keyfoto  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
+
+                if($lista){
+                    $go = true;
+                //dd('true');
+                }else{
+                    $go = false;
+                // return true;
+                }
+                //dd($go);
+                // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
+                if(is_file($this->caminho) &&  $go ){
+
+                    // dd('agora VAI ');         
+                    $novo_nome = $this->uuid();
+                    $conteudo  =  file_get_contents($this->caminho) ;
+
+                    $result =  Storage::disk('s3Socorro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+
+                    //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+
+                    $affected = DB::connection('BDGeralSocorro')->update("UPDATE dbo.Imagem  
+                                                                                    SET  ImagemNome =   ? 
+                                                                                    , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/3ef077e8-fd6f-4ad5-bfef-2a55570b6367' 
+                                                                                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
+
+                    unset($conteudo);
+                    if ($affected){
+                        unlink($this->caminho);
+                    }
+                }
+            }
+
+        }
+        return $images ;
+    }
+
+    private function loopBucket(string $Bucket)
+    {
+        // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
+         $count = 0;
+         $files = Storage::disk($Bucket)->allFiles();
+         foreach ($files as $file) {
+
+            if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
+                $count++; 
+                $images[] = [
+                    'nome' =>  $file,
+                    'extensao'  => (string) $count ,
+                    'caminho' => $Bucket ,
+                    'up'      => $count
+                ];
+            } 
+            //Storage::disk($Bucket)->delete($file);
+            // Storage::disk('s3Biri')->setVisibility($file, 'public');
+            // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
+             // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
+        }
+
+        return $images ;
+
+    }
+
+    
+
+
     
     
-    
-    
-    
-    
-     public function indexVinhedo()
+    public function loopBancoVinhedoDoc()
     {
       // $images = loopPorPasta();
         $count =0;
@@ -271,272 +441,83 @@ class Ups3Controller extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Ups3  $ups3
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Ups3 $ups3)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Ups3  $ups3
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Ups3 $ups3)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Ups3  $ups3
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Ups3 $ups3)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Ups3  $ups3
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Ups3 $ups3)
-    {
-        //
-    }
-
-
-    private function loopPorPasta()
-    {
-        //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
-        //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
-        //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
-        $directory = "/media/geoserver/transferencias/socorro/" ;
-        //$directory = "/media/geoserver/transferencias/arturnogueira/" ;
-
-        
-///media/geoserver/transferencias/socorro/fotos
-///media/geoserver/transferencias/registro/fotos 
-
-        if(!File::isDirectory($directory)) {
-            $msg = 'Caminho não acessivél.';
-            return view('ups3.index').compact($msg); 
-        }
-        $count= 0;
-        $files = File::allFiles($directory);
-        foreach ($files as $file) {
-            $count++;
-            $images[] = [
-                'nome' =>  $file->getFilename() ,
-                'extensao'  => (string) $count,
-                'caminho' => $file->getRealPath(),
-                'up'      => true
-            ];
-
-            // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
-           
-             if(is_file($file->getRealPath()) ){
-                 //$this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-             }
-/*
-use App\Jobs\ProcessRegistro;
-use App\Jobs\ProcessArtur;
-use App\Jobs\ProcessSocorro;
-*/
-
-//  SOCORRO 
-if(is_file($file->getRealPath()) ){
-    $this->extensao = $file->getExtension();
-    $this->nome_arquivo = $file->getFilename();
-    $this->caminho = $file->getRealPath();
-
-    $lista = DB::connection('BDGeralSocorro')->select("SELECT keyfoto  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
-
-    if($lista){
-        $go = true;
-    //dd('true');
-    }else{
-        $go = false;
-       // return true;
-    }
-    //dd($go);
-    // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-    if(is_file($this->caminho) &&  $go ){
-
-        // dd('agora VAI ');         
-        $novo_nome = $this->uuid();
-        $conteudo  =  file_get_contents($this->caminho) ;
-
-        $result =  Storage::disk('s3Socorro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-
-        //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-
-        $affected = DB::connection('BDGeralSocorro')->update("UPDATE dbo.Imagem  
-                                                                        SET  ImagemNome =   ? 
-                                                                        , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/3ef077e8-fd6f-4ad5-bfef-2a55570b6367' 
-                                                                        WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
-
-        unset($conteudo);
-        if ($affected){
-            unlink($this->caminho);
-        }
-    }
-}
-
-/*
- //      REGISTRO 
-if(is_file($file->getRealPath()) ){
-                $this->extensao = $file->getExtension();
-                $this->nome_arquivo = $file->getFilename();
-                $this->caminho = $file->getRealPath();
-  
-
-                //$lista = DB::connection('BDGeralSocorro')->select("SELECT SUBSTRING(imagemNomeAnterior,1,13)  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
-                $lista = DB::connection('BDGeralRegistro')->select("SELECT cast(SUBSTRING(imagemNomeAnterior,1,13) as text)  AS inscricao  FROM dbo.Imagem WHERE imagemNomeAnterior = ? and len(ImagemNome)   = 40 and len(LocalArquivo) = 80   " ,[$this->nome_arquivo] );
-
-              
-                if($lista){
-                    //$dono = $lista[0]->inscricao;
-                    $go = true;
-                    unlink($this->caminho);
-                //dd('true');
-                }else{
-                    $go = false;
-                }
-                //dd($go);
-                // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-                if(is_file($this->caminho) &&  $go ){
-
-                    // dd('agora VAI ');         
-                    $novo_nome = $this->uuid();
-                    $conteudo  =  file_get_contents($this->caminho) ;
-
-                  $result =  Storage::disk('s3Registro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-                    
-                    //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-
-                    $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
-                                                                                    SET  ImagemNome =   ?  
-                                                                                    , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' 
-                                                                                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
-
-                DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
-                unset($conteudo);
-                if ($affected){
-                    unlink($this->caminho);
-                }
-            }
-        }
-*/
-/* 
-//      ARTUR NOGUEIRA 
-             if(is_file($file->getRealPath()) ){
-
-                $this->extensao = $file->getExtension();
-                $this->nome_arquivo = $file->getFilename();
-                $this->caminho = $file->getRealPath();
-
-                $lista = DB::connection('BDGeralArturNogueira')->select("SELECT LocalArquivo+'/'+imagemnome  AS teste FROM dbo.Imagem   WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
-                if($lista){
-                    //$file_s3 = $lista->teste;
-                    $go = true;
-                }else{
-                    $go = false;
-                }
-                    // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-                if(is_file($this->caminho) &&  $go ){
-                    $novo_nome = $this->uuid();
-                    $conteudo  =  file_get_contents($this->caminho) ;
-                    $result =  Storage::disk('s3Artur')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-                    $affected = DB::connection('BDGeralArturNogueira')->update("UPDATE dbo.Imagem  
-                                            SET  ImagemNome = ?
-                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/70e17193-8514-4acb-8dee-9f57170debfc'
-                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao   , $this->nome_arquivo ]); 
-
-                    unset($conteudo);
-                    if ($affected){
-                        unlink($this->caminho);
-                    }
-                    //return true;
-                }else{
-                    //return false;
-                    //dd( 'ARQUIVO N�?O ENCONTRADO -> '.$this->caminho  );
-                }
-             }
-         */    
-        }
-        return $images ;
-    }
-
-/*
-use App\Jobs\ProcessRegistro;
-use App\Jobs\ProcessArtur;
-use App\Jobs\ProcessSocorro;
-*/
-
-    private function loopBucket(string $Bucket)
-    {
-        // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
-         $count = 0;
-         $files = Storage::disk($Bucket)->allFiles();
-         foreach ($files as $file) {
-            
-             //Storage::disk('s3')->delete($file);
-             // Storage::disk('s3Biri')->setVisibility($file, 'public');
-
-            if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
-                $count++;
-               // $this->dispatch(new setPublicS3( $Bucket , $file )); 
-                $images[] = [
-                    'nome' =>  $file,
-                    'extensao'  => (string) $count ,
-                    'caminho' => $Bucket ,
-                    'up'      => $count
-                ];
-            } 
-            //Storage::disk($Bucket)->delete($file);
-
-            // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
-             // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
-        }
-
-        return $images ;
-
-    }
-
     
+    
+    public function loopBancoVinhedoImag()
+    {
+        $count =0;
+        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT   codImagem AS idd , keyfotonumerica is dono , ImagemNome AS imagem  , /* imagemFoto ,  */  'JPG' as extensao
+                                                            FROM dbo.imagem
+                                                            WHERE assunto = 'Habitacao'
+                                                            AND TipoFoto = 'Documento'
+                                                            AND ImagemFoto is  not null" );  // AND cpf.imagemS3 is null
+
+        dd($lista );
+         foreach ($lista as $file) {
+
+           //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
+            $id  = intval($file->idd) ; 
+            $dono = strval ($file->dono);
+            $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. str_replace(  ' ' , '%20' , $file->imagem); 
+            $url_image = strval ( $aux ); //$file->url_image
+
+/*
+            $file_headers = @get_headers($url_image);
+            if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
+                $exists = false;
+            }
+            else {
+                $exists = true;
+            }
+*/
+            $exists = true;
+
+            if($exists){
+
+                $count++;
+                $images[] = [
+                    'nome' =>  $id ,
+                    'extensao'  => (string) $count,
+                    'caminho' => $dono ,
+                    'up'      => true
+                ];
+
+                $novo_nome = $this->uuid();
+
+                $extensao = strtolower(substr($url_image, -4 ));
+
+                $nome_completo =  $dono . '/' . $novo_nome . $extensao ;
+
+                if($file->imagemS3 !== '' ){
+                    Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+                }
+                // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+
+                
+                 $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image , strval($file->tabela) ));  
+
+/*
+              $novo_nome = $this->uuid();
+
+              $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
+      
+              $conteudo  =  file_get_contents( $url_image ) ;
+                
+              //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
+      
+              $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+              
+              if ($result!==false){
+                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $nome_completo , $id ]); 
+              }
+*/
+            }
+
+         }
+
+      return view('ups3.index',compact('images') ); //,compact('images')
+
+    }
     private function uuid()
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
