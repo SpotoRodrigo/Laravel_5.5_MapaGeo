@@ -35,7 +35,7 @@ class Ups3Controller extends Controller
     public function index()
     {
          //$images = $this->loopPorPasta();
-        $images = $this->loopBucket('s3Artur');
+        $images = $this->loopBucket('s3Registro');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -469,8 +469,9 @@ if(is_file($file->getRealPath()) ){
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
 
-                $lista = DB::connection('BDGeralArturNogueira')->select("SELECT keyfoto  AS inscricao FROM dbo.Imagem   WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
+                $lista = DB::connection('BDGeralArturNogueira')->select("SELECT LocalArquivo+'/'+imagemnome  AS teste FROM dbo.Imagem   WHERE imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
                 if($lista){
+                    //$file_s3 = $lista->teste;
                     $go = true;
                 }else{
                     $go = false;
