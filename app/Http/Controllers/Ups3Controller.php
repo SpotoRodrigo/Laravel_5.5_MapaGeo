@@ -496,11 +496,11 @@ if(is_file($file->getRealPath()) ){
                     //dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
                 }
              }
-             
+         */    
         }
         return $images ;
     }
-*/
+
 /*
 use App\Jobs\ProcessRegistro;
 use App\Jobs\ProcessArtur;
