@@ -454,7 +454,7 @@ class Ups3Controller extends Controller
                                                             AND TipoFoto = 'Documento'
                                                             AND ImagemFoto is not null" );  // AND cpf.imagemS3 is null
 
-       // dd($lista );
+        dd($lista );
        $conteudo  =  $lista->imagemFoto ;
 
         dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" /> `  );
