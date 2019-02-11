@@ -448,11 +448,11 @@ class Ups3Controller extends Controller
     public function loopBancoVinhedoImag()
     {
         $count =0;
-        $lista =  DB::connection('BDGeralVinhedoImagem')->select("SELECT top 1  codImagem AS idd , keyfotonumerica is dono , ImagemNome AS imagem  ,  imagemFoto ,   'JPG' as extensao
+        $lista =  DB::connection('BDGeralVinhedoImagem')->select("SELECT top 1  codImagem AS idd , keyfotonumerica as dono , ImagemNome AS imagem  ,  imagemFoto ,   'JPG' as extensao
                                                             FROM dbo.imagem
                                                             WHERE assunto = 'Habitacao'
                                                             AND TipoFoto = 'Documento'
-                                                            AND ImagemFoto <> null" );  // AND cpf.imagemS3 is null
+                                                            AND ImagemFoto is not null" );  // AND cpf.imagemS3 is null
 
        // dd($lista );
         dd( fopen($lista->imagem) );
