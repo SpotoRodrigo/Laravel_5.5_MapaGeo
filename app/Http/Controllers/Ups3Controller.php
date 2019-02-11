@@ -35,7 +35,7 @@ class Ups3Controller extends Controller
     public function index()
     {
          //$images = $this->loopPorPasta();
-        $images = $this->loopBucket('s3Socorro');
+        $images = $this->loopBucket('s3Registro');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -416,7 +416,7 @@ if(is_file($file->getRealPath()) ){
 }
 */
 
-/*      REGISTRO 
+ //      REGISTRO 
 if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
@@ -449,8 +449,8 @@ if(is_file($file->getRealPath()) ){
                     //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
                     $affected = DB::connection('BDGeralRegistro')->update("UPDATE dbo.Imagem  
-                                                                                    SET  ImagemNome =  CAST( ?  AS nvarchar) 
-                                                                                    , LocalArquivo =  CAST('http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' AS nvarchar) 
+                                                                                    SET  ImagemNome =   ?  
+                                                                                    , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/89b230d3-12a6-4db4-ae32-7426a3953ea8' 
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
                 DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , '89b230d3-12a6-4db4-ae32-7426a3953ea8/'. $novo_nome . '.' . $this->extensao  ] );
@@ -460,8 +460,8 @@ if(is_file($file->getRealPath()) ){
                 }
             }
         }
-*/
 
+/* 
 //      ARTUR NOGUEIRA 
              if(is_file($file->getRealPath()) ){
 
@@ -500,7 +500,7 @@ if(is_file($file->getRealPath()) ){
         }
         return $images ;
     }
-
+*/
 /*
 use App\Jobs\ProcessRegistro;
 use App\Jobs\ProcessArtur;
