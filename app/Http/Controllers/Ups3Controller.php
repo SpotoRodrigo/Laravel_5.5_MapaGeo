@@ -528,6 +528,8 @@ use App\Jobs\ProcessSocorro;
                 ];
             } 
             //Storage::disk($Bucket)->delete($file);
+
+             DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
         }
 
         return $images ;
