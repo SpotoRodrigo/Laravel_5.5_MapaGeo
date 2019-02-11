@@ -460,7 +460,7 @@ class Ups3Controller extends Controller
 
          foreach ($lista as $file) {
 
-            $conteudo  =  $file->imagemFoto ;
+            $conteudo  =   base64_encode($file->imagemFoto) ;
             dd($conteudo);
             dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" /> `  );
 
