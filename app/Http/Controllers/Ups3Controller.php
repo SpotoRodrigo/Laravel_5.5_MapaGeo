@@ -452,7 +452,7 @@ class Ups3Controller extends Controller
                                                             FROM dbo.imagem
                                                             WHERE assunto = 'Habitacao'
                                                             AND TipoFoto = 'Documento'
-                                                            AND ImagemFoto is  not null" );  // AND cpf.imagemS3 is null
+                                                            AND ImagemFoto <> null" );  // AND cpf.imagemS3 is null
 
        // dd($lista );
         dd( fopen($lista->imagem) );
