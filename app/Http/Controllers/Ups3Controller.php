@@ -455,7 +455,9 @@ class Ups3Controller extends Controller
                                                             AND ImagemFoto is not null" );  // AND cpf.imagemS3 is null
 
        // dd($lista );
-        dd( fopen($lista->imagemFoto) );
+       $conteudo  =  file_get_contents( $lista->imagemFoto ) ;
+
+        dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" /> `  );
 
          foreach ($lista as $file) {
 
