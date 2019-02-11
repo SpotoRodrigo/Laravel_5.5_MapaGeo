@@ -34,8 +34,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-         $images = $this->loopPorPasta();
-        //$images = $this->loopBucket('s3Artur');
+         //$images = $this->loopPorPasta();
+        $images = $this->loopBucket('s3Artur');
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -526,7 +526,7 @@ use App\Jobs\ProcessSocorro;
                     'up'      => $count
                 ];
             } 
-            Storage::disk($Bucket)->delete($file);
+            //Storage::disk($Bucket)->delete($file);
         }
 
         return $images ;
