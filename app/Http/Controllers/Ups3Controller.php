@@ -35,7 +35,9 @@ class Ups3Controller extends Controller
     public function index()
     {
         //$images = $this->loopPorPasta();
-        $images = $this->loopBucket('s3Artur');
+        //$images = $this->loopBucket('s3Artur');
+
+        $images = $this->loopBancoVinhedoImag();
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -446,13 +448,15 @@ class Ups3Controller extends Controller
     public function loopBancoVinhedoImag()
     {
         $count =0;
-        $lista =  DB::connection('BDServicoVinhedo')->select("SELECT   codImagem AS idd , keyfotonumerica is dono , ImagemNome AS imagem  , /* imagemFoto ,  */  'JPG' as extensao
+        $lista =  DB::connection('BDGeralVinhedoImagem')->select("SELECT top 1  codImagem AS idd , keyfotonumerica is dono , ImagemNome AS imagem  ,  imagemFoto ,   'JPG' as extensao
                                                             FROM dbo.imagem
                                                             WHERE assunto = 'Habitacao'
                                                             AND TipoFoto = 'Documento'
                                                             AND ImagemFoto is  not null" );  // AND cpf.imagemS3 is null
 
-        dd($lista );
+       // dd($lista );
+        dd( fopen($lista->imagem) );
+
          foreach ($lista as $file) {
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
