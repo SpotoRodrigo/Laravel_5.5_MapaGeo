@@ -143,8 +143,8 @@ class Ups3Controller extends Controller
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
         //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
-        $directory = "/media/geoserver/transferencias/socorro/" ;
-        //$directory = "/media/geoserver/transferencias/arturnogueira/" ;
+        //$directory = "/media/geoserver/transferencias/socorro/" ;
+        $directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
 
         
 ///media/geoserver/transferencias/socorro/fotos
@@ -177,7 +177,7 @@ class Ups3Controller extends Controller
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
 
-                $lista = DB::connection('BDGeralSocorro')->select("SELECT keyfoto  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
+                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT keyfoto  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
 
                 if($lista){
                     $go = true;
@@ -194,13 +194,13 @@ class Ups3Controller extends Controller
                     $novo_nome = $this->uuid();
                     $conteudo  =  file_get_contents($this->caminho) ;
 
-                    $result =  Storage::disk('s3Socorro')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                    $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
                     //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
-                    $affected = DB::connection('BDGeralSocorro')->update("UPDATE dbo.Imagem  
+                    $affected = DB::connection('BDGeralVinhedoImagem')->update("UPDATE dbo.Imagem  
                                                                                     SET  ImagemNome =   ? 
-                                                                                    , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/3ef077e8-fd6f-4ad5-bfef-2a55570b6367' 
+                                                                                    , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
                     unset($conteudo);
@@ -448,14 +448,14 @@ class Ups3Controller extends Controller
     public function loopBancoVinhedoImag()
     {
         $count =0;
-        $lista =  DB::connection('BDGeralVinhedoImagem')->select("SELECT top 1  codImagem AS idd , keyfotonumerica as dono , ImagemNome AS imagem  ,  imagemFoto ,   'JPG' as extensao
+        $lista =  DB::connection('BDGeralVinhedoImagem')->select("SELECT top 1  codImagem AS idd , keyfotonumerica as dono   ,  imagemFoto ,   'JPG' as extensao
                                                             FROM dbo.imagem
                                                             WHERE assunto = 'Habitacao'
                                                             AND TipoFoto = 'Documento'
                                                             AND ImagemFoto is not null" );  // AND cpf.imagemS3 is null
 
-       // dd($lista );
-        dd( fopen($lista->imagem) );
+        dd($lista );
+       // dd( fopen($lista->imagem) );
 
          foreach ($lista as $file) {
 

@@ -158,6 +158,17 @@ return [
             'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'region' => 'sao01',
         ],
+
+        's3Vinhedo' => [
+            'driver' => 's3',
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => 'acdb0896-101b-4a9d-aa32-6d1b134f3961',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
     ],
 
 ];
