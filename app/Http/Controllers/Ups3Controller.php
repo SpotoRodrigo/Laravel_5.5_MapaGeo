@@ -458,12 +458,11 @@ class Ups3Controller extends Controller
     //header('Content-Type: image/x-bmp');
     //echo $lista->imagemFoto;
 
- dd( var_dump($lista) );
-       $conteudo  =  $lista->imagemFoto ;
-
-        dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" /> `  );
-
          foreach ($lista as $file) {
+
+            $conteudo  =  $lista->imagemFoto ;
+
+            dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" /> `  );
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
             $id  = intval($file->idd) ; 
