@@ -35,8 +35,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
-       //$images = $this->loopBucket('s3Vinhedo');
+       // $images = $this->loopPorPasta();
+       $images = $this->loopBucket('s3Vinhedo');
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -243,7 +243,7 @@ class Ups3Controller extends Controller
                     'up'      => $count
                 ];
             } 
-            Storage::disk($Bucket)->delete($file);
+            //Storage::disk($Bucket)->delete($file);
             // Storage::disk('s3Biri')->setVisibility($file, 'public');
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
