@@ -73,7 +73,7 @@ class ProcessVinhedo implements ShouldQueue
 
             $novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
-            $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+            $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . 'jpg', $conteudo , ['ACL' => 'public-read'] );
 
             $affected = DB::connection('BDGeralVinhedoImagem')->update("UPDATE dbo.Imagem  
                                                                         SET  ImagemNome =   ? 
