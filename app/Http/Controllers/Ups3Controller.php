@@ -35,8 +35,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        //$images = $this->loopPorPasta();
-       $images = $this->loopBucket('s3Vinhedo');
+        $images = $this->loopPorPasta();
+       //$images = $this->loopBucket('s3Vinhedo');
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -145,7 +145,7 @@ class Ups3Controller extends Controller
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
         //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
         //$directory = "/media/geoserver/transferencias/socorro/" ;
-        $directory = "/media/geoserver/transferencias/vinhedo/teste/" ;
+        $directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
 
         
 ///media/geoserver/transferencias/socorro/fotos
