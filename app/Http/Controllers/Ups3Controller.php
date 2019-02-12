@@ -174,8 +174,8 @@ class Ups3Controller extends Controller
                  $this->dispatch(new ProcessVinhedo($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 
-             if($count>0){
-                exit();
+             if($count>1){
+                return $images ;
              }
              /*
             //  VINHEDO   
