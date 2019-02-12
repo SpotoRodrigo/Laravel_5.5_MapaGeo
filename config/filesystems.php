@@ -169,6 +169,17 @@ return [
             'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'region' => 'sao01',
         ],
+
+        's3Slserra' => [
+            'driver' => 's3',
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => 'aa7bd982-f24d-448d-bdcf-1cc7f02f169d',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
     ],
 
 ];
@@ -185,4 +196,5 @@ ba84f1b8-ee11-4c0c-ad77-8bf91c71a5ae => Vinhedo Pessoas documentos
 39f409a7-da21-4260-a07a-c469a22b707d => Lorena
 ca800d52-3770-4a68-9f84-63a71b9b57c0 => SÃ£o SebastiÃ£o do ParaÃ­so
 2d5bc2e9-4fb2-431b-92ad-a0a572714979 => Pidamonhangaba
+aa7bd982-f24d-448d-bdcf-1cc7f02f169d => São Lourenço da Serra
 */
