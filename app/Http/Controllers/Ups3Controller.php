@@ -180,13 +180,13 @@ class Ups3Controller extends Controller
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
 
-                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao ,  ImagemNomeAnterior , ImagemNome 
+                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao ,  ImagemNomeAnterior , cast(ImagemNome as text) as subiu
                                                                         FROM dbo.imagem 
                                                                         , BDGeralVinhedo.dbo.imovel_territorial
                                                                         WHERE assunto = 'Terreno'
                                                                         AND TipoFoto = 'Foto Fachada'
                                                                         AND CadTerCodigo = keyfotonumerica 
-                                                                        AND cast(imagemNomeAnterior as text ) = ?  " ,[$this->nome_arquivo] );
+                                                                        AND cast(imagemNomeAnterior as varchar(30) ) = ?  " ,[$this->nome_arquivo] );
 
 dd($lista);
                 if($lista){
