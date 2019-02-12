@@ -195,8 +195,8 @@ class Ups3Controller extends Controller
                     $go = true;
                 }else{
                     $go = false;
-                    $affected= false;
-                    $conteudo  =  file_get_contents($this->caminho) ;
+                    $affected = false;
+                    $conteudo =  file_get_contents($this->caminho) ;
                     Storage::disk('public_web')->put('vinhedo_nao/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
                     unlink($this->caminho);
                     unset($conteudo);
