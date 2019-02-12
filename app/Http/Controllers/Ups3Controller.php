@@ -171,13 +171,10 @@ class Ups3Controller extends Controller
 
 
              if(is_file($file->getRealPath()) ){
-                 $this->dispatch(new ProcessVinhedo($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                // $this->dispatch(new ProcessVinhedo($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 
-             if($count>1){
-                return $images ;
-             }
-             /*
+             
             //  VINHEDO   
             if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
@@ -218,7 +215,7 @@ class Ups3Controller extends Controller
                     }
                 }
             }
-*/
+
         }
         return $images ;
     }
