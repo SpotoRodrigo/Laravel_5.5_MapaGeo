@@ -206,7 +206,7 @@ class Ups3Controller extends Controller
                     $conteudo  =  file_get_contents($this->caminho) ;
 
                     $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-dd($result);
+
                     //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
                     $affected = DB::connection('BDGeralVinhedoImagem')->update("UPDATE dbo.Imagem  
                                                                                 SET  ImagemNome =   ? 
