@@ -49,11 +49,18 @@ class ProcessVinhedo implements ShouldQueue
     public function handle()
     {
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-        $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT keyfoto  AS inscricao   FROM dbo.Imagem WHERE imagemNomeAnterior = ? " ,[$this->nome_arquivo] );
+        $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao , sequencia 
+                                                                        FROM dbo.imagem 
+                                                                        , BDGeralVinhedo.dbo.imovel_territorial
+                                                                        WHERE assunto = 'Terreno'
+                                                                        AND TipoFoto = 'Foto Fachada'
+                                                                        AND LEN(LocalArquivo) < 60 
+                                                                        AND CadTerNumLote = keyfotonumerica 
+                                                                AND  imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
 //dd($lista );
         if($lista){
             $dono = $lista[0]->inscricao;
-            $qtde = $lista[0]->qtde;
+            $idd = $lista[0]->codImagem;
             $go = true;
 //dd('true');
         }else{
@@ -69,9 +76,12 @@ class ProcessVinhedo implements ShouldQueue
             $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
             $affected = DB::connection('BDGeralVinhedoImagem')->update("UPDATE dbo.Imagem  
-            SET  ImagemNome =   ? 
-            , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
-            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
+                                                                        SET  ImagemNome =   ? 
+                                                                        , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
+                                                                        WHERE assunto = 'Terreno'
+                                                                        AND TipoFoto = 'Foto Fachada'
+                                                                        AND LEN(LocalArquivo) < 60  
+                                                                        AND  codImagem = ?", [$novo_nome . '.' . $this->extensao , $idd ]); 
 
             DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
 
