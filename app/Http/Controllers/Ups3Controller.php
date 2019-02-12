@@ -34,10 +34,10 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        //$images = $this->loopPorPasta();
+        $images = $this->loopPorPasta();
         //$images = $this->loopBucket('s3Artur');
 
-        $images = $this->loopBancoVinhedoImag();
+        //$images = $this->loopBancoVinhedoImag();
 /*
        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("select top 50 * FROM dbo.Imagem where UploadNuvemArquivoPublico = 0 ");
        // $lista =  DB::connection('pgsql_paraiso')->select("select count(*) from apgv.dimensao where dimensao_tipo_id = 24  ");
@@ -167,11 +167,17 @@ class Ups3Controller extends Controller
 
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
            
+
+
              if(is_file($file->getRealPath()) ){
-                 //$this->dispatch(new ProcessArtur($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 $this->dispatch(new ProcessVinhedo($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
 
-            //  SOCORRO   
+             if($count>0){
+                exit();
+             }
+             /*
+            //  VINHEDO   
             if(is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
@@ -203,7 +209,7 @@ class Ups3Controller extends Controller
                                                                                     , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
-                    DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
+                    DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
 
                     unset($conteudo);
                     if ($affected){
@@ -211,7 +217,7 @@ class Ups3Controller extends Controller
                     }
                 }
             }
-
+*/
         }
         return $images ;
     }
