@@ -35,8 +35,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-       // $images = $this->loopPorPasta();
-       $images = $this->loopBucket('s3Vinhedo');
+        $images = $this->loopPorPasta();
+       //$images = $this->loopBucket('s3Vinhedo');
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -146,7 +146,7 @@ class Ups3Controller extends Controller
         //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
         //$directory = "/media/geoserver/transferencias/socorro/" ;
         $directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
-
+        $count= 0;
         
 ///media/geoserver/transferencias/socorro/fotos
 ///media/geoserver/transferencias/registro/fotos 
@@ -155,8 +155,8 @@ class Ups3Controller extends Controller
             $msg = 'Caminho não acessivél.';
             return view('ups3.index').compact($msg); 
         }
-        $count= 0;
         $files = File::allFiles($directory);
+
         foreach ($files as $file) {
             $count++;
             $images[] = [
@@ -175,7 +175,7 @@ class Ups3Controller extends Controller
              }
           
             //  VINHEDO   
-            if(is_file($file->getRealPath()) ){
+            if( is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
@@ -185,7 +185,7 @@ class Ups3Controller extends Controller
                                                                         , BDGeralVinhedo.dbo.imovel_territorial
                                                                         WHERE assunto = 'Terreno'
                                                                         AND TipoFoto = 'Foto Fachada'
-                                                                        AND CadTerNumLote = keyfotonumerica 
+                                                                        AND CadTerCodigo = keyfotonumerica 
                                                                          AND  imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
 
                 if($lista){
@@ -214,7 +214,7 @@ class Ups3Controller extends Controller
                                                                                 AND TipoFoto = 'Foto Fachada'
                                                                                 AND  codImagem = ?", [$novo_nome . '.' . $this->extensao , $idd ]); 
 
-                    DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
+                    //DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
 
                     unset($conteudo);
                     if ($affected){
@@ -226,6 +226,7 @@ class Ups3Controller extends Controller
         }
         return $images ;
     }
+
 
     private function loopBucket(string $Bucket)
     {
@@ -244,6 +245,7 @@ class Ups3Controller extends Controller
                 ];
             } 
             //Storage::disk($Bucket)->delete($file);
+            Storage::disk($Bucket)->delete($file);
             // Storage::disk('s3Biri')->setVisibility($file, 'public');
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
