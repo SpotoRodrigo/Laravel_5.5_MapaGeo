@@ -35,8 +35,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        //$images = $this->loopPorPasta();
-       $images = $this->loopBucket('s3Vinhedo');
+        $images = $this->loopPorPasta();
+      // $images = $this->loopBucket('s3Vinhedo');
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -180,7 +180,7 @@ class Ups3Controller extends Controller
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
 
-                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao , sequencia 
+                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao ,  ImagemNomeAnterior , ImagemNome , case when LEN(LocalArquivo) > 60 then 'JA' else 'NAO' end as subiu
                                                                         FROM dbo.imagem 
                                                                         , BDGeralVinhedo.dbo.imovel_territorial
                                                                         WHERE assunto = 'Terreno'
@@ -190,35 +190,48 @@ class Ups3Controller extends Controller
 
                 if($lista){
                     $dono = $lista[0]->inscricao;
+                    $subiu = $lista[0]->subiu;
                     $idd = $lista[0]->codImagem;
                     $go = true;
                 }else{
                     $go = false;
-                // return true;
+                    $affected= false;
+                    $conteudo  =  file_get_contents($this->caminho) ;
+                    Storage::disk('public_web')->put('vinhedo_nao/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
+                    unlink($this->caminho);
+                    unset($conteudo);
                 }
                 //dd($go);
                 // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
                 if(is_file($this->caminho) &&  $go   ){
 
-                    // dd('agora VAI ');         
-                    $novo_nome = $this->uuid();
-                    $conteudo  =  file_get_contents($this->caminho) ;
+                    if($subiu =='NAO'){
+                        $novo_nome = $this->uuid();
+                        $conteudo  =  file_get_contents($this->caminho) ;
 
-                    $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                        $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
-                    //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-                    $affected = DB::connection('BDGeralVinhedoImagem')->update("UPDATE dbo.Imagem  
-                                                                                SET  ImagemNome =   ? 
-                                                                                , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
-                                                                                WHERE assunto = 'Terreno'
-                                                                                AND TipoFoto = 'Foto Fachada'
-                                                                                AND  codImagem = ?", [$novo_nome . '.' . $this->extensao , $idd ]); 
+                        //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                        $affected = DB::connection('BDGeralVinhedoImagem')->update("UPDATE dbo.Imagem  
+                                                                                    SET  ImagemNome =   ? 
+                                                                                    , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
+                                                                                    WHERE assunto = 'Terreno'
+                                                                                    AND TipoFoto = 'Foto Fachada'
+                                                                                    AND  codImagem = ?", [$novo_nome . '.' . $this->extensao , $idd ]); 
 
-                    //DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
+                        DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
+                    }else{
+                        DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
+                        $affected = true;
+                    }
 
-                    unset($conteudo);
                     if ($affected){
+
+                        $conteudo  =  file_get_contents($this->caminho) ;
+                        Storage::disk('public_web')->put('vinhedo/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
                         unlink($this->caminho);
+                        unset($conteudo);
+
                     }
                 }
             }
