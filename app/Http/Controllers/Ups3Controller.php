@@ -199,7 +199,7 @@ class Ups3Controller extends Controller
                 }
                 //dd($go);
                 // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-                if(is_file($this->caminho) &&  $go && false  ){
+                if(is_file($this->caminho) &&  $go   ){
 
                     // dd('agora VAI ');         
                     $novo_nome = $this->uuid();
