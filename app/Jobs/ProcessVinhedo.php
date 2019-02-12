@@ -54,7 +54,6 @@ class ProcessVinhedo implements ShouldQueue
                                                                         , BDGeralVinhedo.dbo.imovel_territorial
                                                                         WHERE assunto = 'Terreno'
                                                                         AND TipoFoto = 'Foto Fachada'
-                                                                        AND LEN(LocalArquivo) < 60 
                                                                         AND CadTerNumLote = keyfotonumerica 
                                                                 AND  imagemNomeAnterior = ?  " ,[$this->nome_arquivo] );
 //dd($lista );
@@ -80,7 +79,6 @@ class ProcessVinhedo implements ShouldQueue
                                                                         , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
                                                                         WHERE assunto = 'Terreno'
                                                                         AND TipoFoto = 'Foto Fachada'
-                                                                        AND LEN(LocalArquivo) < 60  
                                                                         AND  codImagem = ?", [$novo_nome . '.' . $this->extensao , $idd ]); 
 
             DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
