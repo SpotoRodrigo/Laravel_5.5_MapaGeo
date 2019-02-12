@@ -180,7 +180,7 @@ class Ups3Controller extends Controller
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
 
-                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao ,  ImagemNomeAnterior , ImagemNome ,  LEN(LocalArquivo)  as subiu
+                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao ,  ImagemNomeAnterior , ImagemNome ,  LocalArquivo  as subiu
                                                                         FROM dbo.imagem 
                                                                         , BDGeralVinhedo.dbo.imovel_territorial
                                                                         WHERE assunto = 'Terreno'
@@ -205,7 +205,7 @@ class Ups3Controller extends Controller
                 // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
                 if(is_file($this->caminho) &&  $go   ){
 
-                    if($subiu < 60 ){
+                    if( strlen($subiu) < 60 ){
                         $novo_nome = $this->uuid();
                         $conteudo  =  file_get_contents($this->caminho) ;
 
