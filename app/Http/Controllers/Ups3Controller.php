@@ -203,6 +203,8 @@ class Ups3Controller extends Controller
                                                                                     , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
                                                                                     WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $this->nome_arquivo  ]); 
 
+                    DB::connection('pgsql_registro')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
+
                     unset($conteudo);
                     if ($affected){
                         unlink($this->caminho);
@@ -462,6 +464,7 @@ class Ups3Controller extends Controller
 
             $conteudo  =   base64_encode($file->imagemFoto) ;
             //dd($conteudo);
+            Storage::disk('s3Vinhedo')->put($conteudo  , ['ACL' => 'public-read'] );
             dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" />` );
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
