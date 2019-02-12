@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 //use Illuminate\Database\Schema\DB;
 use Illuminate\Support\Facades\DB;
 
