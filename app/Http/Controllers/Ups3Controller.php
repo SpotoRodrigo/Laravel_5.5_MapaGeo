@@ -145,7 +145,7 @@ class Ups3Controller extends Controller
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
         //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
         //$directory = "/media/geoserver/transferencias/socorro/" ;
-        $directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
+        $directory = "/media/geoserver/transferencias/vinhedo/teste/" ;
 
         
 ///media/geoserver/transferencias/socorro/fotos
