@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessLorena;
 //use App\Jobs\ProcessParaiso;
 //use App\Jobs\ProcessItatiba;
+use App\Jobs\ProcessVinhedo;
 //use App\Jobs\upVinhedoDoc;
 //use App\Jobs\setPublicS3;
 
