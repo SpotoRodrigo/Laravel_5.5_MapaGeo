@@ -179,14 +179,15 @@ class Ups3Controller extends Controller
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
+                $aux = str_replace ('.jpg','',$this->nome_arquivo ) ;
 
                 $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao  
                                                                         FROM dbo.imagem 
                                                                         , BDGeralVinhedo.dbo.imovel_territorial
                                                                         WHERE assunto = 'Terreno'
-                                                                        AND TipoFoto = 'Foto Fachada'
+                                                                        AND TipoFoto = 'Foto Fachada' AND uploads3 = 0
                                                                         AND CadTerCodigo = keyfotonumerica 
-                                                                        AND ImagemNomeAnterior  = ?  " ,[$this->nome_arquivo] );
+                                                                        AND descricao  like   ('%?%')  " ,[$this->nome_arquivo] );
 
 
                 if($lista){
