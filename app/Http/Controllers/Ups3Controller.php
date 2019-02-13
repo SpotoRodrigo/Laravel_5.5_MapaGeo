@@ -197,7 +197,7 @@ class Ups3Controller extends Controller
                     WHERE assunto = 'Terreno'
                     AND TipoFoto = 'Foto Fachada' AND uploads3 = 0
                     AND CadTerCodigo = keyfotonumerica 
-                    AND descricao  like   ('%?%') " . $lista );
+                    AND descricao  like   ('%?%') " . $lista ,[$aux]  );
                 }
 
                 if($lista){
