@@ -179,7 +179,8 @@ class Ups3Controller extends Controller
                 $this->extensao = $file->getExtension();
                 $this->nome_arquivo = $file->getFilename();
                 $this->caminho = $file->getRealPath();
-                $aux = str_replace ('.jpg','',$this->nome_arquivo ) ;
+                $tt = strpos($this->nome_arquivo , '_') ?  strpos($this->nome_arquivo , '_')  : srtlen($this->nome_arquivo) ; 
+                $aux =  substr (str_replace('.jpg','',$this->nome_arquivo ) , 0 ,  $tt ) ;
 
                 $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao  
                                                                         FROM dbo.imagem 
