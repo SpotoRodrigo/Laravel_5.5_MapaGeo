@@ -190,13 +190,7 @@ class Ups3Controller extends Controller
                                                                         AND CadTerCodigo = keyfotonumerica 
                                                                         AND descricao  like   ('%?%')  " ,[$aux] );
 
-dd("SELECT codImagem ,   CadTerPrefNum as inscricao  
-FROM dbo.imagem 
-, BDGeralVinhedo.dbo.imovel_territorial
-WHERE assunto = 'Terreno'
-AND TipoFoto = 'Foto Fachada' AND uploads3 = 0
-AND CadTerCodigo = keyfotonumerica 
-AND descricao  like   ('%?%')  " ,[$aux]);
+
                 if($lista){
                     $idd  = $lista[0]->codImagem;
                     $dono = $lista[0]->inscricao;
