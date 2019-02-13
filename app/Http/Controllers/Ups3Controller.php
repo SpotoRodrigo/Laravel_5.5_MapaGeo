@@ -191,13 +191,7 @@ class Ups3Controller extends Controller
                                                                         AND descricao  like   ('%?%')  " ,[$aux] );
 
                 if($this->nome_arquivo =='03039003.jpg'){
-                    dd( "SELECT codImagem ,   CadTerPrefNum as inscricao  
-                    FROM dbo.imagem 
-                    , BDGeralVinhedo.dbo.imovel_territorial
-                    WHERE assunto = 'Terreno'
-                    AND TipoFoto = 'Foto Fachada' AND uploads3 = 0
-                    AND CadTerCodigo = keyfotonumerica 
-                    AND descricao  like   ('%?%') " . $lista ,[$aux]  );
+                    dd( $lista , $aux );
                 }
 
                 if($lista){
