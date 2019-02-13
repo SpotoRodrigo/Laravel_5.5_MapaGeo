@@ -189,7 +189,7 @@ class Ups3Controller extends Controller
                                                                         AND CadTerCodigo = keyfotonumerica 
                                                                         AND descricao  like   ('%?%')  " ,[$this->nome_arquivo] );
 
-
+dd($lista);
                 if($lista){
                     $idd  = $lista[0]->codImagem;
                     $dono = $lista[0]->inscricao;
