@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
-//use App\Jobs\ProcessParaiso;
+use App\Jobs\ProcessParaiso;
 //use App\Jobs\ProcessItatiba;
-use App\Jobs\ProcessVinhedo;
+//use App\Jobs\ProcessVinhedo;
 //use App\Jobs\upVinhedoDoc;
 //use App\Jobs\setPublicS3;
 
@@ -142,10 +142,11 @@ class Ups3Controller extends Controller
     private function loopPorPasta()
     {
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
+        $directory = "/media/geoserver/web/ssparaiso/img/Entregavel_05";
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
         //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
         //$directory = "/media/geoserver/transferencias/socorro/" ;
-        $directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
+        //$directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
         $count= 0;
         
 ///media/geoserver/transferencias/socorro/fotos
@@ -171,9 +172,9 @@ class Ups3Controller extends Controller
 
 
              if(is_file($file->getRealPath()) ){
-                 // $this->dispatch(new ProcessVinhedo($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
-          
+          /*
             //  VINHEDO   
             if( is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
@@ -224,7 +225,7 @@ class Ups3Controller extends Controller
                     }
                 }
             }
-
+*/
         }
         return $images ;
     }
