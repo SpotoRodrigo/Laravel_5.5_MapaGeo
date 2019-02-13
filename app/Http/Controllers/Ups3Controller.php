@@ -190,9 +190,6 @@ class Ups3Controller extends Controller
                                                                         AND CadTerCodigo = keyfotonumerica 
                                                                         AND descricao  like   (?)  " ,['%'.$aux.'%'] );
 
-                if($this->nome_arquivo =='03039003.jpg'){
-                    dd( $lista , $aux );
-                }
 
                 if($lista){
                     $idd  = $lista[0]->codImagem;
