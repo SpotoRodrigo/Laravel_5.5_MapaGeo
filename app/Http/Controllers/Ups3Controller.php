@@ -191,7 +191,7 @@ class Ups3Controller extends Controller
                                                                         AND descricao  like   ('%?%')  " ,[$aux] );
 
                 if($this->nome_arquivo =='03039003.jpg'){
-                    dd($lista);
+                    dd($aux );
                 }
 
                 if($lista){
