@@ -19,7 +19,7 @@
             <td>{{ $image['nome'] }}</td>
             <td>{{ $image['extensao'] }}</td>
             <td>{{ $image['caminho'] }}</td>
-            @if($image['extensao']  !== 'jpg')
+            @if($image['up']  !== 'true')
                 {{-- There is already booking for that dictionary time --}}
                 <td>not available</td>
             @else

@@ -564,9 +564,9 @@ class Ups3Controller extends Controller
         $pastas = array(
           //  'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
           //  'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-          //  'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
-            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
-            'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
+            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
+          //  'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+          //  'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
           //  'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
 
@@ -589,7 +589,7 @@ class Ups3Controller extends Controller
                     'caminho' => $file->getRealPath(),
                     'up'      =>  is_file($file->getRealPath())
                 ];
-                dd( is_file($file->getRealPath()) ) ;
+
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
 
                 if($lista  != [] &&  is_file($file->getRealPath()) ){
