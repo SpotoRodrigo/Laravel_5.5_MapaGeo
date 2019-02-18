@@ -562,12 +562,12 @@ class Ups3Controller extends Controller
         $count= 0;
 
         $pastas = array(
-          //  'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
-          //  'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
+            'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
+            'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
+         //   'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
           //  'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
           //  'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
-          //  'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
+            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
 
         foreach ($pastas as $pasta => $caminho ) {
@@ -596,10 +596,10 @@ class Ups3Controller extends Controller
                     $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
 
-                   // $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
 
                     // INICIO ROTINA QUE PODE SER UM JOB.
-
+/*
                    $this->extensao = $file->getExtension() ; // $extensao;
                    $this->nome_completo =  $file->getFilename() ; // $nome_completo;
                    $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
@@ -636,7 +636,7 @@ class Ups3Controller extends Controller
                             unset($conteudo ,$result ,$update );
                             //return true ;
                         }
- 
+ */
 
                 }else{
                     //$conteudo  =  file_get_contents($file->getRealPath()) ;

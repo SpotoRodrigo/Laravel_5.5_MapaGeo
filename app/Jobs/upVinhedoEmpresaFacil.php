@@ -58,26 +58,28 @@ class upVinhedoEmpresaFacil implements ShouldQueue
             'liberacaousosolo' => 's3VinhedoEFLiberacao' ,
             'recadastramento' =>  's3VinhedoEFRecadastramento' 
         );
-        
-        $conteudo  =  file_get_contents( $this->caminho_completo ) ;
-        $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
+        if(is_file($this->caminho_completo)){
+            $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+            $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .'.'.  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
 
-        if ($result!==false){
-            $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .  $this->extensao , $this->pasta   , $this->idd ]); 
+            if ($result!==false){
+                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .  $this->extensao , $this->pasta   , $this->idd ]); 
 
-            if($update!==false ){
-                unlink($this->caminho_completo);
+                if($update!==false ){
+                    unlink($this->caminho_completo);
+                }else{
+                    return false;
+                    //dd('falha update banco');
+                }
+
             }else{
                 return false;
-                //dd('falha update banco');
+                //dd('falha subir S3 ');
             }
-
-        }else{
-            return false;
-           //dd('falha subir S3 ');
+            unset($conteudo ,$result ,$update );
+            return true ;
         }
-        unset($conteudo ,$result ,$update );
-        return true ; 
+
     }
 
 
