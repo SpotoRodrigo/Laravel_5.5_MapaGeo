@@ -563,7 +563,7 @@ class Ups3Controller extends Controller
         
         $pastas = ['abertura','alteracao','encerramento','laudos','liberacaousosolo','recadastramento'];
 
-        dd(   in_array(  $directory, $pastas[] )  );    
+        dd(   in_array(  $directory, $pastas )  );    
         
 
         if(!File::isDirectory($directory)) {
