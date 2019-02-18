@@ -765,7 +765,7 @@ class Ups3Controller extends Controller
 
         foreach ($files as $file) {
             $subiu = false;
-            $lista = DB::connection('BDGeralVinhedoImagem')->select("    SELECT  CAST(  serv.servicoIdentificadorUnico as  VARCHAR(MAX) )  as idserv
+            $lista = DB::connection('BDGeralVinhedo')->select("    SELECT  CAST(  serv.servicoIdentificadorUnico as  VARCHAR(MAX) )  as idserv
                                                                             ,  CAST(fich.codFichaIdentUnico as  VARCHAR(MAX) )     as idfile 
                                                                             , CAST( imag.idunico as  VARCHAR(MAX) )  AS idimag    
                                                                             , ImagemNome  
