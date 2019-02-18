@@ -555,52 +555,52 @@ class Ups3Controller extends Controller
         //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/abertura";
         //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/alteracao";
         //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/encerramento";
-        $directory = "/media/geoserver/transferencias/vinhedo/empresafacil/laudos";
+        //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/laudos";
         //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo";
         //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento";
 
         $count= 0;
 
         $pastas = array(
-            'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
-            'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
+       //     'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
+       //     'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
+       //     'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
             'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
-            'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
-            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
+       //     'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
+        //    'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
+
 
 //  in_array(  $directory, $pastas ) = true 
 
-
-
-        if(!File::isDirectory($directory)) {
-            $msg = 'Caminho não acessivél.';
-            return view('ups3.index').compact($msg); 
-        }
-        
-        
         foreach ($pastas as $pasta => $caminho ) {
 
-            dd('PASTA '.$pasta . '  CAMINHO = '.$caminho );
+            //dd('PASTA '.$pasta . '  CAMINHO = '.$caminho );
 
-  /*          $files = File::allFiles($directory);
+            if(!File::isDirectory($caminho)) {
+                $msg = 'Caminho não acessivél.';
+                return view('ups3.index').compact($msg); 
+            }
+
+            $files = File::allFiles($caminho);
 
             foreach ($files as $file) {
                 $count++;
                 $images[] = [
                     'count' => (string) $count , 
                     'nome' =>  $file->getFilename() ,
-                    'extensao'  =>  File::extension( $file->getRealPath()),
+                    'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
                     'caminho' => $file->getRealPath(),
                     'up'      => true
                 ];
     
+
+                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$this->nome_arquivo] );
+                dd($lista);
                  if(is_file($file->getRealPath()) ){
-                      //$this->dispatch(new upVinhedoEmpresaFacil($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                     // $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  ));  
                  }
             }
-*/
         }
 
 

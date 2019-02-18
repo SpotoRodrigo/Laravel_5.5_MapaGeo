@@ -33,12 +33,12 @@ class upVinhedoEmpresaFacil implements ShouldQueue
      *
      * @return void
      */
-    public function __construct( $id , $nome_completo , $url_image ,$tabela )
+    public function __construct( $extensao , $nome_completo , $caminho_completo ,$pasta )
     {
-        $this->id = $id;
+        $this->extensao = $extensao;
         $this->nome_completo = $nome_completo;
-        $this->url_image = $url_image;
-        $this->tabela = $tabela;
+        $this->caminho_completo = $caminho_completo;
+        $this->pasta = $pasta;
     }
 
     /**
@@ -49,26 +49,32 @@ class upVinhedoEmpresaFacil implements ShouldQueue
     public function handle()
     {
 
-        $streamSSL = stream_context_create(array(
-            "ssl"=>array(
-                "verify_peer"=> false,
-                "verify_peer_name"=> false
-            )
-        ));
 
-/*
-        $file_headers = @get_headers($this->url_image);
-        if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
-            $exists = false;
-            $result = false;
-        }*/
-  //      else {
+        $s3 = array(
+            'abertura' =>  's3VinhedoEFAbertura' ,
+            'alteracao' =>  's3VinhedoEFAlteracao',
+            'encerramento' =>  's3VinhedoEFEncerramento' ,
+            'laudos' =>  's3VinhedoEFLaudos',
+            'liberacaousosolo' => 's3VinhedoEFLiberacao' ,
+            'recadastramento' =>  's3VinhedoEFRecadastramento' 
+        );
+
+
+        $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$this->nome_arquivo] );
+
+        if($lista){
+            $idd = $lista[0]->decamuDocCodigo;
+            $idUnico = $lista[0]->idUnico;
             $exists = true;
-   //     }
+//dd('true');
+        }else{
+            $exists = false;
+            return true;
+        }
 
         if($exists){
-            $conteudo  =  file_get_contents( $this->url_image , false, $streamSSL  ) ;
-            $result =  Storage::disk('s3VinhedoDoc')->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+            $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+            $result =  Storage::disk($s3[$pasta])->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
         }
         
         
