@@ -620,7 +620,7 @@ class Ups3Controller extends Controller
                             $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .'.'.  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
     
                             if ($result!==false){
-                                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .  $this->extensao , $this->pasta   , $this->idd ]); 
+                                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .'.'.  $this->extensao , $this->pasta   , $this->idd ]); 
     
                                 if($update!==false ){
                                     unlink($this->caminho_completo);
