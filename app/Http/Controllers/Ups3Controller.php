@@ -570,8 +570,10 @@ class Ups3Controller extends Controller
             'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
 
+//  in_array(  $directory, $pastas ) = true 
+        dd(  array_search( $directory , $pastas)   );    
 
-        dd(   in_array(  $directory, $pastas )  );    
+       
         
 
         if(!File::isDirectory($directory)) {
