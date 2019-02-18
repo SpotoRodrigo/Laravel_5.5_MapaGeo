@@ -36,7 +36,7 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();
+        $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();
         
        //$images = $this->loopBucket('s3Vinhedo');
 
@@ -750,6 +750,103 @@ class Ups3Controller extends Controller
         return $images ;
     }
 
+    private function loopPorPastaHabitacao()
+    {
+
+        $directory = "/media/geoserver/transferencias/vinhedo/habitacao";
+        $count= 0;
+
+        if(!File::isDirectory($directory)) {
+            $msg = 'Caminho não acessivél.';
+            return view('ups3.index').compact($msg); 
+        }
+
+        $files = File::allFiles($directory);
+
+        foreach ($files as $file) {
+            $subiu = false;
+            $lista = DB::connection('BDGeralVinhedoImagem')->select("    SELECT  CAST(  serv.servicoIdentificadorUnico as  VARCHAR(MAX) )  as idserv
+                                                                            ,  CAST(fich.codFichaIdentUnico as  VARCHAR(MAX) )     as idfile 
+                                                                            , CAST( imag.idunico as  VARCHAR(MAX) )  AS idimag    
+                                                                            , ImagemNome  
+                                                                            , codImagem
+                                                                        FROM BDGeralVinhedoImagem.dbo.Imagem          as imag
+                                                                        , BDGeralVinhedo.habitacao.FichaHabitacao  as fich
+                                                                        , BDServicoVinhedo.organizacao.Servico     as serv
+                                                                        WHERE imag.TipoFoto = 'Documento'  
+                                                                        AND imag.assunto = 'Habitacao'
+                                                                        AND imag.ImagemNome  = ? 
+                                                                        AND fich.codFicha = imag.keyFotoNumerica
+                                                                        and serv.servicoIndetificador = 19 
+                                                                        order by imag.ImagemNome  " ,[$file->getFilename()] );
+
+            if($lista  != []  ){
+                $idd = $lista[0]->codImagem;
+                $idserv = $lista[0]->idserv;
+                $idfile = $lista[0]->idfile;
+                $idimag = $lista[0]->idimag;
+
+
+            //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+
+                // INICIO ROTINA QUE PODE SER UM JOB.
+
+                $this->extensao = $file->getExtension() ; // $extensao;
+                $this->nome_completo =   $file->getFilename() ; // $nome_completo;
+                $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
+                $this->idd = $idd;
+                $this->novo_nome =  $idserv .'/'.   $idfile .'/'.   $idimag   .'.'. $file->getExtension() ; 
+
+
+                if(is_file($this->caminho_completo)){
+                    $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+                    $result =  Storage::disk('s3VinhedoQuest')->put( $this->novo_nome    , $conteudo );  // ['ACL' => 'public-read'] 
+
+                    if ($result!==false){
+                        $subiu = true;
+                        $update = DB::connection('BDGeralVinhedoImagem')->update(" UPDATE dbo.Imagem  SET localarquivo = CAST(? AS VARCHAR(MAX)) , imagemnome =  null , uploads3 = 1  WHERE codImagem = ? ", [ $this->novo_nome   , $this->idd ]); 
+
+                        if($update!==false ){
+                            unlink($this->caminho_completo);
+                        }else{
+                            //return false;
+                            dd('falha update banco');
+                        }
+
+                    }else{
+                        //return false;
+                        dd('falha subir S3 ');
+                    }
+                    
+                    //return true ;
+                }
+
+
+            }else{
+                //$conteudo  =  file_get_contents($file->getRealPath()) ;
+                //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                //unlink($file->getRealPath());
+                //unset($conteudo);
+            }
+
+
+            $count++;
+            $images[] = [
+                'count' => (string) $count , 
+                'nome' =>  $file->getFilename() ,
+                'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                'caminho' => $file->getRealPath(),
+                'up'      => $subiu
+            ];
+            unset($conteudo ,$result ,$update , $subiu );
+
+        }
+        
+
+
+
+        return $images ;
+    }
 
     private function uuid()
     {
