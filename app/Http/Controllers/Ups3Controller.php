@@ -605,7 +605,7 @@ class Ups3Controller extends Controller
 
                 }else{
                     $conteudo  =  file_get_contents($file->getRealPath()) ;
-                    Storage::disk('public_web')->put('vinhedo/empresafacil/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                     unlink($file->getRealPath());
                     unset($conteudo);
                 }
