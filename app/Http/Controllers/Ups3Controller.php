@@ -696,7 +696,6 @@ class Ups3Controller extends Controller
                 $this->extensao = $file->getExtension() ; // $extensao;
                 $this->nome_completo =   $file->getFilename() ; // $nome_completo;
                 $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
-                $this->pasta = $pasta;
                 $this->idd = $idd;
                 $this->novo_nome =  $idquest .'/'.   $idUnico   .'.'. $file->getExtension() ; 
 
