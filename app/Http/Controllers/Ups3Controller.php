@@ -36,7 +36,8 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPastaEmpresaFacil();
+        $images = $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();
+        
        //$images = $this->loopBucket('s3Vinhedo');
 
         //$images = $this->loopBancoVinhedoImag();
@@ -564,9 +565,9 @@ class Ups3Controller extends Controller
         $pastas = array(
             'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
             'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-         //   'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
-          //  'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
-          //  'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
+            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
+            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+            'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
             'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
 
@@ -650,6 +651,100 @@ class Ups3Controller extends Controller
 
             }
         }
+
+
+
+        return $images ;
+    }
+
+
+    private function loopPorPastaQuestionario()
+    {
+
+        $directory = "/media/geoserver/transferencias/vinhedo/questionario";
+        $count= 0;
+
+        if(!File::isDirectory($directory)) {
+            $msg = 'Caminho não acessivél.';
+            return view('ups3.index').compact($msg); 
+        }
+
+        $files = File::allFiles($directory);
+
+        foreach ($files as $file) {
+            $subiu = false;
+            $lista = DB::connection('BDServicoVinhedo')->select(" SELECT  cast(qt.questionarioRespostaIdentificadorUnico as  VARCHAR(MAX) ) as idquest   
+                                                                        ,  cast(fl.questionarioRespostaAnexoIdentificadorUnico as  VARCHAR(MAX) ) as idfile 
+                                                                        , substring ( arquivo , CHARINDEX('.',arquivo) +1 , len(arquivo)) as extensao
+                                                                        , fl.arquivo 
+                                                                        , fl.id as id_update 
+                                                                    FROM  questionario.questionario_resposta as qt 
+                                                                        , questionario.questionario_resposta_anexo as fl
+                                                                    WHERE qt.id = fl.questionario_resposta_id
+                                                                     AND fl.arquivo = ?  " ,[$file->getFilename()] );
+
+            if($lista  != []  ){
+                $idd = $lista[0]->id_update;
+                $idUnico = $lista[0]->idfile;
+                $idquest = $lista[0]->idquest;
+
+
+            //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+
+                // INICIO ROTINA QUE PODE SER UM JOB.
+
+                $this->extensao = $file->getExtension() ; // $extensao;
+                $this->nome_completo =   $file->getFilename() ; // $nome_completo;
+                $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
+                $this->pasta = $pasta;
+                $this->idd = $idd;
+                $this->novo_nome =  $idquest .'/'.   $idUnico   .'.'. $file->getExtension() ; 
+
+
+                if(is_file($this->caminho_completo)){
+                    $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+                    $result =  Storage::disk('s3VinhedoQuest')->put( $this->novo_nome    , $conteudo );  // ['ACL' => 'public-read'] 
+
+                    if ($result!==false){
+                        $subiu = true;
+                        $update = DB::connection('BDServicoVinhedo')->update(" UPDATE questionario.questionario_resposta_anexo  SET arquivoS3 = CAST(? AS VARCHAR(MAX))   WHERE id = ? ", [ $this->novo_nome   , $this->idd ]); 
+
+                        if($update!==false ){
+                            unlink($this->caminho_completo);
+                        }else{
+                            //return false;
+                            dd('falha update banco');
+                        }
+
+                    }else{
+                        //return false;
+                        dd('falha subir S3 ');
+                    }
+                    
+                    //return true ;
+                }
+
+
+            }else{
+                //$conteudo  =  file_get_contents($file->getRealPath()) ;
+                //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                //unlink($file->getRealPath());
+                //unset($conteudo);
+            }
+
+
+            $count++;
+            $images[] = [
+                'count' => (string) $count , 
+                'nome' =>  $file->getFilename() ,
+                'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                'caminho' => $file->getRealPath(),
+                'up'      => $subiu
+            ];
+            unset($conteudo ,$result ,$update , $subiu );
+
+        }
+        
 
 
 
