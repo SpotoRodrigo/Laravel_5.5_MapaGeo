@@ -596,7 +596,7 @@ class Ups3Controller extends Controller
     
 
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
-                dd($lista);
+                dd($file->getFilename() , $lista);
                  if(is_file($file->getRealPath()) ){
                      // $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  ));  
                  }
