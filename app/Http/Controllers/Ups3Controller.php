@@ -586,14 +586,7 @@ class Ups3Controller extends Controller
 
             foreach ($files as $file) {
                 $count++;
-                $images[] = [
-                    'count' => (string) $count , 
-                    'nome' =>  $file->getFilename() ,
-                    'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
-                    'caminho' => $file->getRealPath(),
-                    'up'      => true
-                ];
-    
+   
 
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
 
@@ -604,10 +597,20 @@ class Ups3Controller extends Controller
                     $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
 
                 }else{
-                    $conteudo  =  file_get_contents($file->getRealPath()) ;
-                    Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                    unlink($file->getRealPath());
-                    unset($conteudo);
+
+                    //$conteudo  =  file_get_contents($file->getRealPath()) ;
+                    //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    //unlink($file->getRealPath());
+                    //unset($conteudo);
+
+                    $images[] = [
+                        'count' => (string) $count , 
+                        'nome' =>  $file->getFilename() ,
+                        'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                        'caminho' => $file->getRealPath(),
+                        'up'      => true
+                    ];
+
                 }
 
 
