@@ -564,8 +564,8 @@ class Ups3Controller extends Controller
         $pastas = array(
        //     'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
        //     'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-       //     'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
-            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
+       //     'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
        //     'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
         //    'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
