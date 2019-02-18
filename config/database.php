@@ -209,6 +209,20 @@ return [
         ],
 
         
+        'BDGeralVinhedo' => [
+            'driver' => 'sqlsrv',  
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.205'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralVinhedo',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false,
+          // 'sticky'    => true,
+        ],
+        
         'BDGeralVinhedoImagem' => [
             'driver' => 'sqlsrv',  
             'host' =>   env('DB_MITRA_HOST2', '10.150.199.205'),      // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral  E FOI PARA 169.57.166.53  -- 10.150.199.205 

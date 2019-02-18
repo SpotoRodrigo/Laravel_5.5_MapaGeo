@@ -10,15 +10,16 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
-use App\Jobs\ProcessParaiso;
+//use App\Jobs\ProcessParaiso;
 //use App\Jobs\ProcessItatiba;
 //use App\Jobs\ProcessVinhedo;
 //use App\Jobs\upVinhedoDoc;
 //use App\Jobs\setPublicS3;
 
-use App\Jobs\ProcessRegistro;
-use App\Jobs\ProcessArtur;
-use App\Jobs\ProcessSocorro;
+use App\Jobs\upVinhedoEmpresaFacil;
+//use App\Jobs\ProcessRegistro;
+//use App\Jobs\ProcessArtur;
+//use App\Jobs\ProcessSocorro;
 
 use Illuminate\Support\Facades\DB;
 
@@ -35,7 +36,7 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images = $this->loopPorPasta();
+        $images = $this->loopPorPastaEmpresaFacil();
        //$images = $this->loopBucket('s3Vinhedo');
 
         //$images = $this->loopBancoVinhedoImag();
@@ -544,8 +545,52 @@ class Ups3Controller extends Controller
          }
 
       return view('ups3.index',compact('images') ); //,compact('images')
-
     }
+
+
+
+    private function loopPorPastaEmpresaFacil()
+    {
+
+        //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/abertura";
+        //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/alteracao";
+        //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/encerramento";
+        $directory = "/media/geoserver/transferencias/vinhedo/empresafacil/laudos";
+        //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo";
+        //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento";
+
+        $count= 0;
+        
+
+
+        if(!File::isDirectory($directory)) {
+            $msg = 'Caminho não acessivél.';
+            return view('ups3.index').compact($msg); 
+        }
+        $files = File::allFiles($directory);
+
+        foreach ($files as $file) {
+            $count++;
+            $images[] = [
+                'nome' =>  $file->getFilename() ,
+                'extensao'  => (string) $count,
+                'caminho' => $file->getRealPath(),
+                'up'      => true
+            ];
+
+            // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
+           
+
+
+             if(is_file($file->getRealPath()) ){
+                  //$this->dispatch(new upVinhedoEmpresaFacil($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+             }
+
+        }
+        return $images ;
+    }
+
+
     private function uuid()
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
