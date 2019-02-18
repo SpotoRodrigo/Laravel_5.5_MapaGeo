@@ -617,7 +617,7 @@ class Ups3Controller extends Controller
                         );
                         if(is_file($this->caminho_completo)){
                             $conteudo  =  file_get_contents( $this->caminho_completo ) ;
-                            $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
+                            $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .'.'.  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
     
                             if ($result!==false){
                                 $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .  $this->extensao , $this->pasta   , $this->idd ]); 
