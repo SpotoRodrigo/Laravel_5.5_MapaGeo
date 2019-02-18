@@ -580,26 +580,17 @@ class Ups3Controller extends Controller
             $files = File::allFiles($caminho);
 
             foreach ($files as $file) {
-
-                $count++;
-                $images[] = [
-                    'count' => (string) $count , 
-                    'nome' =>  $file->getFilename() ,
-                    'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
-                    'caminho' => $file->getRealPath(),
-                    'up'      =>  is_file($file->getRealPath())
-                ];
-
+                $subiu = false;
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
 
                 if($lista  != [] &&  is_file($file->getRealPath()) ){
                     $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
 
-                    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
 
                     // INICIO ROTINA QUE PODE SER UM JOB.
-/*
+
                    $this->extensao = $file->getExtension() ; // $extensao;
                    $this->nome_completo =  $file->getFilename() ; // $nome_completo;
                    $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
@@ -620,6 +611,7 @@ class Ups3Controller extends Controller
                             $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .'.'.  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
     
                             if ($result!==false){
+                                $subiu = true;
                                 $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .'.'.  $this->extensao , $this->pasta   , $this->idd ]); 
     
                                 if($update!==false ){
@@ -633,10 +625,10 @@ class Ups3Controller extends Controller
                                 //return false;
                                 dd('falha subir S3 ');
                             }
-                            unset($conteudo ,$result ,$update );
+                            
                             //return true ;
                         }
- */
+ 
 
                 }else{
                     //$conteudo  =  file_get_contents($file->getRealPath()) ;
@@ -645,6 +637,16 @@ class Ups3Controller extends Controller
                     //unset($conteudo);
                 }
 
+
+                $count++;
+                $images[] = [
+                    'count' => (string) $count , 
+                    'nome' =>  $file->getFilename() ,
+                    'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                    'caminho' => $file->getRealPath(),
+                    'up'      => $subiu
+                ];
+                unset($conteudo ,$result ,$update , $subiu );
 
             }
         }
