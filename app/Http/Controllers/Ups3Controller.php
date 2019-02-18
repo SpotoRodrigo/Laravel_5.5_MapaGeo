@@ -570,12 +570,7 @@ class Ups3Controller extends Controller
             'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
 
-
-//  in_array(  $directory, $pastas ) = true 
-
         foreach ($pastas as $pasta => $caminho ) {
-
-            //dd('PASTA '.$pasta . '  CAMINHO = '.$caminho );
 
             if(!File::isDirectory($caminho)) {
                 $msg = 'Caminho não acessivél.';
@@ -585,16 +580,16 @@ class Ups3Controller extends Controller
             $files = File::allFiles($caminho);
 
             foreach ($files as $file) {
+                
                 $count++;
-   
-
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
 
-                if($lista){
+                if($lista &&  is_file($file->getRealPath()) ){
                     $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
 
-                    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                    dd($file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico );
+                    //$this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
 
                 }else{
 
@@ -608,7 +603,7 @@ class Ups3Controller extends Controller
                         'nome' =>  $file->getFilename() ,
                         'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
                         'caminho' => $file->getRealPath(),
-                        'up'      => true
+                        'up'      =>  is_file($file->getRealPath())
                     ];
 
                 }

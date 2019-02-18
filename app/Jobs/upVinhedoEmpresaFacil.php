@@ -50,8 +50,6 @@ class upVinhedoEmpresaFacil implements ShouldQueue
      */
     public function handle()
     {
-
-
         $s3 = array(
             'abertura' =>  's3VinhedoEFAbertura' ,
             'alteracao' =>  's3VinhedoEFAlteracao',
