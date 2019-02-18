@@ -572,8 +572,9 @@ class Ups3Controller extends Controller
         foreach ($files as $file) {
             $count++;
             $images[] = [
+                'count' => (string) $count , 
                 'nome' =>  $file->getFilename() ,
-                'extensao'  => (string) $count,
+                'extensao'  =>  $file->getClientOriginalExtension() ,         // File::extension( $file->getRealPath()),
                 'caminho' => $file->getRealPath(),
                 'up'      => true
             ];
