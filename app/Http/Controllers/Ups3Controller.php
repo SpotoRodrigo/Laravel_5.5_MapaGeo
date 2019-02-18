@@ -565,7 +565,7 @@ class Ups3Controller extends Controller
           //  'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
           //  'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
           //  'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
-          //  'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
             'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
           //  'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
@@ -590,8 +590,8 @@ class Ups3Controller extends Controller
                     'up'      =>  is_file($file->getRealPath())
                 ];
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
-dd( $lista != [] );
-                if($lista &&  is_file($file->getRealPath()) ){
+
+                if($lista  != [] &&  is_file($file->getRealPath()) ){
                     $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
 
