@@ -590,7 +590,7 @@ class Ups3Controller extends Controller
                     'up'      =>  is_file($file->getRealPath())
                 ];
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
-dd($lista);
+dd( $lista != [] );
                 if($lista &&  is_file($file->getRealPath()) ){
                     $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
