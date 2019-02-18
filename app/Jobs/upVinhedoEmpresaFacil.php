@@ -33,15 +33,17 @@ class upVinhedoEmpresaFacil implements ShouldQueue
      *
      * @return void
      */
-    public function __construct( $extensao , $nome_completo , $caminho_completo ,$pasta )
+    public function __construct( $extensao , $nome_completo , $caminho_completo ,$pasta , $idd  , $novo_nome)
     {
         $this->extensao = $extensao;
         $this->nome_completo = $nome_completo;
         $this->caminho_completo = $caminho_completo;
         $this->pasta = $pasta;
+        $this->idd = $idd;
+        $this->novo_nome = $novo_nome;
     }
 
-    /**
+    /**  
      * Execute the job.
      *
      * @return void
@@ -58,118 +60,25 @@ class upVinhedoEmpresaFacil implements ShouldQueue
             'liberacaousosolo' => 's3VinhedoEFLiberacao' ,
             'recadastramento' =>  's3VinhedoEFRecadastramento' 
         );
-
-
-        $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$this->nome_arquivo] );
-
-        if($lista){
-            $idd = $lista[0]->decamuDocCodigo;
-            $idUnico = $lista[0]->idUnico;
-            $exists = true;
-//dd('true');
-        }else{
-            $exists = false;
-            return true;
-        }
-
-        if($exists){
-            $conteudo  =  file_get_contents( $this->caminho_completo ) ;
-            $result =  Storage::disk($s3[$pasta])->put(  $this->nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
-        }
         
-        
+        $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+        $result =  Storage::disk($s3[$pasta])->put( $this->novo_nome .  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
+
         if ($result!==false){
-            
-            
-            switch ($this->tabela ) {
-                case 'RG':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'CNH':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'TITULO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'CERTIDAO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'ENDERECO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'PESSOA':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
+            $update = DB::connection('BDGeralVinhedo')->update(" UPDATE  dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .  $this->extensao , $pasta   , $this->idd ]); 
 
-                case 'CIDADAO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'RESERVISTA':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'CNS':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'CPF':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'CTPS':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-
-                case 'LOG_RG':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_CNH':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_TITULO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_CERTIDAO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_ENDERECO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_PESSOA':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-
-                case 'LOG_CIDADAO':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_RESERVISTA':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_CNS':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_CPF':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
-                case 'LOG_CTPS':
-                    DB::connection('BDServicoVinhedo')->update(" UPDATE  log_documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->id ]); 
-                break;
+            if($update!==false ){
+                unlink($this->caminho_completo);
+            }else{
+                dd('falha update banco');
             }
+
         }else{
-           // $conteudo  =  file_get_contents( $this->url_image ) ;
+           dd('falha subir S3 ');
         }
+        unset($conteudo);
+        return true ; 
     }
 
-
-    /*
-    			 documentos.cnh			cnhIdentificador    CNH
-		 documentos.TituloEleitor	TituloIdentificador     TITULO
-		 documentos.Certidao		CertidaoIdentificador   CERTIDAO
-         documentos.Rg				RgIdentificador         RG
-         
-         SELECT * FROM log_documentos.CartaoCidadao   -- SIM 
-            SELECT * FROM log_documentos.CarteiraReservista
-            SELECT * FROM log_documentos.Cns
-            SELECT * FROM log_documentos.Cpf
-            SELECT * FROM log_documentos.Ctps
-
-    */
 
 }

@@ -562,12 +562,12 @@ class Ups3Controller extends Controller
         $count= 0;
 
         $pastas = array(
-       //     'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
-       //     'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
+            'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
+            'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
             'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
-       //     'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
-       //     'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
-        //    'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
+            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+            'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
+            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
 
 
@@ -598,16 +598,19 @@ class Ups3Controller extends Controller
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
 
                 if($lista){
-                    dd($file->getFilename() , $lista);
-        //dd('true');
+                    $idd = $lista[0]->decamuDocCodigo;
+                    $idUnico = $lista[0]->idUnico;
+
+                    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+
                 }else{
-                  //  $exists = false;
-                   // return true;
+                    $conteudo  =  file_get_contents($file->getRealPath()) ;
+                    Storage::disk('public_web')->put('vinhedo/empresafacil/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    unlink($file->getRealPath());
+                    unset($conteudo);
                 }
 
-                 if(is_file($file->getRealPath()) ){
-                     // $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  ));  
-                 }
+
             }
         }
 
