@@ -574,7 +574,7 @@ class Ups3Controller extends Controller
             $images[] = [
                 'count' => (string) $count , 
                 'nome' =>  $file->getFilename() ,
-                'extensao'  =>  $file->extension() ,         // File::extension( $file->getRealPath()),
+                'extensao'  =>  File::extension( $file->getRealPath()),
                 'caminho' => $file->getRealPath(),
                 'up'      => true
             ];
