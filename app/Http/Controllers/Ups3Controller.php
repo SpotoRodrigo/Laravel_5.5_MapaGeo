@@ -580,32 +580,28 @@ class Ups3Controller extends Controller
             $files = File::allFiles($caminho);
 
             foreach ($files as $file) {
-                
+
                 $count++;
+                $images[] = [
+                    'count' => (string) $count , 
+                    'nome' =>  $file->getFilename() ,
+                    'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                    'caminho' => $file->getRealPath(),
+                    'up'      =>  is_file($file->getRealPath())
+                ];
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
 
                 if($lista &&  is_file($file->getRealPath()) ){
                     $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
 
-                    dd($file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico );
-                    //$this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
 
                 }else{
-
                     //$conteudo  =  file_get_contents($file->getRealPath()) ;
                     //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                     //unlink($file->getRealPath());
                     //unset($conteudo);
-
-                    $images[] = [
-                        'count' => (string) $count , 
-                        'nome' =>  $file->getFilename() ,
-                        'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
-                        'caminho' => $file->getRealPath(),
-                        'up'      =>  is_file($file->getRealPath())
-                    ];
-
                 }
 
 

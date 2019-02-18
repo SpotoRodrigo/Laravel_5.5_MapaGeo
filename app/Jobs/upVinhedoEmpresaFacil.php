@@ -60,21 +60,23 @@ class upVinhedoEmpresaFacil implements ShouldQueue
         );
         
         $conteudo  =  file_get_contents( $this->caminho_completo ) ;
-        $result =  Storage::disk($s3[$pasta])->put( $this->novo_nome .  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
+        $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
 
         if ($result!==false){
-            $update = DB::connection('BDGeralVinhedo')->update(" UPDATE  dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .  $this->extensao , $pasta   , $this->idd ]); 
+            $update = DB::connection('BDGeralVinhedo')->update(" UPDATE  dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .  $this->extensao , $this->pasta   , $this->idd ]); 
 
             if($update!==false ){
                 unlink($this->caminho_completo);
             }else{
-                dd('falha update banco');
+                return false;
+                //dd('falha update banco');
             }
 
         }else{
-           dd('falha subir S3 ');
+            return false;
+           //dd('falha subir S3 ');
         }
-        unset($conteudo);
+        unset($conteudo ,$result ,$update );
         return true ; 
     }
 
