@@ -562,12 +562,12 @@ class Ups3Controller extends Controller
         $count= 0;
 
         $pastas = array(
-            'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
-            'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
-            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+          //  'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
+          //  'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
+          //  'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
+          //  'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
             'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
-            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
+          //  'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
         );
 
         foreach ($pastas as $pasta => $caminho ) {
@@ -616,7 +616,6 @@ class Ups3Controller extends Controller
                         );
                         if(is_file($this->caminho_completo)){
                             $conteudo  =  file_get_contents( $this->caminho_completo ) ;
-                            dd($s3[$this->pasta]);
                             $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
     
                             if ($result!==false){
