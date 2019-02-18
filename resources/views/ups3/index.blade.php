@@ -15,6 +15,7 @@
     @foreach($images as $image)
 
         <tr>
+            <td>{{ $image['count'] }}</td>
             <td>{{ $image['nome'] }}</td>
             <td>{{ $image['extensao'] }}</td>
             <td>{{ $image['caminho'] }}</td>

@@ -561,7 +561,10 @@ class Ups3Controller extends Controller
 
         $count= 0;
         
+        $pastas = ['abertura','alteracao','encerramento','laudos','liberacaousosolo','recadastramento'];
 
+        dd(   in_array(  $directory, $pastas[] )  );    
+        
 
         if(!File::isDirectory($directory)) {
             $msg = 'Caminho não acessivél.';
