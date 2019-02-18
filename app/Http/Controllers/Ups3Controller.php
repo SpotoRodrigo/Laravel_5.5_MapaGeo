@@ -560,10 +560,18 @@ class Ups3Controller extends Controller
         //$directory = "/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento";
 
         $count= 0;
-        
-        $pastas = ['abertura','alteracao','encerramento','laudos','liberacaousosolo','recadastramento'];
 
-        dd(   in_array(  $pastas , $directory  )  );    
+        $pastas = array(
+            'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
+            'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
+            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,
+            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+            'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
+            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
+        );
+
+
+        dd(   in_array(  $directory, $pastas )  );    
         
 
         if(!File::isDirectory($directory)) {
