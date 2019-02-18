@@ -775,7 +775,7 @@ class Ups3Controller extends Controller
                                                                         , BDServicoVinhedo.organizacao.Servico     as serv
                                                                         WHERE imag.TipoFoto = 'Documento'  
                                                                         AND imag.assunto = 'Habitacao'
-                                                                        AND imag.ImagemNome  = ? 
+                                                                        AND imag.ImagemNome  = '?'
                                                                         AND fich.codFicha = imag.keyFotoNumerica
                                                                         and serv.servicoIndetificador = 19 
                                                                         order by imag.ImagemNome  " ,[$file->getFilename()] );
