@@ -573,35 +573,38 @@ class Ups3Controller extends Controller
 //  in_array(  $directory, $pastas ) = true 
 
 
-       
-        
 
         if(!File::isDirectory($directory)) {
             $msg = 'Caminho não acessivél.';
             return view('ups3.index').compact($msg); 
         }
-        $files = File::allFiles($directory);
+        
+        
+        foreach ($pastas as $pasta => $caminho ) {
 
-        foreach ($files as $file) {
-            dd(  array_search( $file->getRealPath()  , $pastas)   );    
-            $count++;
-            $images[] = [
-                'count' => (string) $count , 
-                'nome' =>  $file->getFilename() ,
-                'extensao'  =>  File::extension( $file->getRealPath()),
-                'caminho' => $file->getRealPath(),
-                'up'      => true
-            ];
+            dd('PASTA '.$pasta . '  CAMINHO = '.$caminho );
 
-            // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
-           
+  /*          $files = File::allFiles($directory);
 
-
-             if(is_file($file->getRealPath()) ){
-                  //$this->dispatch(new upVinhedoEmpresaFacil($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-             }
-
+            foreach ($files as $file) {
+                $count++;
+                $images[] = [
+                    'count' => (string) $count , 
+                    'nome' =>  $file->getFilename() ,
+                    'extensao'  =>  File::extension( $file->getRealPath()),
+                    'caminho' => $file->getRealPath(),
+                    'up'      => true
+                ];
+    
+                 if(is_file($file->getRealPath()) ){
+                      //$this->dispatch(new upVinhedoEmpresaFacil($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 }
+            }
+*/
         }
+
+
+
         return $images ;
     }
 
