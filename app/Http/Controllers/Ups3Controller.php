@@ -571,7 +571,7 @@ class Ups3Controller extends Controller
         );
 
 //  in_array(  $directory, $pastas ) = true 
-        dd(  array_search( $directory , $pastas)   );    
+
 
        
         
@@ -583,6 +583,7 @@ class Ups3Controller extends Controller
         $files = File::allFiles($directory);
 
         foreach ($files as $file) {
+            dd(  array_search( $file->getRealPath()  , $pastas)   );    
             $count++;
             $images[] = [
                 'count' => (string) $count , 
