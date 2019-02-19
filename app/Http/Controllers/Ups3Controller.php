@@ -586,12 +586,12 @@ class Ups3Controller extends Controller
 
             foreach ($files as $file) {
                 $subiu = false;
-                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  
+                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
                                         FROM dbo.DECAMUDocumento 
                                         WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
 dd($lista);
                 if($lista  != [] &&  is_file($file->getRealPath()) ){
-                    $idd = $lista[0]->decamuDocCodigo;
+                  //  $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
 
                 //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
@@ -602,8 +602,8 @@ dd($lista);
                    $this->nome_completo =  $file->getFilename() ; // $nome_completo;
                    $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
                    $this->pasta = $pasta;
-                   $this->idd = $idd;
-                   $this->novo_nome =  $idUnico ; // $novo_nome;
+                   //$this->idd = $idd;
+                   $this->novo_nome =  $idUnico .'.'.  $this->extensao  ; // $novo_nome;
 
                         $s3 = array(
                             'abertura' =>  's3VinhedoEFAbertura' ,
@@ -615,11 +615,11 @@ dd($lista);
                         );
                         if(is_file($this->caminho_completo)){
                             $conteudo  =  file_get_contents( $this->caminho_completo ) ;
-                            $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome .'.'.  $this->extensao   , $conteudo );  // ['ACL' => 'public-read'] 
+                            $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome  , $conteudo );  // ['ACL' => 'public-read'] 
     
                             if ($result!==false){
                                 $subiu = true;
-                                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocCodigo = ? ", [ $this->novo_nome .'.'.  $this->extensao , $this->pasta   , $this->idd ]); 
+                                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocNomeArquivoold = ?  and tipoArquivo is null ", [ $this->novo_nome  , $this->pasta   , $this->nome_completo ]); 
     
                                 if($update!==false ){
                                     unlink($this->caminho_completo);
