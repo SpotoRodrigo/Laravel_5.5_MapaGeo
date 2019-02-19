@@ -589,11 +589,11 @@ class Ups3Controller extends Controller
                 $lista = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
                                         FROM dbo.DECAMUDocumento 
                                         WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
-dd($lista);
+
                 if($lista  != []  ){  // &&  is_file($file->getRealPath()) 
                   //  $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
-
+                    dd($lista);
                 //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
 
                     // INICIO ROTINA QUE PODE SER UM JOB.
