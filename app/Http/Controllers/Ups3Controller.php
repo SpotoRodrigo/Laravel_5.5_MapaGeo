@@ -36,9 +36,9 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+         $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-         $images = $this->loopPorPastaEmpresaFacil(); 
+        // $images = $this->loopPorPastaEmpresaFacil(); 
 
         //$images = $this->loopBucket('s3VinhedoServ');
 
@@ -566,12 +566,12 @@ class Ups3Controller extends Controller
         $count= 0;
 
         $pastas = array(
-            'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
-            'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
-            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
-            'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
-            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' ,
+            'abertura'      =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
+            'alteracao'     =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
+            'encerramento'  =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
+            'laudos'        =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+            'liberacaousosolo'  => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
+            'recadastramento'   =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' ,
             //'fora' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/fora' 
         );
 
