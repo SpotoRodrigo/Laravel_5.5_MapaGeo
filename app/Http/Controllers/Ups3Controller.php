@@ -36,9 +36,9 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-         $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+        // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        // $images = $this->loopPorPastaEmpresaFacil(); 
+         $images = $this->loopPorPastaEmpresaFacil(); 
 
         //$images = $this->loopBucket('s3VinhedoServ');
 
@@ -838,6 +838,26 @@ class Ups3Controller extends Controller
 
 
             }else{
+
+                $pasta = 'habitacao';
+                $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
+                FROM dbo.DECAMUDocumento 
+                WHERE  decamuDocNomeArquivoold    = replace(? , '__','_')  and tipoArquivo is not null   " ,[$file->getFilename()] );
+
+                if($jasubiu  != []  ){
+                   // $conteudo  =  file_get_contents($file->getRealPath()) ;
+                   // Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    unlink($file->getRealPath());
+                   // unset($conteudo);
+                }else{
+                    // $conteudo  =  file_get_contents($file->getRealPath()) ;
+                    // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    // unlink($file->getRealPath());
+                    // unset($conteudo);
+                }
+
+
+
                 //$conteudo  =  file_get_contents($file->getRealPath()) ;
                 //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                 //unlink($file->getRealPath());
