@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();
         
-        $images = $this->loopPorPastaHabitacao(); 
+       // $images = $this->loopPorPastaEmpresaFacil(); 
 
-       // $images = $this->loopBucket('s3VinhedoEFRecadastramento');
+        $images = $this->loopBucket('s3VinhedoServ');
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -254,7 +254,7 @@ class Ups3Controller extends Controller
             } 
             //Storage::disk($Bucket)->delete($file);
             //Storage::disk($Bucket)->delete($file);
-            // Storage::disk('s3Biri')->setVisibility($file, 'public');
+             Storage::disk($Bucket)->setVisibility($file, 'public');
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
@@ -571,7 +571,8 @@ class Ups3Controller extends Controller
             'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
             'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
             'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
-            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' 
+            'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' ,
+            'fora' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/fora' 
         );
 
         foreach ($pastas as $pasta => $caminho ) {
