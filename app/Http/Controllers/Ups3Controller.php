@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();
         
-        $images = $this->loopPorPastaHabitacao(); 
+        //$images = $this->loopPorPastaHabitacao(); 
 
-       //$images = $this->loopBucket('s3Vinhedo');
+       $images = $this->loopBucket('s3VinhedoEFRecadastramento');
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -252,7 +252,7 @@ class Ups3Controller extends Controller
                 ];
             } 
             //Storage::disk($Bucket)->delete($file);
-            Storage::disk($Bucket)->delete($file);
+            //Storage::disk($Bucket)->delete($file);
             // Storage::disk('s3Biri')->setVisibility($file, 'public');
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
@@ -768,7 +768,7 @@ class Ups3Controller extends Controller
         foreach ($files as $file) {
             $subiu = false;
             //$lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT  CAST( serv.servicoIdentificadorUnico as   char(50)  )  as idserv , CAST(fich.codFichaIdentUnico as   char(50)  )     as idfile  , CAST( imag.idunico as  char(50) )  AS idimag , ImagemNome   , codImagem FROM BDGeralVinhedoImagem.dbo.Imagem       as imag  , BDGeralVinhedo.habitacao.FichaHabitacao  as fich  , BDServicoVinhedo.organizacao.Servico     as serv WHERE imag.TipoFoto = 'Documento' AND imag.assunto = 'Habitacao' AND imag.ImagemNome  = ? AND fich.codFicha = imag.keyFotoNumerica and serv.servicoIndetificador = 19 order by imag.ImagemNome  " ,[$file->getFilename()] );
-            $lista = DB::connection('BDGeralVinhedo')->select(" select ImagemNome, codImagem ,  uidarquivo , uidficha ,  uidserv   from BDGeralVinhedoImagem.dbo.viewDocHabitacao WHERE  ImagemNome  = ?  ",[$file->getFilename()] );
+            $lista = DB::connection('BDGeralVinhedoImagem')->select(" SELECT ImagemNome, codImagem ,  uidarquivo , uidficha ,  uidserv   FROM  dbo.viewDocHabitacao WHERE  ImagemNome  = ?  ",[$file->getFilename()] );
 dd($lista );
             if($lista  != []  ){
                 $idd = $lista[0]->codImagem;
