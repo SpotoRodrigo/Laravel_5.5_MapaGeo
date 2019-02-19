@@ -590,7 +590,7 @@ class Ups3Controller extends Controller
                                         FROM dbo.DECAMUDocumento 
                                         WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
 dd($lista);
-                if($lista  != [] &&  is_file($file->getRealPath()) ){
+                if($lista  != []  ){  // &&  is_file($file->getRealPath()) 
                   //  $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
 
@@ -619,7 +619,7 @@ dd($lista);
     
                             if ($result!==false){
                                 $subiu = true;
-                                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ?   WHERE decamuDocNomeArquivoold = ?  and tipoArquivo is null ", [ $this->novo_nome  , $this->pasta   , $this->nome_completo ]); 
+                                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ? ,  idUnico  = CAST(? AS VARCHAR(MAX))   WHERE decamuDocNomeArquivoold = ?  and tipoArquivo is null ", [ $this->novo_nome  , $this->pasta , $idUnico   , $this->nome_completo ]); 
     
                                 if($update!==false ){
                                     unlink($this->caminho_completo);
