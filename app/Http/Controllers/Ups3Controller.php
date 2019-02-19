@@ -642,7 +642,7 @@ dd($lista);
                     //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                     //unlink($file->getRealPath());
                     //unset($conteudo);
-
+                }
 
                 $count++;
                 $images[] = [
@@ -657,7 +657,7 @@ dd($lista);
             }
         }
 
-
+    
 
         return $images ;
     }
