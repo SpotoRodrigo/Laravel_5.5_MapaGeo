@@ -36,11 +36,11 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();
-        
-       // $images = $this->loopPorPastaEmpresaFacil(); 
+        // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+         
+         $images = $this->loopPorPastaEmpresaFacil(); 
 
-        $images = $this->loopBucket('s3VinhedoServ');
+        //$images = $this->loopBucket('s3VinhedoServ');
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -146,13 +146,13 @@ class Ups3Controller extends Controller
     private function loopPorPasta()
     {
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
-        $directory = "/media/geoserver/web/ssparaiso/img/Entregavel_05";
+        $directory = "/media/geoserver/transferencias/saolourenco/Fotos de Fachada";
         //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
         //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
         //$directory = "/media/geoserver/transferencias/socorro/" ;
         //$directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
         $count= 0;
-        
+        dd('falta banco de são lourenco.');
 ///media/geoserver/transferencias/socorro/fotos
 ///media/geoserver/transferencias/registro/fotos 
 
@@ -176,9 +176,9 @@ class Ups3Controller extends Controller
 
 
              if(is_file($file->getRealPath()) ){
-                  $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                 // $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
-          /*
+          
             //  VINHEDO   
             if( is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
@@ -187,7 +187,7 @@ class Ups3Controller extends Controller
                 $tt = strpos($this->nome_arquivo , '_') != false ?  strpos($this->nome_arquivo , '_')  : strlen($this->nome_arquivo) ; 
                 $aux =  strtoupper  (substr (str_replace('.jpg','',$this->nome_arquivo ) , 0 ,  $tt ) ) ;
 
-                $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao  
+                $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao  
                                                                         FROM dbo.imagem 
                                                                         , BDGeralVinhedo.dbo.imovel_territorial
                                                                         WHERE assunto = 'Terreno'
@@ -211,17 +211,17 @@ class Ups3Controller extends Controller
                     $novo_nome = $this->uuid();
                     $conteudo  =  file_get_contents($this->caminho) ;
 
-                    $result =  Storage::disk('s3Vinhedo')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                    $result =  Storage::disk('s3Slserra')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
                     //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-                    $affected = DB::connection('BDGeralVinhedoImagem')->update("UPDATE dbo.Imagem  
+                    $affected = DB::connection('BDGeralLorenaImagem')->update("UPDATE dbo.Imagem  
                                                                                 SET  ImagemNome =   ? 
-                                                                                , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/acdb0896-101b-4a9d-aa32-6d1b134f3961' 
+                                                                                , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d' 
                                                                                 WHERE assunto = 'Terreno'
                                                                                 AND TipoFoto = 'Foto Fachada'
                                                                                 AND  codImagem = ?", [$novo_nome . '.' . $this->extensao , $idd ]); 
 
-                    DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
+                  //  DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
                         
                     if ($affected){
                         unlink($this->caminho);
@@ -229,7 +229,7 @@ class Ups3Controller extends Controller
                     }
                 }
             }
-*/
+
         }
         return $images ;
     }
@@ -566,13 +566,13 @@ class Ups3Controller extends Controller
         $count= 0;
 
         $pastas = array(
-            'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
-            'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
-            'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
-            'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
-            'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
+          //  'abertura' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/abertura' ,
+          //  'alteracao' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/alteracao',
+          //  'encerramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/encerramento' ,  // 386 
+          //  'laudos' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/laudos',
+          //  'liberacaousosolo' => '/media/geoserver/transferencias/vinhedo/empresafacil/liberacaousosolo' ,
             'recadastramento' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/recadastramento' ,
-            'fora' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/fora' 
+            //'fora' =>  '/media/geoserver/transferencias/vinhedo/empresafacil/fora' 
         );
 
         foreach ($pastas as $pasta => $caminho ) {
@@ -586,8 +586,10 @@ class Ups3Controller extends Controller
 
             foreach ($files as $file) {
                 $subiu = false;
-                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  FROM dbo.DECAMUDocumento  WHERE decamuDocNomeArquivo = ?  " ,[$file->getFilename()] );
-
+                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico   , isnull(tipoArquivo,'NAO') as subiu
+                                        FROM dbo.DECAMUDocumento 
+                                        WHERE  decamuDocNomeArquivoold    = ?   " ,[$file->getFilename()] );
+dd($lista);
                 if($lista  != [] &&  is_file($file->getRealPath()) ){
                     $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
@@ -640,7 +642,6 @@ class Ups3Controller extends Controller
                     //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                     //unlink($file->getRealPath());
                     //unset($conteudo);
-                }
 
 
                 $count++;
