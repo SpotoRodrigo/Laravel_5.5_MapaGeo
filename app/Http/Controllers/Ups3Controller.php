@@ -586,9 +586,9 @@ class Ups3Controller extends Controller
 
             foreach ($files as $file) {
                 $subiu = false;
-                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico   , isnull(tipoArquivo,'NAO') as subiu
+                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT decamuDocCodigo , decamuDocNomeArquivo , cast(idUnico as  VARCHAR(MAX) ) as idUnico  
                                         FROM dbo.DECAMUDocumento 
-                                        WHERE  decamuDocNomeArquivoold    = ?   " ,[$file->getFilename()] );
+                                        WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
 dd($lista);
                 if($lista  != [] &&  is_file($file->getRealPath()) ){
                     $idd = $lista[0]->decamuDocCodigo;
