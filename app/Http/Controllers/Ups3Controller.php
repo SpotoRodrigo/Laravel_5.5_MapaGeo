@@ -245,8 +245,9 @@ class Ups3Controller extends Controller
             if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                 $count++; 
                 $images[] = [
+                    'count' => (string) $count ,
                     'nome' =>  $file,
-                    'extensao'  => (string) $count ,
+                    'extensao'  => '' ,
                     'caminho' => $Bucket ,
                     'up'      => $count
                 ];
