@@ -683,7 +683,7 @@ class Ups3Controller extends Controller
                                                                     FROM  questionario.questionario_resposta as qt 
                                                                         , questionario.questionario_resposta_anexo as fl
                                                                     WHERE qt.id = fl.questionario_resposta_id
-                                                                     AND fl.arquivo = ?  " ,[$file->getFilename()] );
+                                                                      AND fl.arquivo = ?  " ,[$file->getFilename()] );
 
             if($lista  != []  ){
                 $idd = $lista[0]->id_update;
@@ -768,13 +768,13 @@ class Ups3Controller extends Controller
         foreach ($files as $file) {
             $subiu = false;
             //$lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT  CAST( serv.servicoIdentificadorUnico as   char(50)  )  as idserv , CAST(fich.codFichaIdentUnico as   char(50)  )     as idfile  , CAST( imag.idunico as  char(50) )  AS idimag , ImagemNome   , codImagem FROM BDGeralVinhedoImagem.dbo.Imagem       as imag  , BDGeralVinhedo.habitacao.FichaHabitacao  as fich  , BDServicoVinhedo.organizacao.Servico     as serv WHERE imag.TipoFoto = 'Documento' AND imag.assunto = 'Habitacao' AND imag.ImagemNome  = ? AND fich.codFicha = imag.keyFotoNumerica and serv.servicoIndetificador = 19 order by imag.ImagemNome  " ,[$file->getFilename()] );
-            $lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT top 5  ImagemNome   , codImagem FROM BDGeralVinhedoImagem.dbo.Imagem       as imag  , BDGeralVinhedo.habitacao.FichaHabitacao  as fich  , BDServicoVinhedo.organizacao.Servico     as serv WHERE imag.TipoFoto = 'Documento' AND imag.assunto = 'Habitacao'  AND fich.codFicha = imag.keyFotoNumerica and serv.servicoIndetificador = 19 order by imag.ImagemNome  " );
+            $lista = DB::connection('BDGeralVinhedoImagem')->select(" select ImagemNome, codImagem ,  uidarquivo , uidficha ,  uidserv   from dbo.viewDocHabitacao WHERE  ImagemNome  = ?  ",[$file->getFilename()] );
 dd($lista );
             if($lista  != []  ){
                 $idd = $lista[0]->codImagem;
-                $idserv = $lista[0]->idserv;
-                $idfile = $lista[0]->idfile;
-                $idimag = $lista[0]->idimag;
+                $uidserv = $lista[0]->uidserv;
+                $uidficha = $lista[0]->uidficha;
+                $uidarquivo = $lista[0]->uidarquivo;
 
 
             //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
@@ -785,7 +785,7 @@ dd($lista );
                 $this->nome_completo =   $file->getFilename() ; // $nome_completo;
                 $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
                 $this->idd = $idd;
-                $this->novo_nome =  $idserv .'/'.   $idfile .'/'.   $idimag   .'.'. $file->getExtension() ; 
+                $this->novo_nome =  $uidserv .'/'.   $uidficha .'/'.   $uidarquivo   .'.'. $file->getExtension() ; 
 
 
                 if(is_file($this->caminho_completo)){
