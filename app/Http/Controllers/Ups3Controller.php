@@ -776,7 +776,7 @@ class Ups3Controller extends Controller
                                                                             ,cast(uidficha as char(36)) uidficha 
                                                                             ,cast(uidserv as char(36))  uidserv  
                                                                              FROM  dbo.viewDocHabitacao WHERE  ImagemNome  = ?  ",[$file->getFilename()] );
-dd($lista );
+
             if($lista  != []  ){
                 $idd = $lista[0]->codImagem;
                 $uidserv = $lista[0]->uidserv;
@@ -797,7 +797,7 @@ dd($lista );
 
                 if(is_file($this->caminho_completo)){
                     $conteudo  =  file_get_contents( $this->caminho_completo ) ;
-                    $result =  Storage::disk('s3VinhedoQuest')->put( $this->novo_nome    , $conteudo );  // ['ACL' => 'public-read'] 
+                    $result =  Storage::disk('s3VinhedoServ')->put( $this->novo_nome    , $conteudo );  // ['ACL' => 'public-read'] 
 
                     if ($result!==false){
                         $subiu = true;

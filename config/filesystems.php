@@ -192,6 +192,17 @@ return [
             'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
             'region' => 'sao01',
         ],
+
+        's3VinhedoServ' => [
+            'driver' => 's3',
+            'key' => 'yjkOvSG4IVMdTinzsFI3',
+            'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
+            'version' => '2006-03-01',            
+            'bucket' =>  '8ee80b03-66be-4945-a4cf-990c7b1e969c', 
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
+            'region' => 'sao01',
+        ],
 /* EMPRESA FACIL */
 
         's3VinhedoEFAbertura' => [
