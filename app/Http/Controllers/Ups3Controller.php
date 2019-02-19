@@ -38,7 +38,7 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();
         
-        $images = $this->loopPorPastaEmpresaFacil(); 
+        $images = $this->loopPorPastaHabitacao(); 
 
        //$images = $this->loopBucket('s3Vinhedo');
 
