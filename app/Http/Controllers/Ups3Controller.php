@@ -593,7 +593,6 @@ class Ups3Controller extends Controller
                 if($lista  != []  ){  // &&  is_file($file->getRealPath()) 
                   //  $idd = $lista[0]->decamuDocCodigo;
                     $idUnico = $lista[0]->idUnico;
-                    dd($lista);
                 //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
 
                     // INICIO ROTINA QUE PODE SER UM JOB.
@@ -622,7 +621,10 @@ class Ups3Controller extends Controller
                                 $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ? ,  idUnico  = CAST(? AS VARCHAR(MAX))   WHERE decamuDocNomeArquivoold = ?  and tipoArquivo is null ", [ $this->novo_nome  , $this->pasta , $idUnico   , $this->nome_completo ]); 
     
                                 if($update!==false ){
+                                    $conteudo  =  file_get_contents($this->caminho_completo) ;
+                                    Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                                     unlink($this->caminho_completo);
+                                    unset($conteudo);
                                 }else{
                                     //return false;
                                     dd('falha update banco');
@@ -637,11 +639,25 @@ class Ups3Controller extends Controller
                         }
  
 
-                }else{
-                    //$conteudo  =  file_get_contents($file->getRealPath()) ;
-                    //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                    //unlink($file->getRealPath());
-                    //unset($conteudo);
+                }else{  // NÃO ACHOU NO BANCO ,,,, (jã subiu ou não existe . co)
+
+                    $jasubiu  = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
+                    FROM dbo.DECAMUDocumento 
+                    WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is not null   " ,[$file->getFilename()] );
+
+                    if($jasubiu  != []  ){
+                        $conteudo  =  file_get_contents($file->getRealPath()) ;
+                        Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                        unlink($file->getRealPath());
+                        unset($conteudo);
+                    }else{
+                        // $conteudo  =  file_get_contents($file->getRealPath()) ;
+                        // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                        // unlink($file->getRealPath());
+                        // unset($conteudo);
+                    }
+
+                   
                 }
 
                 $count++;
