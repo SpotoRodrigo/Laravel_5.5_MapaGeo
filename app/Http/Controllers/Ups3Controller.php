@@ -771,11 +771,10 @@ class Ups3Controller extends Controller
             //$lista = DB::connection('BDGeralVinhedoImagem')->select("SELECT  CAST( serv.servicoIdentificadorUnico as   char(50)  )  as idserv , CAST(fich.codFichaIdentUnico as   char(50)  )     as idfile  , CAST( imag.idunico as  char(50) )  AS idimag , ImagemNome   , codImagem FROM BDGeralVinhedoImagem.dbo.Imagem       as imag  , BDGeralVinhedo.habitacao.FichaHabitacao  as fich  , BDServicoVinhedo.organizacao.Servico     as serv WHERE imag.TipoFoto = 'Documento' AND imag.assunto = 'Habitacao' AND imag.ImagemNome  = ? AND fich.codFicha = imag.keyFotoNumerica and serv.servicoIndetificador = 19 order by imag.ImagemNome  " ,[$file->getFilename()] );
             //$lista = DB::connection('BDGeralVinhedoImagem')->select(" SELECT @@version; " );
             //$lista = DB::connection('BDGeralVinhedoImagem')->select(" SELECT  cast(ImagemNome as char(120)) as imagemnome,  codImagem  FROM dbo.Imagem WHERE   TipoFoto = 'Documento' AND assunto = 'Habitacao' AND 44496 = codImagem    " );
-            $lista = DB::connection('BDGeralVinhedoImagem')->select(" SELECT  cast(ImagemNome as char(150)) ImagemNome 
-                                                                            ,  codImagem 
-                                                                            , cast(uidarquivo as char(50)) uidarquivo 
-                                                                            ,cast(uidficha as char(50)) uidficha 
-                                                                            ,cast(uidserv as char(50))  uidserv  
+            $lista = DB::connection('BDGeralVinhedoImagem')->select(" SELECT  codImagem 
+                                                                            ,cast(uidarquivo as char(36)) uidarquivo 
+                                                                            ,cast(uidficha as char(36)) uidficha 
+                                                                            ,cast(uidserv as char(36))  uidserv  
                                                                              FROM  dbo.viewDocHabitacao WHERE  ImagemNome  = ?  ",[$file->getFilename()] );
 dd($lista );
             if($lista  != []  ){
