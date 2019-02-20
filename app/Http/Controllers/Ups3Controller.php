@@ -793,17 +793,7 @@ class Ups3Controller extends Controller
                                                                             ,cast(uidarquivo as char(36)) uidarquivo 
                                                                             ,cast(uidficha as char(36)) uidficha 
                                                                             ,cast(uidserv as char(36))  uidserv  
-                                                                             FROM  dbo.viewDocHabitacao WHERE  ImagemNome  = ?  AND codimagem not in (
-                                                                                                                                    SELECT novos.codimagem 
-                                                                                                                                    FROM  dbo.imagem as novos 
-                                                                                                                                    , dbo.imagem as old
-                                                                                                                                    WHERE novos.assunto = 'Documento'
-                                                                                                                                    and novos.TipoFoto = 'Habitacao' 
-                                                                                                                                    and  old.TipoFoto = 'Documento'
-                                                                                                                                    and old.assunto = 'Habitacao' 
-                                                                                                                                    and novos.keyfoto = old.keyfoto 
-                                                                                                                                    and replace( novos.imagemnome ,'__','_') = replace (old.ImagemNomeAnterior ,'__','_')
-                                                                                                                                    )  ",[$file->getFilename()] );
+                                                                             FROM  dbo.viewDocHabitacao WHERE  ImagemNome  = ?    ",[$file->getFilename()] );
 
             if($lista  != []  ){
                 $idd = $lista[0]->codImagem;
@@ -848,31 +838,6 @@ class Ups3Controller extends Controller
 
 
             }else{
-
-                $pasta = 'habitacao';
-                $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select(" SELECT novos.codimagem , novos.ImagemNome
-                FROM  dbo.imagem as novos 
-                   , dbo.imagem as old
-                WHERE novos.assunto = 'Documento'
-                  and novos.TipoFoto = 'Habitacao' 
-                  and  old.TipoFoto = 'Documento'
-                  and old.assunto = 'Habitacao' 
-                  and novos.keyfoto = old.keyfoto 
-                  and replace( novos.imagemnome ,'__','_') = replace (old.ImagemNomeAnterior ,'__','_')  AND  (novos.imagemnome  = replace(? , '__','_') " ,[$file->getFilename()] );
-
-                if($jasubiu  != []  ){
-                   // $conteudo  =  file_get_contents($file->getRealPath()) ;
-                   // Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                    unlink($file->getRealPath());
-                   // unset($conteudo);
-                }else{
-                    // $conteudo  =  file_get_contents($file->getRealPath()) ;
-                    // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                    // unlink($file->getRealPath());
-                    // unset($conteudo);
-                }
-
-
 
                 //$conteudo  =  file_get_contents($file->getRealPath()) ;
                 //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
