@@ -839,6 +839,28 @@ class Ups3Controller extends Controller
 
             }else{
 
+                $pasta = 'habitacao';
+                $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select("SELECT codimagem 
+                                                                            FROM dbo.imagem 
+                                                                            WHERE assunto = 'Habitacao' 
+                                                                            AND TipoFoto = 'Documento' 
+                                                                            AND uploads3 = 1 
+                                                                            AND  imagemnomeanterior = replace(? , '__','_') " ,[$file->getFilename()] );
+
+                if($jasubiu  != []  ){
+                   // $conteudo  =  file_get_contents($file->getRealPath()) ;
+                   // Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    unlink($file->getRealPath());
+                   // unset($conteudo);
+                }else{
+                    // $conteudo  =  file_get_contents($file->getRealPath()) ;
+                    // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    // unlink($file->getRealPath());
+                    // unset($conteudo);
+                }
+
+
+
                 //$conteudo  =  file_get_contents($file->getRealPath()) ;
                 //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                 //unlink($file->getRealPath());
