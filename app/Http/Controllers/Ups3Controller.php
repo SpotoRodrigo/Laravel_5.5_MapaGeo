@@ -793,7 +793,17 @@ class Ups3Controller extends Controller
                                                                             ,cast(uidarquivo as char(36)) uidarquivo 
                                                                             ,cast(uidficha as char(36)) uidficha 
                                                                             ,cast(uidserv as char(36))  uidserv  
-                                                                             FROM  dbo.viewDocHabitacao WHERE  ImagemNome  = ?  ",[$file->getFilename()] );
+                                                                             FROM  dbo.viewDocHabitacao WHERE  ImagemNome  = ?  AND codimagem not in (
+                                                                                                                                    SELECT novos.codimagem 
+                                                                                                                                    FROM  dbo.imagem as novos 
+                                                                                                                                    , dbo.imagem as old
+                                                                                                                                    WHERE novos.assunto = 'Documento'
+                                                                                                                                    and novos.TipoFoto = 'Habitacao' 
+                                                                                                                                    and  old.TipoFoto = 'Documento'
+                                                                                                                                    and old.assunto = 'Habitacao' 
+                                                                                                                                    and novos.keyfoto = old.keyfoto 
+                                                                                                                                    and replace( novos.imagemnome ,'__','_') = replace (old.ImagemNomeAnterior ,'__','_')
+                                                                                                                                    )  ",[$file->getFilename()] );
 
             if($lista  != []  ){
                 $idd = $lista[0]->codImagem;
@@ -840,9 +850,7 @@ class Ups3Controller extends Controller
             }else{
 
                 $pasta = 'habitacao';
-                $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
-                FROM dbo.DECAMUDocumento 
-                WHERE  decamuDocNomeArquivoold    = replace(? , '__','_')  and tipoArquivo is not null   " ,[$file->getFilename()] );
+                $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select(" SELECT  codImagem   FROM  dbo.imagem WHERE ( TipoFoto = 'Documento' OR TipoFoto = 'Habitacao') AND  (ImagemNome  = replace(? , '__','_') OR  ImagemNomeAnterior  = replace(? , '__','_') ) " ,[$file->getFilename()] );
 
                 if($jasubiu  != []  ){
                    // $conteudo  =  file_get_contents($file->getRealPath()) ;
