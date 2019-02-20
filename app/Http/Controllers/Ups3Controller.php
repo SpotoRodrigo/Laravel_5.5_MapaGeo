@@ -850,7 +850,7 @@ class Ups3Controller extends Controller
             }else{
 
                 $pasta = 'habitacao';
-                $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select(" SELECT  codImagem   FROM  dbo.imagem WHERE ( TipoFoto = 'Documento' OR TipoFoto = 'Habitacao') AND  (ImagemNome  = replace(? , '__','_') OR  ImagemNomeAnterior  = replace(? , '__','_') ) " ,[$file->getFilename()] );
+                $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select(" SELECT  codImagem   FROM  dbo.imagem WHERE ( TipoFoto = 'Documento' OR TipoFoto = 'Habitacao') AND  (ImagemNome  = replace(? , '__','_') OR  ImagemNomeAnterior  = replace(? , '__','_') ) " ,[$file->getFilename(),$file->getFilename()] );
 
                 if($jasubiu  != []  ){
                    // $conteudo  =  file_get_contents($file->getRealPath()) ;
