@@ -836,7 +836,6 @@ class Ups3Controller extends Controller
                     //return true ;
                 }
 
-
             }else{
 
                 $pasta = 'habitacao';
@@ -845,7 +844,7 @@ class Ups3Controller extends Controller
                                                                             WHERE assunto = 'Habitacao' 
                                                                             AND TipoFoto = 'Documento' 
                                                                             AND uploads3 = 1 
-                                                                            AND  imagemnomeanterior = replace(? , '__','_') " ,[$file->getFilename()] );
+                                                                            AND  imagemnomeanterior = replace(? ,'__','_') " ,[$file->getFilename()] );
 
                 if($jasubiu  != []  ){
                    // $conteudo  =  file_get_contents($file->getRealPath()) ;
