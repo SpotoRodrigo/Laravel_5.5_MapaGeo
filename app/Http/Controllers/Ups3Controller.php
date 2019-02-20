@@ -837,7 +837,7 @@ class Ups3Controller extends Controller
                 }
 
             }else{
-
+                // NAO DISPONIVEL PARA UPDATE NO BANCO, POREM ARQUIVO SEMELHANTE OU IGUAL JA PROCESSADO . SE JA SUBIU DELETA FILE.
                 $pasta = 'habitacao';
                 $jasubiu  = DB::connection('BDGeralVinhedoImagem')->select("SELECT codimagem 
                                                                             FROM dbo.imagem 
