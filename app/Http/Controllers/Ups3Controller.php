@@ -38,23 +38,19 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-       //  $images = $this->loopPorPastaHabitacao(); 
+        $images = $this->loopBancoLorena(); 
 
 
-
+/*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
         
-        $images[] = ['count' => '0' ,
-                    'nome' =>  '0',
-                    'extensao'  => '' ,
-                    'caminho' => '' ,
-                    'up'      => 'true'];
+        $images = [];
         foreach ($buckets as $buck ){
             $images1 = $this->loopBucket($buck);
             array_push($images,$images1);
-        }
-        
+        }  
         dd($images);
+*/
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -490,7 +486,34 @@ class Ups3Controller extends Controller
     }
 
     
-    
+    public function loopBancoLorena()  
+    {
+        $count =0;
+        $lista =  DB::connection('BDGeralLorenaImagem')->select("SELECT top 10 imag.CodImagem , LocalArquivo, ImagemNome , ImagemNomeAnterior , CadTerPrefNum , CadTerCodigo , keyfoto 
+        FROM dbo.imagem AS imag
+           , BDGeralLorena.dbo.Imovel_Territorial as imo
+      where len(LocalArquivo)>77 
+      and assunto = 'Terreno'
+      and TipoFoto = 'Foto Fachada'
+      and imo.CadTerCodigo = imag.keyFotoNumerica");
+
+       dd($lista );
+
+
+         foreach ($lista as $file) {
+
+                $count++;
+                $images[] = [
+                    'nome' =>  $id ,
+                    'extensao'  => (string) $count,
+                    'caminho' => $dono ,
+                    'up'      => true
+                ];
+                DB::connection('pgsql_lorena')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , '39f409a7-da21-4260-a07a-c469a22b707d/'. $novo_nome . '.' . $this->extensao  ] );
+         }
+      return view('ups3.index',compact('images') ); //,compact('images')
+   }
+
     public function loopBancoVinhedoImag()
     {
         $count =0;
