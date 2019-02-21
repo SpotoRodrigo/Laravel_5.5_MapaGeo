@@ -268,7 +268,7 @@ class Ups3Controller extends Controller
 
         $images[] = [
             'count' => (string) $count ,
-            'nome' =>  $$Bucket,
+            'nome' =>  $Bucket,
             'extensao'  => '' ,
             'caminho' => $Bucket ,
             'up'      => $count
