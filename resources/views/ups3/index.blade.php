@@ -7,6 +7,7 @@
 
     <table>
     <thead>
+    <th> COUNT </th>
     <th> ARQUIVO </th>
     <th> EXTENSAO </th>
     <th> CAMINHO </th>

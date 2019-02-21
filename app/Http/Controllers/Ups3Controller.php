@@ -44,7 +44,11 @@ class Ups3Controller extends Controller
 
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
         
-        $images[] = [];
+        $images[] = ['count' => '0' ,
+                    'nome' =>  '0',
+                    'extensao'  => '' ,
+                    'caminho' => '' ,
+                    'up'      => 'true'];
         foreach ($buckets as $buck ){
             $images1 = $this->loopBucket($buck);
             array_push($images,$images1);
@@ -269,7 +273,7 @@ class Ups3Controller extends Controller
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
-
+        echo 'Total de arquivos = '.(string) $count . '  No Bucket -> ' .  $Bucket ;
         $images[] = [
             'count' => (string) $count ,
             'nome' =>  $Bucket,
