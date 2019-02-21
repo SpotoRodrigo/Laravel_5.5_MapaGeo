@@ -489,7 +489,7 @@ class Ups3Controller extends Controller
     public function loopBancoLorena()  
     {
         $count =0;
-        $lista =  DB::connection('BDGeralLorenaImagem')->select("SELECT top 10 imag.CodImagem , LocalArquivo, ImagemNome , ImagemNomeAnterior , CadTerPrefNum , CadTerCodigo , keyfoto 
+        $lista =  DB::connection('BDGeralLorenaImagem')->select("SELECT top 10 imag.CodImagem , ImagemNomeAnterior , CadTerPrefNum , CadTerCodigo , keyfoto 
         FROM dbo.imagem AS imag
            , BDGeralLorena.dbo.Imovel_Territorial as imo
       where len(LocalArquivo)>77 
