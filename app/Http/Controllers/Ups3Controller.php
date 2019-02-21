@@ -38,9 +38,15 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-         $images = $this->loopPorPastaHabitacao(); 
+       //  $images = $this->loopPorPastaHabitacao(); 
 
-        //$images = $this->loopBucket('s3VinhedoServ');
+        $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
+       
+        foreach ($buckets as $buck ){
+            $images = $this->loopBucket($buck);
+        }
+        
+
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -244,20 +250,29 @@ class Ups3Controller extends Controller
 
             if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                 $count++; 
-                $images[] = [
+
+                /*$images[] = [
                     'count' => (string) $count ,
                     'nome' =>  $file,
                     'extensao'  => '' ,
                     'caminho' => $Bucket ,
                     'up'      => $count
-                ];
+                ];*/
             } 
             //Storage::disk($Bucket)->delete($file);
             //Storage::disk($Bucket)->delete($file);
-             Storage::disk($Bucket)->setVisibility($file, 'public');
+            // Storage::disk($Bucket)->setVisibility($file, 'public');
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
+
+        $images[] = [
+            'count' => (string) $count ,
+            'nome' =>  $$Bucket,
+            'extensao'  => '' ,
+            'caminho' => $Bucket ,
+            'up'      => $count
+        ];
 
         return $images ;
 
