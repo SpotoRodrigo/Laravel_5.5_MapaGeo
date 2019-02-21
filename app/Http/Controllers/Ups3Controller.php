@@ -273,7 +273,7 @@ class Ups3Controller extends Controller
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
-        echo 'Total de arquivos = '.(string) $count . '  No Bucket -> ' .  $Bucket ;
+        echo 'Total de arquivos = '.(string) $count . '  No Bucket -> ' .  $Bucket .'<BR>';
         $images[] = [
             'count' => (string) $count ,
             'nome' =>  $Bucket,
