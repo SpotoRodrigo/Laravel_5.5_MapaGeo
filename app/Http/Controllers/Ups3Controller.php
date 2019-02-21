@@ -279,7 +279,7 @@ class Ups3Controller extends Controller
             'nome' =>  $Bucket,
             'extensao'  => '' ,
             'caminho' => $Bucket ,
-            'up'      => $count
+            'up'      => 'true'
         ];
 
         return $images ;
