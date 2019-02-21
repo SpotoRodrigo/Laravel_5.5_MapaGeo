@@ -40,10 +40,14 @@ class Ups3Controller extends Controller
          
        //  $images = $this->loopPorPastaHabitacao(); 
 
+
+
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
-       
+        
+        $images[] = [];
         foreach ($buckets as $buck ){
-            $images = $this->loopBucket($buck);
+            $images1 = $this->loopBucket($buck);
+            array_push($images,$images1);
         }
         
 
