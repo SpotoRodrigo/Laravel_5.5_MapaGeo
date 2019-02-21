@@ -489,11 +489,12 @@ class Ups3Controller extends Controller
     public function loopBancoLorena()  
     {
         $count =0;
-        $lista =  DB::connection('BDGeralLorenaImagem')->select(" SELECT top 10  imag.CodImagem  , ImagemNomeAnterior , CadTerPrefNum , CadTerCodigo , keyfoto 
-                                                                    FROM dbo.imagem AS imag
-                                                                    inner join BDGeralLorena.dbo.Imovel_Territorial as imo ON imo.CadTerCodigo = imag.keyFotoNumerica 
-                                                                where assunto = 'Terreno'
-                                                                and TipoFoto = 'Foto Fachada'");
+        $lista =  DB::connection('BDGeralLorenaImagem')->select("SELECT top 10  imag.CodImagem  ,cast( ImagemNomeAnterior as varchar(25)) as name_old, cast(CadTerPrefNum as varchar(25)) as inscricao , CadTerCodigo , keyfoto 
+          FROM dbo.imagem AS imag
+           inner join BDGeralLorena.dbo.Imovel_Territorial as imo ON imo.CadTerCodigo = imag.keyFotoNumerica 
+        where assunto = 'Terreno'
+        and TipoFoto = 'Foto Fachada'
+        ");
 
        dd($lista );
 
