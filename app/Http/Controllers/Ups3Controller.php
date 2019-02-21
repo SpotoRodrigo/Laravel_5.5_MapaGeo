@@ -509,7 +509,7 @@ class Ups3Controller extends Controller
                     'caminho' => $dono ,
                     'up'      => true
                 ];
-                DB::connection('pgsql_lorena')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , '39f409a7-da21-4260-a07a-c469a22b707d/'. $novo_nome . '.' . $this->extensao  ] );
+                DB::connection('pgsql_lorena')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '39f409a7-da21-4260-a07a-c469a22b707d/'. $novo_nome . '.' . $this->extensao  ] );
          }
       return view('ups3.index',compact('images') ); //,compact('images')
    }
