@@ -54,7 +54,7 @@ class Ups3Controller extends Controller
             array_push($images,$images1);
         }
         
-
+        dd($images);
 
         //$images = $this->loopBancoVinhedoImag();
 /*
@@ -85,7 +85,7 @@ class Ups3Controller extends Controller
 
         dd('PASSOU TUDO');
 */
-        return view('ups3.index',compact('images') ); //,compact('images')
+       // return view('ups3.index',compact('images') ); //,compact('images')
 
     }
 
@@ -273,12 +273,12 @@ class Ups3Controller extends Controller
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
-        echo 'Total de arquivos = '.(string) $count . '  No Bucket -> ' .  $Bucket .'<BR>';
+        $aux =  'Total de arquivos = '.(string) $count . '  No Bucket -> ' .  $Bucket .'<BR>';
         $images[] = [
             'count' => (string) $count ,
             'nome' =>  $Bucket,
-            'extensao'  => '' ,
-            'caminho' => $Bucket ,
+            'extensao'  => $aux ,
+            'caminho' => '' ,
             'up'      => 'true'
         ];
 
