@@ -293,10 +293,8 @@ class Ups3Controller extends Controller
             $this->nome_arquivo = $file->getFilename();
             $this->caminho = $file->getRealPath();
 
-            $teste =  DB::connection('BDServicoTaquaritinga')->select("SELECT @@version");
-
-            dd($teste);
-
+ ///d:/web/safe/taquaritinga/central/modulos/atendimento/arquivos
+ //  https://www.smartcities.net.br/central/modulos/atendimento/arquivos/20190227143136_HEITOR BENICIO DE PAIVA ASCENCIO.pdf
 
             $lista = DB::connection('BDServicoTaquaritinga')->select("SELECT * FROM (
                                                                         SELECT cnhIdentificador as idd
@@ -429,7 +427,7 @@ class Ups3Controller extends Controller
 
             if($lista){
                 $this->$idd  = $lista[0]->idd;
-                $dono = $lista[0]->dono;
+                $this-$dono = $lista[0]->dono;
                 $this->tabela  = $lista[0]->tabela;
                 $go = true;
             }else{
@@ -449,11 +447,11 @@ class Ups3Controller extends Controller
             // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
             if($go ){
                 
-                $novo_nome =  $dono .'/'. $this->uuid() . '.' . $this->extensao   ;
+                $this->nome_completo =  $this-$dono .'/'. $this->uuid() . '.' . $this->extensao   ;
 
                 $conteudo  =  file_get_contents($this->caminho) ;
 
-                $result =  Storage::disk('s3TaquaritingaDoc')->put( $novo_nome  , $conteudo );
+                $result =  Storage::disk('s3TaquaritingaDoc')->put( $this->nome_completo  , $conteudo );
 
                 if ($result!==false){
             
