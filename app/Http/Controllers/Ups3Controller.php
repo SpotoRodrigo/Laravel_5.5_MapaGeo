@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        //$images = $this->loopPorPastaDocumento(); 
+        $images = $this->loopPorPastaDocumento(); 
 
-        $images = $this->loopBucket('s3TaquaritingaDoc');
+        //$images = $this->loopBucket('s3TaquaritingaDoc');
 
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
@@ -293,7 +293,7 @@ class Ups3Controller extends Controller
             $this->nome_arquivo = $file->getFilename();
             $this->caminho = $file->getRealPath();
 
-            $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT * FROM (
+            $lista = DB::connection('BDServicoTaquaritinga')->select("SELECT * FROM (
                                                                         SELECT cnhIdentificador as idd
                                                                                 ,cnhImagem as imagem  
                                                                                 ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+cnhImagem  as url_image
@@ -419,12 +419,13 @@ class Ups3Controller extends Controller
                                                                         
                                                                             ) as tabelas
                                                                         
-                                                                            where imagem =  ? " ,['%'.$aux.'%'] );
+                                                                            where imagem =  ? " ,[$this->nome_arquivo] );
 
 
             if($lista){
                 $this->$idd  = $lista[0]->idd;
                 $dono = $lista[0]->dono;
+                $this->tabela  = $lista[0]->tabela;
                 $go = true;
             }else{
                 $go = false;
