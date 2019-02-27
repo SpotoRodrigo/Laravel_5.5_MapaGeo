@@ -419,7 +419,130 @@ class Ups3Controller extends Controller
                                                                             , pessoa.Fisica  as peso
                                                                             where CtpsImagem is not null   AND CtpsImagem <> '' AND len(CtpsImagem) < 70 
                                                                             AND Rg.CtpsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                        UNION 
+                                                                        SELECT cnhIdentificador as idd
+                                                                                ,cnhImagem as imagem  
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+cnhImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_CNH' as tabela
+                                                                                , cnh.imagemS3
+                                                                        FROM log_documentos.cnh as cnh
+                                                                            , pessoa.Fisica  as peso
+                                                                            where cnhImagem is not null    AND cnhImagem <> ''  AND len(cnhImagem) < 70
+                                                                            AND cnh.cnhPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
                                                                         
+                                                                            UNION 
+                                                                            SELECT TituloIdentificador as idd
+                                                                                ,TituloImagem as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+TituloImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_TITULO' as tabela
+                                                                                , Titulo.imagemS3
+                                                                            FROM log_documentos.TituloEleitor as Titulo
+                                                                            , pessoa.Fisica  as peso
+                                                                            where TituloImagem is not null  AND TituloImagem <> '' AND len(TituloImagem) < 70
+                                                                            AND Titulo.TituloPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            UNION 
+                                                                            SELECT CertidaoIdentificador as idd
+                                                                                ,CertidaoImagem as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CertidaoImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_CERTIDAO' as tabela
+                                                                                , Certidao.imagemS3
+                                                                            FROM log_documentos.Certidao as Certidao
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CertidaoImagem is not null AND CertidaoImagem <> ''  AND len(CertidaoImagem) < 70
+                                                                            AND Certidao.CertidaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            
+                                                                            union 
+                                                                            SELECT RgIdentificador as idd
+                                                                                ,RgImagem as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+RgImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_RG' as tabela
+                                                                                , Rg.imagemS3
+                                                                            FROM log_documentos.Rg as Rg
+                                                                            , pessoa.Fisica  as peso
+                                                                            where RgImagem is not null  AND  RgImagem <> '' AND len(RgImagem) < 70
+                                                                            AND Rg.RgPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                        
+                                                                            UNION 
+                                                                            Select   emd.enderecoIdentificador as idd 
+                                                                                , enderecoImagem   as imagem 
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+enderecoImagem  as url_image
+                                                                                ,CAST( fi.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_ENDERECO' as tabela
+                                                                                , emd.imagemS3
+                                                                            from log_pessoa.PessoaEndereco  as emd
+                                                                            , pessoa.fisica  as fi
+                                                                            where emd.enderecoPessoaFisicaIdentificador = fi.pessoaFisicaIdentificador
+                                                                            and emd.enderecoImagem is not null and emd.enderecoImagem <> ''    AND len(enderecoImagem) < 70
+                                                                            union 
+                                                                            Select   fi.pessoaFisicaIdentificador as idd 
+                                                                                , fi.pessoaFisicaFoto   as imagem 
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+ fi.pessoaFisicaFoto  as url_image
+                                                                                ,CAST( fi.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_PESSOA' as tabela
+                                                                                , fi.imagemS3
+                                                                            from  pessoa.fisica  as fi
+                                                                            where fi.pessoaFisicaFoto is not null and fi.pessoaFisicaFoto <> ''   AND len(pessoaFisicaFoto) < 70
+
+                                                                            UNION     
+                                                                            SELECT CartaoCidadaoIdentificador as idd
+                                                                                ,CartaoCidadaoImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CartaoCidadaoImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_CIDADAO' as tabela
+                                                                                , cnh.imagemS3
+                                                                            FROM log_documentos.CartaoCidadao as cnh
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CartaoCidadaoImagem is not null   AND CartaoCidadaoImagem <> ''   AND len(CartaoCidadaoImagem) < 70
+                                                                            AND cnh.CartaoCidadaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            UNION  
+                                                                            SELECT ReservistaIdentificador as idd  
+                                                                                ,ReservistaImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+ReservistaImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_RESERVISTA' as tabela
+                                                                                , Titulo.imagemS3
+                                                                            FROM log_documentos.CarteiraReservista as Titulo
+                                                                            , pessoa.Fisica  as peso
+                                                                            where ReservistaImagem is not null  AND ReservistaImagem <> '' AND len(ReservistaImagem) < 70
+                                                                            AND Titulo.ReservistaPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            UNION 
+                                                                            SELECT CnsIdentificador as idd
+                                                                                ,CnsImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CnsImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_CNS' as tabela
+                                                                                , Certidao.imagemS3
+                                                                            FROM log_documentos.Cns as Certidao
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CnsImagem is not null AND CnsImagem <> ''   AND len(CnsImagem) < 70
+                                                                            AND Certidao.CnsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            union  
+                                                                            SELECT CpfIdentificador as idd
+                                                                                ,CpfImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CpfImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_CPF' as tabela
+                                                                                , Rg.imagemS3
+                                                                            FROM log_documentos.Cpf as Rg
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CpfImagem is not null AND CpfImagem <> ''  AND len(CpfImagem) < 70
+                                                                            AND Rg.CpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            union 
+                                                                            SELECT CtpsIdentificador as idd
+                                                                                ,CtpsImagem  as imagem 
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CtpsImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'LOG_CTPS' as tabela
+                                                                                , Rg.imagemS3
+                                                                            FROM log_documentos.Ctps as Rg
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CtpsImagem is not null   AND CtpsImagem <> '' AND len(CtpsImagem) < 70
+                                                                            AND Rg.CtpsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+
                                                                             ) as tabelas
                                                                         
                                                                             where imagem =  ? " ,[$this->nome_arquivo] );
