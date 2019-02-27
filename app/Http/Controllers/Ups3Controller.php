@@ -801,7 +801,7 @@ class Ups3Controller extends Controller
 
     
          foreach ($lista as $file) {
-
+dd($file);
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
             $id  = intval($file->idd) ; 
             $dono = strval ($file->dono);
