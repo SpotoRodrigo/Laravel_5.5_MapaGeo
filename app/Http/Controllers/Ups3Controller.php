@@ -460,74 +460,75 @@ class Ups3Controller extends Controller
             
                     switch ($this->tabela ) {
                         case 'RG':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'CNH':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'TITULO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'CERTIDAO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'ENDERECO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'PESSOA':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
         
                         case 'CIDADAO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'RESERVISTA':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected =  DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'CNS':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected =  DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'CPF':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'CTPS':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
         
                         case 'LOG_RG':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_CNH':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_TITULO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_CERTIDAO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_ENDERECO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_PESSOA':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
         
                         case 'LOG_CIDADAO':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_RESERVISTA':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_CNS':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_CPF':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
                         case 'LOG_CTPS':
-                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        $affected = DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
                         break;
+                        
                     }
                 }else{
                    dd('Falha subida s3TaquaritingaDoc ');
