@@ -293,6 +293,11 @@ class Ups3Controller extends Controller
             $this->nome_arquivo = $file->getFilename();
             $this->caminho = $file->getRealPath();
 
+            $teste =  DB::connection('BDServicoTaquaritinga')->select("SELECT @@version");
+
+            dd($teste);
+
+
             $lista = DB::connection('BDServicoTaquaritinga')->select("SELECT * FROM (
                                                                         SELECT cnhIdentificador as idd
                                                                                 ,cnhImagem as imagem  

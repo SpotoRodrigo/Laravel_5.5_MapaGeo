@@ -194,6 +194,8 @@ return [
           //  'pooling' => false
            // 'sticky'    => true,
         ],
+
+        
         'BDServicoTaquaritinga' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_MITRA_HOST1', '10.150.199.226'),
