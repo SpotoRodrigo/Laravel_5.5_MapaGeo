@@ -449,7 +449,7 @@ class Ups3Controller extends Controller
             // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
             if($go ){
                 
-                $this->nome_completo =  $this-$dono .'/'. $this->uuid() . '.' . $this->extensao   ;
+                $this->nome_completo =  $this->dono .'/'. $this->uuid() . '.' . $this->extensao   ;
 
                 $conteudo  =  file_get_contents($this->caminho) ;
 
