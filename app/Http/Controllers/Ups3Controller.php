@@ -424,7 +424,7 @@ class Ups3Controller extends Controller
                                                                         
                                                                             where imagem =  ? " ,[$this->nome_arquivo] );
 
-dd($lista);
+
             if($lista){
                 $this->$idd  = $lista[0]->idd;
                 $this-$dono = $lista[0]->dono;
@@ -435,7 +435,7 @@ dd($lista);
                 $affected = false;
             }
 
-            
+            dd($this->$idd , $this-$dono  ,  $this->tabela ) ;
             $images[] = [
                 'count' => $count ,
                 'nome' =>  $this->nome_arquivo ,
