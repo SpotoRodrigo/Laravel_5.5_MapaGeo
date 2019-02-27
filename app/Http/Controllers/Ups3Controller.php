@@ -38,8 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        $images = $this->loopBancoLorena(); 
+        //$images = $this->loopPorPastaDocumento(); 
 
+        $images = $this->loopBucket('s3TaquaritingaDoc');
 
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
@@ -252,13 +253,13 @@ class Ups3Controller extends Controller
             if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                 $count++; 
 
-                /*$images[] = [
+                $images[] = [
                     'count' => (string) $count ,
                     'nome' =>  $file,
                     'extensao'  => '' ,
                     'caminho' => $Bucket ,
                     'up'      => $count
-                ];*/
+                ];
             } 
             //Storage::disk($Bucket)->delete($file);
             //Storage::disk($Bucket)->delete($file);
@@ -266,23 +267,349 @@ class Ups3Controller extends Controller
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
         }
-        $aux =  'Total de arquivos = '.(string) $count . '  No Bucket -> ' .  $Bucket .'<BR>';
-        $images[] = [
-            'count' => (string) $count ,
-            'nome' =>  $Bucket,
-            'extensao'  => $aux ,
-            'caminho' => '' ,
-            'up'      => 'true'
-        ];
+
 
         return $images ;
 
     }
 
-    
-
 
     
+    private function loopPorPastaDocumento()
+    {
+        //$directory = "/media/geoserver/transferencias/taquaritinga/atendimento";
+        $directory = "/media/geoserver/transferencias/taquaritinga/teste";
+        $count= 0;
+       
+
+        if(!File::isDirectory($directory)) {
+            $msg = 'Caminho não acessivél.';
+            return view('ups3.index').compact($msg); 
+        }
+        $files = File::allFiles($directory);
+
+        foreach ($files as $file) {
+            $count++;
+
+            $this->extensao = $file->getExtension();
+            $this->nome_arquivo = $file->getFilename();
+            $this->caminho = $file->getRealPath();
+
+            $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT * FROM (
+                                                                        SELECT cnhIdentificador as idd
+                                                                                ,cnhImagem as imagem  
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+cnhImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'CNH' as tabela
+                                                                                , cnh.imagemS3
+                                                                            FROM documentos.cnh as cnh
+                                                                            , pessoa.Fisica  as peso
+                                                                            where cnhImagem is not null    AND cnhImagem <> ''  AND len(cnhImagem) < 70 
+                                                                            AND cnh.cnhPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                        
+                                                                            UNION 
+                                                                            SELECT TituloIdentificador as idd
+                                                                                ,TituloImagem as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+TituloImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'TITULO' as tabela
+                                                                                , Titulo.imagemS3
+                                                                            FROM documentos.TituloEleitor as Titulo
+                                                                            , pessoa.Fisica  as peso
+                                                                            where TituloImagem is not null  AND TituloImagem <> '' AND len(TituloImagem) < 70 
+                                                                            AND Titulo.TituloPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            UNION 
+                                                                            SELECT CertidaoIdentificador as idd
+                                                                                ,CertidaoImagem as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CertidaoImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'CERTIDAO' as tabela
+                                                                                , Certidao.imagemS3
+                                                                            FROM documentos.Certidao as Certidao
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CertidaoImagem is not null AND CertidaoImagem <> ''  AND len(CertidaoImagem) < 70 
+                                                                            AND Certidao.CertidaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            
+                                                                            union 
+                                                                            SELECT RgIdentificador as idd
+                                                                                ,RgImagem as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+RgImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'RG' as tabela
+                                                                                , Rg.imagemS3
+                                                                            FROM documentos.Rg as Rg
+                                                                            , pessoa.Fisica  as peso
+                                                                            where RgImagem is not null  AND  RgImagem <> '' AND len(RgImagem) < 70 
+                                                                            AND Rg.RgPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                        
+                                                                            UNION 
+                                                                            Select   emd.enderecoIdentificador as idd 
+                                                                                , enderecoImagem   as imagem 
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+enderecoImagem  as url_image
+                                                                                ,CAST( fi.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'ENDERECO' as tabela
+                                                                                , emd.imagemS3
+                                                                            from pessoa.PessoaEndereco  as emd
+                                                                            , pessoa.fisica  as fi
+                                                                            where emd.enderecoPessoaFisicaIdentificador = fi.pessoaFisicaIdentificador
+                                                                            and emd.enderecoImagem is not null and emd.enderecoImagem <> ''    AND len(enderecoImagem) < 70 
+                                                                            union 
+                                                                            Select   fi.pessoaFisicaIdentificador as idd 
+                                                                                , fi.pessoaFisicaFoto   as imagem 
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+ fi.pessoaFisicaFoto  as url_image
+                                                                                ,CAST( fi.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'PESSOA' as tabela
+                                                                                , fi.imagemS3
+                                                                            from  pessoa.fisica  as fi
+                                                                            where fi.pessoaFisicaFoto is not null and fi.pessoaFisicaFoto <> ''   AND len(pessoaFisicaFoto) < 70 
+                                                                        
+                                                                            UNION     
+                                                                            SELECT CartaoCidadaoIdentificador as idd
+                                                                                ,CartaoCidadaoImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CartaoCidadaoImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'CIDADAO' as tabela
+                                                                                , cnh.imagemS3
+                                                                            FROM documentos.CartaoCidadao as cnh
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CartaoCidadaoImagem is not null   AND CartaoCidadaoImagem <> ''   AND len(CartaoCidadaoImagem) < 70 
+                                                                            AND cnh.CartaoCidadaoPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            UNION  
+                                                                            SELECT ReservistaIdentificador as idd  
+                                                                                ,ReservistaImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+ReservistaImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'RESERVISTA' as tabela
+                                                                                , Titulo.imagemS3
+                                                                            FROM documentos.CarteiraReservista as Titulo
+                                                                            , pessoa.Fisica  as peso
+                                                                            where ReservistaImagem is not null  AND ReservistaImagem <> '' AND len(ReservistaImagem) < 70 
+                                                                            AND Titulo.ReservistaPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            UNION 
+                                                                            SELECT CnsIdentificador as idd
+                                                                                ,CnsImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CnsImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'CNS' as tabela
+                                                                                , Certidao.imagemS3
+                                                                            FROM documentos.Cns as Certidao
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CnsImagem is not null AND CnsImagem <> ''   AND len(CnsImagem) < 70 
+                                                                            AND Certidao.CnsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            union  
+                                                                            SELECT CpfIdentificador as idd
+                                                                                ,CpfImagem  as imagem
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CpfImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'CPF' as tabela
+                                                                                , Rg.imagemS3
+                                                                            FROM documentos.Cpf as Rg
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CpfImagem is not null AND CpfImagem <> ''  AND len(CpfImagem) < 70 
+                                                                            AND Rg.CpfPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                            union 
+                                                                            SELECT CtpsIdentificador as idd
+                                                                                ,CtpsImagem  as imagem 
+                                                                                ,'https://www.smartcities.net.br/central/modulos/atendimento/arquivos/'+CtpsImagem  as url_image
+                                                                                ,CAST( peso.pessoaFisicaIdentificadorUnico AS VARCHAR(MAX) )  as dono
+                                                                                , 'CTPS' as tabela
+                                                                                , Rg.imagemS3
+                                                                            FROM documentos.Ctps as Rg
+                                                                            , pessoa.Fisica  as peso
+                                                                            where CtpsImagem is not null   AND CtpsImagem <> '' AND len(CtpsImagem) < 70 
+                                                                            AND Rg.CtpsPessoaFisicaIdentificador = peso.pessoaFisicaIdentificador
+                                                                        
+                                                                            ) as tabelas
+                                                                        
+                                                                            where imagem =  ? " ,['%'.$aux.'%'] );
+
+
+            if($lista){
+                $this->$idd  = $lista[0]->idd;
+                $dono = $lista[0]->dono;
+                $go = true;
+            }else{
+                $go = false;
+                $affected = false;
+            }
+
+            
+            $images[] = [
+                'count' => $count ,
+                'nome' =>  $this->nome_arquivo ,
+                'extensao'  => (string) $this->extensao,
+                'caminho' => $this->caminho,
+                'up'      => $go
+            ];
+            //dd($go);
+            // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
+            if($go ){
+                
+                $novo_nome =  $dono .'/'. $this->uuid() . '.' . $this->extensao   ;
+
+                $conteudo  =  file_get_contents($this->caminho) ;
+
+                $result =  Storage::disk('s3TaquaritingaDoc')->put( $novo_nome  , $conteudo );
+
+                if ($result!==false){
+            
+            
+                    switch ($this->tabela ) {
+                        case 'RG':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'CNH':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'TITULO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'CERTIDAO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'ENDERECO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'PESSOA':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+        
+                        case 'CIDADAO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'RESERVISTA':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'CNS':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'CPF':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'CTPS':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+        
+                        case 'LOG_RG':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Rg SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE RgIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_CNH':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.cnh SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE cnhIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_TITULO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.TituloEleitor SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE TituloIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_CERTIDAO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Certidao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CertidaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_ENDERECO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_pessoa.PessoaEndereco SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE enderecoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_PESSOA':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_pessoa.fisica SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE pessoaFisicaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+        
+                        case 'LOG_CIDADAO':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.CartaoCidadao SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CartaoCidadaoIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_RESERVISTA':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.CarteiraReservista SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE ReservistaIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_CNS':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Cns SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CnsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_CPF':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Cpf SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CpfIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                        case 'LOG_CTPS':
+                            DB::connection('BDServicoTaquaritinga')->update(" UPDATE  log_documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $this->nome_completo , $this->idd]); 
+                        break;
+                    }
+                }else{
+                   dd('Falha subida s3TaquaritingaDoc ');
+                }
+                    
+                if ($affected){
+                    unlink($this->caminho);
+                    unset($conteudo);
+                }
+            }
+
+        }
+        return $images ;
+    }
+
+    
+    public function loopBancoTaquaritingaDoc()
+    {
+      // $images = loopPorPasta();
+        $count =0;
+     //   $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT top 3 SUBSTRING(imagemNomeAnterior,1,16)  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem GROUP BY SUBSTRING(imagemNomeAnterior,1,16) "  );
+     //   dd($lista );
+        
+        $lista =  DB::connection('BDServicoTaquaritinga')->select(" " );
+
+        //dd($lista );
+         foreach ($lista as $file) {
+
+           //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
+            $id  = intval($file->idd) ; 
+            $dono = strval ($file->dono);
+            $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. str_replace(  ' ' , '%20' , $file->imagem); 
+            
+            $url_image = strval ( $aux ); //$file->url_image
+
+            $exists = true;
+
+            if($exists){
+
+                $count++;
+                $images[] = [
+                    'nome' =>  $id ,
+                    'extensao'  => (string) $count,
+                    'caminho' => $dono ,
+                    'up'      => true
+                ];
+
+                $novo_nome = $this->uuid();
+
+                $extensao = strtolower(substr($url_image, -4 ));
+
+                $nome_completo =  $dono . '/' . $novo_nome . $extensao ;
+
+                //if($file->imagemS3 !== '' ){
+                   // Storage::disk('s3TaquaritingaDoc')->delete($file->imagemS3 );
+                //}
+                // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+
+                
+                 $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image , strval($file->tabela) ));  
+
+/*
+              $novo_nome = $this->uuid();
+
+              $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
+      
+              $conteudo  =  file_get_contents( $url_image ) ;
+                
+              //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
+      
+              $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+              
+              if ($result!==false){
+                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $nome_completo , $id ]); 
+              }
+*/
+            }
+
+         }
+
+      return view('ups3.index',compact('images') ); //,compact('images')
+
+    }
+
+
+
     
     public function loopBancoVinhedoDoc()
     {
@@ -481,7 +808,6 @@ class Ups3Controller extends Controller
       return view('ups3.index',compact('images') ); //,compact('images')
 
     }
-
     
     public function loopBancoLorena()  
     {
