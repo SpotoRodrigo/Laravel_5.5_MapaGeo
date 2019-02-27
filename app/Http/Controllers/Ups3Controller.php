@@ -156,15 +156,12 @@ class Ups3Controller extends Controller
     private function loopPorPasta()
     {
         //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
-        $directory = "/media/geoserver/transferencias/saolourenco/Fotos de Fachada";
-        //$directory = "/media/geoserver/transferencias/arturnogueira/fotosfachada/" ;
-        //$directory = "/media/geoserver/transferencias/registro/fotos/" ;
-        //$directory = "/media/geoserver/transferencias/socorro/" ;
-        //$directory = "/media/geoserver/transferencias/vinhedo/fotos/" ;
+        $directory = "/media/geoserver/transferencias/campos/fotosfachada";
         $count= 0;
-        dd('falta banco de s„o lourenco.');
-///media/geoserver/transferencias/socorro/fotos
-///media/geoserver/transferencias/registro/fotos 
+       
+        // dd('falta banco de s„o lourenco.');
+        //$directory = "/media/geoserver/transferencias/saolourenco/Fotos de Fachada";
+
 
         if(!File::isDirectory($directory)) {
             $msg = 'Caminho n√£o acessiv√©l.';
