@@ -156,7 +156,7 @@ return [
 
         'BDGeralSSebastiaoImagem' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_MITRA_HOST1', '10.150.199.226'),
+            'host' => env('DB_MITRA_HOST1', '10.150.199.233'),
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralSSebastiaoImagem',
             'username' => env('DB_MITRA_USER', 'scaes'),
@@ -168,7 +168,7 @@ return [
 
         'BDGeralLorenaImagem' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_MITRA_HOST1', '10.150.199.226'),
+            'host' => env('DB_MITRA_HOST1', '10.150.199.233'),
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralLorenaImagem',
             'username' => env('DB_MITRA_USER', 'scaes'),
@@ -179,6 +179,35 @@ return [
           //  'pooling' => false
            // 'sticky'    => true,
         ],
+
+
+        'BDGeralTaquaritinga' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_MITRA_HOST1', '10.150.199.226'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralTaquaritinga',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false
+           // 'sticky'    => true,
+        ],
+        'BDServicoTaquaritinga' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_MITRA_HOST1', '10.150.199.226'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDServicoTaquaritinga',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false
+           // 'sticky'    => true,
+        ],
+
 
      'BDGeralItatiba' => [
             'driver' => 'sqlsrv',

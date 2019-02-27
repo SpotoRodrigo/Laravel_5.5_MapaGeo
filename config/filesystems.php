@@ -159,6 +159,17 @@ return [
             'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'region' => 'sao01',
         ],
+        
+        's3Campos' => [
+            'driver' => 's3',
+            'key' => 'nZwcZUh8lVyTPTr6bAtI',
+            'secret' => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
+            'version' => '2006-03-01',            
+            'bucket' => 'a970d3e6-185d-47ec-9281-69ff92b51b87',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
 
         's3Vinhedo' => [
             'driver' => 's3',
@@ -171,6 +182,53 @@ return [
             'region' => 'sao01',
         ],
 
+        // TAQUARITINGA
+        
+        's3TaquaritingaDoc' => [
+            'driver' => 's3',
+            'key' => 'yjkOvSG4IVMdTinzsFI3',
+            'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
+            'version' => '2006-03-01',            
+            'bucket' =>  '14ada9ee-664d-4059-b4b8-37366883cedd', 
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
+            'region' => 'sao01',
+        ],
+
+        's3TaquaritingaLOG' => [
+            'driver' => 's3',
+            'key' => 'yjkOvSG4IVMdTinzsFI3',
+            'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
+            'version' => '2006-03-01',            
+            'bucket' =>  '20e7ca88-9a30-4b2c-81cf-0c541522d1e9', 
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
+            'region' => 'sao01',
+        ],
+
+        's3TaquaritingaQuest' => [
+            'driver' => 's3',
+            'key' => 'yjkOvSG4IVMdTinzsFI3',
+            'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
+            'version' => '2006-03-01',            
+            'bucket' =>  '78b676e7-99a2-4725-8a3f-75c8bbcefd4f', 
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
+            'region' => 'sao01',
+        ],
+
+        's3TaquaritingaServ' => [
+            'driver' => 's3',
+            'key' => 'yjkOvSG4IVMdTinzsFI3',
+            'secret' => 'HTRnusMdrJZQNK3J6BWbdom6hAkG1NlXApXrxvfN',
+            'version' => '2006-03-01',            
+            'bucket' =>  '09cfd574-be01-4804-9077-169947dc4e62', 
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
+            'region' => 'sao01',
+
+
+        // VINHEDO 
         's3VinhedoDoc' => [
             'driver' => 's3',
             'key' => 'yjkOvSG4IVMdTinzsFI3',
