@@ -226,7 +226,7 @@ return [
             'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
             'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
             'region' => 'sao01',
-
+        ],
 
         // VINHEDO 
         's3VinhedoDoc' => [
