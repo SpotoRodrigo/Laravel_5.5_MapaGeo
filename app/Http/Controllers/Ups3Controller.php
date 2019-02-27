@@ -275,8 +275,8 @@ class Ups3Controller extends Controller
     
     private function loopPorPastaDocumento()
     {
-        //$directory = "/media/geoserver/transferencias/taquaritinga/atendimento";
-        $directory = "/media/geoserver/transferencias/taquaritinga/teste";
+        $directory = "/media/geoserver/transferencias/taquaritinga/atendimento";
+        //$directory = "/media/geoserver/transferencias/taquaritinga/teste";
         $count= 0;
        
 
