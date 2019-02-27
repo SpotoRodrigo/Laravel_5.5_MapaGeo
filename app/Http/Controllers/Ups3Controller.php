@@ -82,7 +82,7 @@ class Ups3Controller extends Controller
 
         dd('PASSOU TUDO');
 */
-       // return view('ups3.index',compact('images') ); //,compact('images')
+        return view('ups3.index',compact('images') ); //,compact('images')
 
     }
 
