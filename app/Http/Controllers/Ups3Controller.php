@@ -426,8 +426,8 @@ class Ups3Controller extends Controller
 
 
             if($lista){
-                $this->$idd  = $lista[0]->idd;
-                $this->$dono = $lista[0]->dono;
+                $this->idd  = $lista[0]->idd;
+                $this->dono = $lista[0]->dono;
                 $this->tabela  = $lista[0]->tabela;
                 $go = true;
             }else{
