@@ -832,6 +832,12 @@ class Ups3Controller extends Controller
                     Storage::disk('s3TaquaritingaDoc')->delete($imagems3 );
                 }
 
+            }else{
+                $ja = Storage::disk('s3TaquaritingaLOG')->exists($imagems3) ; 
+
+                if($ja==false){
+                    dd('arquivo não encontrado em nenhum BUCKET '.$imagems3);
+                }
             }
 
          }
