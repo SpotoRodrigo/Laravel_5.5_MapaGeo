@@ -808,7 +808,7 @@ dd($file);
             $imagems3 = strval ($file->imagemS3);
 
             $exists = Storage::disk('s3TaquaritingaDoc')->exists($imagems3) ; 
-            dd($exists , $imagems3 ); //Storage::disk($Bucket)->delete($file);
+          
 
             if($exists){
 
@@ -821,28 +821,17 @@ dd($file);
                     'up'      => true
                 ];
 
-
                 $contents = Storage::disk('s3TaquaritingaDoc')->get($imagems3) ; 
                 
-                $conteudo  =  file_get_contents( $contents ) ;
+               // $conteudo  =  file_get_contents( $contents ) ;
 
-                //Storage::disk('s3TaquaritingaDoc')->delete($imagems3 );
-                
-                // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
-            
+                $result =  Storage::disk('s3TaquaritingaLOG')->put( $imagems3 , $contents ); 
 
-/*
-      
-              
-                
-              //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
-      
-              $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
-              
-              if ($result!==false){
-                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $nome_completo , $id ]); 
-              }
-*/
+                dd( (string) $result .'   '. $imagems3 ); //Storage::disk($Bucket)->delete($file);
+                if ($result!==false){
+                    Storage::disk('s3TaquaritingaDoc')->delete($imagems3 );
+                }
+
             }
 
          }
