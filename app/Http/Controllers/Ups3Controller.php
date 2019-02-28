@@ -805,7 +805,7 @@ dd($file);
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
             $id  = intval($file->idd) ; 
             $dono = strval ($file->dono);
-            $imagems3 = strval ($file->imagems3);
+            $imagems3 = strval ($file->imagemS3);
 
             $exists = Storage::disk('s3TaquaritingaDoc')->exists($imagems3) ; 
             dd($exists , $imagems3 ); //Storage::disk($Bucket)->delete($file);
@@ -822,15 +822,18 @@ dd($file);
                 ];
 
 
-                //if($file->imagemS3 !== '' ){
-                   // Storage::disk('s3TaquaritingaDoc')->delete($file->imagemS3 );
-                //}
+                $contents = Storage::disk('s3TaquaritingaDoc')->get($imagems3) ; 
+                
+                $conteudo  =  file_get_contents( $contents ) ;
+
+                //Storage::disk('s3TaquaritingaDoc')->delete($imagems3 );
+                
                 // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
             
 
 /*
       
-              $conteudo  =  file_get_contents( $url_image ) ;
+              
                 
               //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
       
