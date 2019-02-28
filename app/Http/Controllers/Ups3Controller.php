@@ -808,7 +808,6 @@ class Ups3Controller extends Controller
             $imagems3 = strval ($file->imagemS3);
 
             $exists = Storage::disk('s3TaquaritingaDoc')->exists($imagems3) ; 
-          
 
             if($exists){
 
@@ -827,7 +826,6 @@ class Ups3Controller extends Controller
 
                 $result =  Storage::disk('s3TaquaritingaLOG')->put( $imagems3 , $contents ); 
 
-                dd( (string) $result .'   '. $imagems3 ); //Storage::disk($Bucket)->delete($file);
                 if ($result!==false){
                     Storage::disk('s3TaquaritingaDoc')->delete($imagems3 );
                 }
