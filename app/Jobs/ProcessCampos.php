@@ -98,7 +98,7 @@ class ProcessCampos implements ShouldQueue
                     , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
                     , uploads3 = 1 
                     , idUnico = ? 
-                    WHERE  imagemNomeAnterior = ?", [$this->novo_nome . '.' . $this->extensao , $this->novo_nome  , $this->nome_arquivo ]); 
+                    WHERE  imagemNomeAnterior = ?", [ $this->novo_nome . '.' . $this->extensao , $this->novo_nome  , $this->nome_arquivo ]); 
                 }, 5 );
             }
             if($result!==false && $affected  !==false ){
