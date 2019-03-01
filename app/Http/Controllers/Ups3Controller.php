@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ups3;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 //use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
@@ -21,8 +22,6 @@ use App\Jobs\ProcessCampos;
 //use App\Jobs\ProcessRegistro;
 //use App\Jobs\ProcessArtur;
 //use App\Jobs\ProcessSocorro;
-
-use Illuminate\Support\Facades\DB;
 
 ini_set("max_execution_time",54000);
 ini_set("memory_limit","1024M");
