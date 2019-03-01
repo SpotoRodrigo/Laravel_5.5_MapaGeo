@@ -186,22 +186,26 @@ class Ups3Controller extends Controller
                  // $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ,  $this->uuid() ));   // $file->getRealPath()     $conteudo
             }
           
-            //  PARAISO   
+            //  CAMPOS   
             if( is_file($file->getRealPath()) ){
 
                 $this->extensao = $file->getExtension() ;
                 $this->nome_arquivo = $file->getFilename() ;
                 //$this->conteudo = $conteudo;
-                $this->caminho =$file->getRealPath() ;
+                $this->caminho = $file->getRealPath() ;
+                $this->novo_nome = $this->uuid()  ;
 
                 // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
 
-                
 
-                //$lista = DB::connection('BDGeralLorenaImagem')->select("SELECT @@version;"  );
-                //dd($lista);
+                $lista = DB::connection('BDGeralCamposImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,10),'_','.' )  AS inscricao 
+                                                                            , COUNT(CodImagem) as qtde 
+                                                                            FROM dbo.Imagem 
+                                                                            WHERE Assunto = 'Terreno' 
+                                                                            AND TipoFoto = 'Foto Fachada Tablet' 
+                                                                            AND  imagemNomeAnterior = ? 
+                                                                            GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,10),'_','.' )" ,[$this->nome_arquivo] );
 
-                $lista = DB::connection('BDGeralSSebastiaoImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
                         if($lista){
                             $dono = $lista[0]->inscricao;
                             $qtde = $lista[0]->qtde;
@@ -210,34 +214,31 @@ class Ups3Controller extends Controller
                             $go = false;
 
                         }
-                //dd($go);
-                        // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-                        if(is_file($this->caminho) &&  $go ){  
-                            $novo_nome = $this->uuid();
+
+                        if(is_file($this->caminho) &&  $go ){
                             $conteudo  =  file_get_contents($this->caminho) ;
-                            //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
-
-                            $result =  Storage::disk('s3Paraiso')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-                            
-                            $affected = DB::connection('BDGeralSSebastiaoImagem')->update("UPDATE dbo.Imagem  
-                                                                                            SET  ImagemNome = ?
-                                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/ca800d52-3770-4a68-9f84-63a71b9b57c0'
-                                                                                            , UploadNuvemRenomeado = 1 
-                                                                                            , UploadNuvemArquivoNaoLocalizado = 0
-                                                                                            , UploadNuvemArquivoPublico = 1 
-                                                                                            , idUnico = ? 
-                                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
-                    //print_r( $affected);       
-                        DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $novo_nome . '.' . $this->extensao  ] );
-
-                        
-                        //fclose($this->caminho);
-                        unset($conteudo);
-                        unlink($this->caminho);
-                        // ob_flush();
-                        //dd('feito');
-                        return true;
-
+                            $aux_nome  = (string) $this->novo_nome . '.' . $this->extensao ;
+                
+                            $result =  Storage::disk('s3Campos')->put(  $aux_nome  , $conteudo , ['ACL' => 'public-read'] );
+                           
+                            if($result!==false ){
+                                sleep(1);
+                                //$affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
+                                     DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
+                                    SET  ImagemNome = ?
+                                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
+                                    , uploads3 = 1 
+                                    , idUnico = ? 
+                                    WHERE  imagemNomeAnterior = ?", [$aux_nome, $this->novo_nome  , $this->nome_arquivo ]); 
+                              //  }, 5 );
+                            }
+                            if($result!==false && $affected  !==false ){
+                                $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $aux_nome ] );
+                            }
+                            if($result!==false && $affected  !==false && $affected2  !==false  ){
+                                unset($conteudo);
+                                unlink($this->caminho);
+                            }
                         }
                         
             }
