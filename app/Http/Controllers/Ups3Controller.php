@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        //$images = $this->loopPorPasta(); 
+        $images = $this->loopPorPasta(); 
 
-        $images = $this->loopBucket('s3Campos');
+        //$images = $this->loopBucket('s3Campos');
 
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
@@ -222,7 +222,7 @@ class Ups3Controller extends Controller
                             $result =  Storage::disk('s3Campos')->put(   $this->aux_nome   , $conteudo , ['ACL' => 'public-read'] );
                            
                             if($result!==false ){
-                                sleep(1);
+                                //sleep(1);
                                 $affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
                                             DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
                                             SET  ImagemNome = ?
