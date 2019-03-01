@@ -183,13 +183,18 @@ class Ups3Controller extends Controller
 
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
 
-             if(is_file($file->getRealPath()) ){
+           //  if(is_file($file->getRealPath()) ){
                   //$this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
                   //$this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-             }
+           //  }
           
             //  PARAISO   
             if( is_file($file->getRealPath()) ){
+
+                $this->extensao = $file->getExtension() ;
+                $this->nome_arquivo = $file->getFilename() ;
+                //$this->conteudo = $conteudo;
+                $this->caminho =$file->getRealPath() ;
 
                 // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
                 $lista = DB::connection('BDGeralSSebastiaoImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
