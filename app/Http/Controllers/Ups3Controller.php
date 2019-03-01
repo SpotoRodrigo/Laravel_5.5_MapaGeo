@@ -217,19 +217,19 @@ class Ups3Controller extends Controller
 
                         if(is_file($this->caminho) &&  $go ){
                             $conteudo  =  file_get_contents($this->caminho) ;
-                            $aux_nome  = (string) $this->novo_nome . '.' . $this->extensao ;
+                            $this->aux_nome  = $this->novo_nome . '.' . $this->extensao ;
                 
-                            $result =  Storage::disk('s3Campos')->put(  $aux_nome  , $conteudo , ['ACL' => 'public-read'] );
+                            $result =  Storage::disk('s3Campos')->put(   $this->aux_nome   , $conteudo , ['ACL' => 'public-read'] );
                            
                             if($result!==false ){
                                 sleep(1);
                                 $affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
-                                     DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
-                                    SET  ImagemNome = ?
-                                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
-                                    , uploads3 = 1 
-                                    , idUnico = ? 
-                                    WHERE  imagemNomeAnterior = ?", [$aux_nome, $this->novo_nome  , $this->nome_arquivo ]); 
+                                            DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
+                                            SET  ImagemNome = ?
+                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
+                                            , uploads3 = 1 
+                                            , idUnico = ? 
+                                            WHERE  imagemNomeAnterior = ?", [ $this->aux_nome , $this->novo_nome  , $this->nome_arquivo ]); 
                                 }, 5 );
                             }
                             if($result!==false && $affected  !==false ){
