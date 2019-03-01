@@ -184,61 +184,62 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
 
              if(is_file($file->getRealPath()) ){
-                  $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  //$this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
                   //$this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
-          /*
-            //  VINHEDO   
+          
+            //  PARAISO   
             if( is_file($file->getRealPath()) ){
-                $this->extensao = $file->getExtension();
-                $this->nome_arquivo = $file->getFilename();
-                $this->caminho = $file->getRealPath();
-                $tt = strpos($this->nome_arquivo , '_') != false ?  strpos($this->nome_arquivo , '_')  : strlen($this->nome_arquivo) ; 
-                $aux =  strtoupper  (substr (str_replace('.jpg','',$this->nome_arquivo ) , 0 ,  $tt ) ) ;
 
-                $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT codImagem ,   CadTerPrefNum as inscricao  
-                                                                        FROM dbo.imagem 
-                                                                        , BDGeralVinhedo.dbo.imovel_territorial
-                                                                        WHERE assunto = 'Terreno'
-                                                                        AND TipoFoto = 'Foto Fachada' AND uploads3 = 0
-                                                                        AND CadTerCodigo = keyfotonumerica 
-                                                                        AND descricao  like   (?)  " ,['%'.$aux.'%'] );
+                // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
+                $lista = DB::connection('BDGeralSSebastiaoImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
+                        if($lista){
+                            $dono = $lista[0]->inscricao;
+                            $qtde = $lista[0]->qtde;
+                            $go = true;
+                        }else{
+                            $go = false;
 
-
-                if($lista){
-                    $idd  = $lista[0]->codImagem;
-                    $dono = $lista[0]->inscricao;
-                    $go = true;
-                }else{
-                    $go = false;
-                    $affected = false;
-                }
+                        }
                 //dd($go);
-                // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-                if(is_file($this->caminho) &&  $go   ){
-                   
-                    $novo_nome = $this->uuid();
-                    $conteudo  =  file_get_contents($this->caminho) ;
+                        // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
+                        if(is_file($this->caminho) &&  $go ){  
+                            $novo_nome = $this->uuid();
+                            $conteudo  =  file_get_contents($this->caminho) ;
+                            //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
-                    $result =  Storage::disk('s3Slserra')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                            $result =  Storage::disk('s3Paraiso')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+                            
+                            $affected = DB::connection('BDGeralSSebastiaoImagem')->update("UPDATE dbo.Imagem  
+                                                                                            SET  ImagemNome = ?
+                                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/ca800d52-3770-4a68-9f84-63a71b9b57c0'
+                                                                                            , UploadNuvemRenomeado = 1 
+                                                                                            , UploadNuvemArquivoNaoLocalizado = 0
+                                                                                            , UploadNuvemArquivoPublico = 1 
+                                                                                            , idUnico = ? 
+                                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
+                    //print_r( $affected);       
+                        DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $novo_nome . '.' . $this->extensao  ] );
 
-                    //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
-                    $affected = DB::connection('BDGeralLorenaImagem')->update("UPDATE dbo.Imagem  
-                                                                                SET  ImagemNome =   ? 
-                                                                                , LocalArquivo =  'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d' 
-                                                                                WHERE assunto = 'Terreno'
-                                                                                AND TipoFoto = 'Foto Fachada'
-                                                                                AND  codImagem = ?", [$novo_nome . '.' . $this->extensao , $idd ]); 
-
-                  //  DB::connection('pgsql_vinhedo')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'acdb0896-101b-4a9d-aa32-6d1b134f3961/'. $novo_nome . '.' . $this->extensao  ] );
                         
-                    if ($affected){
-                        unlink($this->caminho);
+                        //fclose($this->caminho);
                         unset($conteudo);
-                    }
-                }
+                        unlink($this->caminho);
+                        // ob_flush();
+                        //dd('feito');
+                        return true;
+
+                        } /*else if(!$go ){
+                                return false;
+                                dd('NAO LOCALIZADO NO BANCO');
+                            
+                            
+                        }else{
+                            return false;
+                            dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
+                        }*/
             }
-*/
+
         }
         return $images ;
     }
