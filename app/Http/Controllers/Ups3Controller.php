@@ -199,8 +199,8 @@ class Ups3Controller extends Controller
 
                 
 
-                $lista = DB::connection('BDGeralLorenaImagem')->select("SELECT @@version;"  );
-                dd($lista);
+                //$lista = DB::connection('BDGeralLorenaImagem')->select("SELECT @@version;"  );
+                //dd($lista);
 
                 $lista = DB::connection('BDGeralSSebastiaoImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
                         if($lista){
