@@ -93,14 +93,14 @@ class ProcessCampos implements ShouldQueue
 
             if($result!==false ){
                 sleep(1);
-                $affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
+             //   $affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
                      DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
                     SET  ImagemNome = ?
                     , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
                     , uploads3 = 1 
                     , idUnico = ? 
                     WHERE  imagemNomeAnterior = ?", [$this->novo_nome . '.' . $this->extensao , $this->novo_nome  , $this->nome_arquivo ]); 
-                }, 5 );
+              //  }, 5 );
             }
             if($result!==false && $affected  !==false ){
                 $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $this->novo_nome . '.' . $this->extensao  ] );
