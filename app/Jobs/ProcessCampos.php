@@ -83,13 +83,13 @@ class ProcessCampos implements ShouldQueue
         if(is_file($this->caminho) &&  $go ){
 
             // dd('agora VAI ');         
-            $novo_nome = $this->uuid();
+            $this->novo_nome = $this->uuid();
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
-           $result =  Storage::disk('s3Campos')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+           $result =  Storage::disk('s3Campos')->put( $this->novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             
-            //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+            //Storage::disk('public_web')->put('teste/'. $this->novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
             if($result!==false ){
                 sleep(1);
@@ -99,11 +99,11 @@ class ProcessCampos implements ShouldQueue
                     , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
                     , uploads3 = 1 
                     , idUnico = ? 
-                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
+                    WHERE  imagemNomeAnterior = ?", [$this->novo_nome . '.' . $this->extensao , $this->novo_nome  , $this->nome_arquivo ]); 
                 }, 5 );
             }
             if($result!==false && $affected  !==false ){
-                $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $novo_nome . '.' . $this->extensao  ] );
+                $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $this->novo_nome . '.' . $this->extensao  ] );
             }
             if($result!==false && $affected  !==false && $affected2  !==false  ){
                 unset($conteudo);
