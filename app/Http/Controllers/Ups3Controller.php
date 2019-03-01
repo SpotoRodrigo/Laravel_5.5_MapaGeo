@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        $images = $this->loopPorPasta(); 
+        //$images = $this->loopPorPasta(); 
 
-        //$images = $this->loopBucket('s3Campos');
+        $images = $this->loopBucket('s3Campos');
 
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
@@ -183,12 +183,12 @@ class Ups3Controller extends Controller
 
             if(is_file($file->getRealPath()) ){
                   // $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-                  $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ,  $this->uuid() ));   // $file->getRealPath()     $conteudo
+                 // $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ,  $this->uuid() ));   // $file->getRealPath()     $conteudo
             }
           
             //  PARAISO   
             if( is_file($file->getRealPath()) ){
-/*
+
                 $this->extensao = $file->getExtension() ;
                 $this->nome_arquivo = $file->getFilename() ;
                 //$this->conteudo = $conteudo;
@@ -239,7 +239,7 @@ class Ups3Controller extends Controller
                         return true;
 
                         }
-                        */ 
+                        
             }
 
         }
