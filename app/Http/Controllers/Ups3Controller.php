@@ -233,7 +233,7 @@ class Ups3Controller extends Controller
                                 }, 5 );
                             }
                             if($result!==false && $affected  !==false ){
-                                $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $aux_nome ] );
+                                $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $this->aux_nome] );
                             }
                             if($result!==false && $affected  !==false && $affected2  !==false  ){
                                 unset($conteudo);
