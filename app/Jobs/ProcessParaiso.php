@@ -63,13 +63,6 @@ class ProcessParaiso implements ShouldQueue
 //dd('true');
         }else{
             $go = false;
-//dd('false');
-            $conteudo  =  file_get_contents($this->caminho) ;
-             Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
-             unlink($this->caminho);
-             unset($conteudo);
-            //rename($this->caminho , "F:\\Fachada\\nao_localizado\\".$this->nome_arquivo );
-            //dd('naoFeito'.$this->nome_arquivo);
              return true;
         }
 //dd($go);
