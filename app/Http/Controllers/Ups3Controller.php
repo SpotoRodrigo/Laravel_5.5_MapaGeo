@@ -157,8 +157,8 @@ class Ups3Controller extends Controller
 
     private function loopPorPasta()
     {
-        $directory = "/media/geoserver/transferencias/campos/teste" ;
-        //$directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
+        //$directory = "/media/geoserver/transferencias/campos/teste" ;
+        $directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
         $count= 0;
        
         // dd('falta banco de são lourenco.');
@@ -184,8 +184,8 @@ class Ups3Controller extends Controller
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
 
              if(is_file($file->getRealPath()) ){
-                  //$this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-                  $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  //$this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
           /*
             //  VINHEDO   
