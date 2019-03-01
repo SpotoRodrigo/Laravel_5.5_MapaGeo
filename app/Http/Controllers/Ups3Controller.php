@@ -24,7 +24,7 @@ use App\Jobs\ProcessCampos;
 //use App\Jobs\ProcessSocorro;
 
 ini_set("max_execution_time",54000);
-ini_set("memory_limit","1024M");
+ini_set("memory_limit","2048M");
 
 class Ups3Controller extends Controller
 {
