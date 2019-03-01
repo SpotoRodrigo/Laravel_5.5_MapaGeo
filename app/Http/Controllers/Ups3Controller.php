@@ -156,8 +156,8 @@ class Ups3Controller extends Controller
 
     private function loopPorPasta()
     {
-        //$directory = "/media/geoserver/transferencias/campos/teste" ;
-        $directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
+        $directory = "/media/geoserver/transferencias/campos/teste" ;
+        //$directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
         $count= 0;
        
         // dd('falta banco de são lourenco.');
@@ -180,16 +180,14 @@ class Ups3Controller extends Controller
                 'up'      => true
             ];
 
-            // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
-
-           //  if(is_file($file->getRealPath()) ){
-                  //$this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-                  //$this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-           //  }
+            if(is_file($file->getRealPath()) ){
+                 // $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+            }
           
             //  PARAISO   
             if( is_file($file->getRealPath()) ){
-
+/*
                 $this->extensao = $file->getExtension() ;
                 $this->nome_arquivo = $file->getFilename() ;
                 //$this->conteudo = $conteudo;
@@ -239,15 +237,8 @@ class Ups3Controller extends Controller
                         //dd('feito');
                         return true;
 
-                        } /*else if(!$go ){
-                                return false;
-                                dd('NAO LOCALIZADO NO BANCO');
-                            
-                            
-                        }else{
-                            return false;
-                            dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
-                        }*/
+                        }
+                        */ 
             }
 
         }
