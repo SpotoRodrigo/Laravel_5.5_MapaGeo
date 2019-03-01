@@ -91,21 +91,25 @@ class ProcessCampos implements ShouldQueue
             
             //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
-            $affected = DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
-                                                                            SET  ImagemNome = ?
-                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
-                                                                            , uploads3 = 1 
-                                                                            , idUnico = ? 
-                                                                            WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
- //print_r( $affected);       
-        DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $novo_nome . '.' . $this->extensao  ] );
+            if($result!==false ){
+                sleep(1);
+                DB::connection('BDGeralCamposImagem')->transaction(function () {
+                    $affected = DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
+                    SET  ImagemNome = ?
+                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
+                    , uploads3 = 1 
+                    , idUnico = ? 
+                    WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
+                }, 5 );
+            }
+            if($result!==false && $affected  !==false ){
+                $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $novo_nome . '.' . $this->extensao  ] );
+            }
+            if($result!==false && $affected  !==false && $affected2  !==false  ){
+                unset($conteudo);
+                unlink($this->caminho);
+            }
 
-        
-        //fclose($this->caminho);
-        unset($conteudo);
-        unlink($this->caminho);
-       // ob_flush();
-        //dd('feito');
         return true;
 
         } /*else if(!$go ){

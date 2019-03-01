@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        $images = $this->loopPorPasta(); 
+        //$images = $this->loopPorPasta(); 
 
-        //$images = $this->loopBucket('s3Campos');
+        $images = $this->loopBucket('s3Campos');
 
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
@@ -156,7 +156,8 @@ class Ups3Controller extends Controller
 
     private function loopPorPasta()
     {
-        $directory = "/media/geoserver/transferencias/campos/fotosfachada" ;
+        //$directory = "/media/geoserver/transferencias/campos/fotosfachada" ;
+        $directory = "/media/geoserver/transferencias/campos/teste" ;
         //$directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
         $count= 0;
        
