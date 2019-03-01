@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        $images = $this->loopPorPasta(); 
+        //$images = $this->loopPorPasta(); 
 
-        //$images = $this->loopBucket('s3TaquaritingaDoc');
+        $images = $this->loopBucket('s3Campos');
 
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
@@ -156,8 +156,8 @@ class Ups3Controller extends Controller
 
     private function loopPorPasta()
     {
-        //$directory = "/media/geoserver/transferencias/campos/teste" ;
-        $directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
+        $directory = "/media/geoserver/transferencias/campos/teste" ;
+        //$directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
         $count= 0;
        
         // dd('falta banco de são lourenco.');
@@ -181,8 +181,8 @@ class Ups3Controller extends Controller
             ];
 
             if(is_file($file->getRealPath()) ){
-                   $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-                  //$this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  // $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
             }
           
             //  PARAISO   
@@ -265,7 +265,7 @@ class Ups3Controller extends Controller
                 ];
             } 
             //Storage::disk($Bucket)->delete($file);
-            //Storage::disk($Bucket)->delete($file);
+            Storage::disk($Bucket)->delete($file);
             // Storage::disk($Bucket)->setVisibility($file, 'public');
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
