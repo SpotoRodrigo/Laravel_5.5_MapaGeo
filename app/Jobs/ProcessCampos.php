@@ -66,6 +66,8 @@ class ProcessCampos implements ShouldQueue
             $go = false;
              return true;
         }
+
+        dd($this->novo_nome);
         // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
         if(is_file($this->caminho) &&  $go ){
             $conteudo  =  file_get_contents($this->caminho) ;
