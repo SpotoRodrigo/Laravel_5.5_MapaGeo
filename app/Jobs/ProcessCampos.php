@@ -36,10 +36,9 @@ class ProcessCampos implements ShouldQueue
     public function __construct($extensao , $nome_arquivo , $caminho , $novo_nome )
     {
         $this->extensao = $extensao;
-        $this->nome_arquivo = $nome_arquivo;
-        $this->novo_nome =$novo_nome;
+        $this->nome_arquivo = $nome_arquivo;        
         $this->caminho = $caminho;
-
+        $this->novo_nome =$novo_nome;
     }
 
     /**
@@ -49,7 +48,16 @@ class ProcessCampos implements ShouldQueue
      */
     public function handle()
     {
+        /*
+        $this->extensao = $file->getExtension() ;
+        $this->nome_arquivo = $file->getFilename() ;
+        //$this->conteudo = $conteudo;
+        $this->caminho = $file->getRealPath() ;
+        $this->novo_nome = $this->uuid()  ;
+        */
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
+
+
         $lista = DB::connection('BDGeralCamposImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,10),'_','.' )  AS inscricao 
                                                                     , COUNT(CodImagem) as qtde 
                                                                     FROM dbo.Imagem 
@@ -57,53 +65,42 @@ class ProcessCampos implements ShouldQueue
                                                                     AND TipoFoto = 'Foto Fachada Tablet' 
                                                                     AND  imagemNomeAnterior = ? 
                                                                     GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,10),'_','.' )" ,[$this->nome_arquivo] );
-//dd($lista );
-        if($lista){
-            $dono = $lista[0]->inscricao;
-            $qtde = $lista[0]->qtde;
-            $go = true;
-        }else{
-            $go = false;
-             return true;
-        }
 
-        // SE EXISTE ARQUIVO E REGISTRO NO BANCO , SUBO E ATUALIZO BANCO. 
-        if(is_file($this->caminho) &&  $go ){
-            $conteudo  =  file_get_contents($this->caminho) ;
-            $aux_nome  = (string) $this->novo_nome . '.' . $this->extensao ;
+                if($lista){
+                    $dono = $lista[0]->inscricao;
+                    $qtde = $lista[0]->qtde;
+                    $go = true;
+                }else{
+                    $go = false;
 
-            $result =  Storage::disk('s3Campos')->put(  $aux_nome  , $conteudo , ['ACL' => 'public-read'] );
-           
-            if($result!==false ){
-                sleep(1);
-                //$affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
-                     DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
-                    SET  ImagemNome = ?
-                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
-                    , uploads3 = 1 
-                    , idUnico = ? 
-                    WHERE  imagemNomeAnterior = ?", [$aux_nome, $this->novo_nome  , $this->nome_arquivo ]); 
-              //  }, 5 );
-            }
-            if($result!==false && $affected  !==false ){
-                $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $aux_nome ] );
-            }
-            if($result!==false && $affected  !==false && $affected2  !==false  ){
-                unset($conteudo);
-                unlink($this->caminho);
-            }
+                }
 
-        return true;
-
-        } /*else if(!$go ){
-             return false;
-             dd('NAO LOCALIZADO NO BANCO');
-            
-            
-        }else{
-            return false;
-            dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
-        }*/
+                if(is_file($this->caminho) &&  $go ){
+                    $conteudo  =  file_get_contents($this->caminho) ;
+                    $this->aux_nome  = $this->novo_nome . '.' . $this->extensao ;
+        
+                    $result =  Storage::disk('s3Campos')->put(   $this->aux_nome   , $conteudo , ['ACL' => 'public-read'] );
+                   
+                    if($result!==false ){
+                        sleep(1);
+                        $affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
+                                    DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
+                                    SET  ImagemNome = ?
+                                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
+                                    , uploads3 = 1 
+                                    , idUnico = ? 
+                                    WHERE  imagemNomeAnterior = ?", [ $this->aux_nome , $this->novo_nome  , $this->nome_arquivo ]); 
+                        }, 5 );
+                    }
+                    if($result!==false && $affected  !==false ){
+                        $affected2 = DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $this->aux_nome] );
+                    }
+                    if($result!==false && $affected  !==false && $affected2  !==false  ){
+                        unset($conteudo);
+                        unlink($this->caminho);
+                    }
+                }
+                return true;
     }
 
 
