@@ -93,8 +93,8 @@ class ProcessCampos implements ShouldQueue
 
             if($result!==false ){
                 sleep(1);
-                DB::connection('BDGeralCamposImagem')->transaction(function () {
-                    $affected = DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
+                $affected = DB::connection('BDGeralCamposImagem')->transaction(function () {
+                     DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
                     SET  ImagemNome = ?
                     , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
                     , uploads3 = 1 
