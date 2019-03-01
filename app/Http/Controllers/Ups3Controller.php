@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
-//use App\Jobs\ProcessParaiso;
+use App\Jobs\ProcessParaiso;
+use App\Jobs\ProcessCampos;
 //use App\Jobs\ProcessItatiba;
 //use App\Jobs\ProcessVinhedo;
 //use App\Jobs\upVinhedoDoc;
 //use App\Jobs\setPublicS3;
 
-use App\Jobs\upVinhedoEmpresaFacil;
+//use App\Jobs\upVinhedoEmpresaFacil;
 //use App\Jobs\ProcessRegistro;
 //use App\Jobs\ProcessArtur;
 //use App\Jobs\ProcessSocorro;
@@ -38,7 +39,7 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        $images = $this->loopBancoTaquaritingaDoc(); 
+        $images = $this->loopPorPasta(); 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
 
@@ -156,8 +157,8 @@ class Ups3Controller extends Controller
 
     private function loopPorPasta()
     {
-        //$directory = "E:\\fachada\\ssparaiso\\Entregavel_03_SSP\\" ;
-        $directory = "/media/geoserver/transferencias/campos/fotosfachada";
+        $directory = "/media/geoserver/transferencias/campos/teste" ;
+        //$directory = "/media/geoserver/transferencias/paraiso/Entregavel_06";
         $count= 0;
        
         // dd('falta banco de são lourenco.');
@@ -184,9 +185,10 @@ class Ups3Controller extends Controller
 
 
              if(is_file($file->getRealPath()) ){
-                 // $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  //$this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
              }
-          
+          /*
             //  VINHEDO   
             if( is_file($file->getRealPath()) ){
                 $this->extensao = $file->getExtension();
@@ -237,7 +239,7 @@ class Ups3Controller extends Controller
                     }
                 }
             }
-
+*/
         }
         return $images ;
     }

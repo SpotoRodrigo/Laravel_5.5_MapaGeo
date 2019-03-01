@@ -54,7 +54,13 @@ class ProcessCampos implements ShouldQueue
         //s3Lorena
 
         // VERIFICO SE EXISTE REGISTRO NO BANCO O ARQUIVO EM PROCESSO.  
-        $lista = DB::connection('BDGeralCamposImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' )  AS inscricao   , COUNT(CodImagem) as qtde FROM dbo.Imagem WHERE imagemNomeAnterior = ? GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) " ,[$this->nome_arquivo] );
+        $lista = DB::connection('BDGeralCamposImagem')->select("SELECT REPLACE(SUBSTRING(imagemNomeAnterior,1,10),'_','.' )  AS inscricao 
+                                                                    , COUNT(CodImagem) as qtde 
+                                                                    FROM dbo.Imagem 
+                                                                    WHERE Assunto = 'Terreno' 
+                                                                    AND TipoFoto = 'Foto Fachada Tablet' 
+                                                                    AND  imagemNomeAnterior = ? 
+                                                                    GROUP BY REPLACE(SUBSTRING(imagemNomeAnterior,1,10),'_','.' )" ,[$this->nome_arquivo] );
 //dd($lista );
         if($lista){
             $dono = $lista[0]->inscricao;
@@ -64,10 +70,10 @@ class ProcessCampos implements ShouldQueue
         }else{
             $go = false;
 //dd('false');
-            $conteudo  =  file_get_contents($this->caminho) ;
-             Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
-             unlink($this->caminho);
-             unset($conteudo);
+            //$conteudo  =  file_get_contents($this->caminho) ;
+             //Storage::disk('public_web')->put('nao_localizado2/'. $this->nome_arquivo   , $conteudo , ['ACL' => 'public-read'] );
+             //unlink($this->caminho);
+             //unset($conteudo);
             //rename($this->caminho , "F:\\Fachada\\nao_localizado\\".$this->nome_arquivo );
             //dd('naoFeito'.$this->nome_arquivo);
              return true;
@@ -81,20 +87,18 @@ class ProcessCampos implements ShouldQueue
             $conteudo  =  file_get_contents($this->caminho) ;
             //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
 
-           $result =  Storage::disk('s3Paraiso')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
+           $result =  Storage::disk('s3Campos')->put( $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
             
             //Storage::disk('public_web')->put('teste/'. $novo_nome . '.' . $this->extensao  , $conteudo , ['ACL' => 'public-read'] );
 
             $affected = DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
                                                                             SET  ImagemNome = ?
-                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/ca800d52-3770-4a68-9f84-63a71b9b57c0'
-                                                                            , UploadNuvemRenomeado = 1 
-                                                                            , UploadNuvemArquivoNaoLocalizado = 0
-                                                                            , UploadNuvemArquivoPublico = 1 
+                                                                            , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/a970d3e6-185d-47ec-9281-69ff92b51b87'
+                                                                            , uploads3 = 1 
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
  //print_r( $affected);       
-        DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $novo_nome . '.' . $this->extensao  ] );
+        DB::connection('pgsql_campos')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'a970d3e6-185d-47ec-9281-69ff92b51b87/'. $novo_nome . '.' . $this->extensao  ] );
 
         
         //fclose($this->caminho);
