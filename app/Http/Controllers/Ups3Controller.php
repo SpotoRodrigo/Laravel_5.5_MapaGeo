@@ -174,15 +174,14 @@ class Ups3Controller extends Controller
         foreach ($files as $file) {
             $count++;
             $images[] = [
+                'count' => (string) $count ,
                 'nome' =>  $file->getFilename() ,
-                'extensao'  => (string) $count,
+                'extensao'  => $file->getExtension(),
                 'caminho' => $file->getRealPath(),
                 'up'      => true
             ];
 
             // $conteudo  =  base64_encode(file_get_contents( $file->getRealPath() )) ;
-           
-
 
              if(is_file($file->getRealPath()) ){
                   //$this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
