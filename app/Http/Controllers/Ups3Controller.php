@@ -183,7 +183,7 @@ class Ups3Controller extends Controller
 
             if(is_file($file->getRealPath()) ){
                   // $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
-                  $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  $this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ,  $this->uuid(); ));   // $file->getRealPath()     $conteudo
             }
           
             //  PARAISO   

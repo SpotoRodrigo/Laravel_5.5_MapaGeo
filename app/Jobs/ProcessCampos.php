@@ -23,6 +23,7 @@ class ProcessCampos implements ShouldQueue
     protected $extensao;
     protected $nome_arquivo;
     protected $caminho;
+    protected $novo_nome;
 
     public $timeout = 300;
     public $memory_limit = 1024;
@@ -32,11 +33,11 @@ class ProcessCampos implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($extensao , $nome_arquivo , $caminho )
+    public function __construct($extensao , $nome_arquivo , $caminho , $novo_nome )
     {
         $this->extensao = $extensao;
         $this->nome_arquivo = $nome_arquivo;
-        $this->novo_nome = $this->uuid();
+        $this->novo_nome =$novo_nome;
         $this->caminho = $caminho;
 
     }
