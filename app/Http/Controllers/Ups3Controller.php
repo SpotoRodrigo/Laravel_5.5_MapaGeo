@@ -158,7 +158,7 @@ class Ups3Controller extends Controller
     {
         //$directory = "/media/geoserver/transferencias/campos/fotosfachada" ;
         //$directory = "/media/geoserver/transferencias/campos/teste" ;
-        $directory = "/media/geoserver/transferencias/paraiso/Entregavel_07";
+        $directory = "/media/geoserver/transferencias/paraiso/";
         $count= 0;
        
         // dd('falta banco de são lourenco.');
