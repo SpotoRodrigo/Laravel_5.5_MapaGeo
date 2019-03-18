@@ -38,9 +38,9 @@ class Ups3Controller extends Controller
     {
         // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        $images = $this->loopPorPasta(); 
+        //$images = $this->loopPorPasta(); 
 
-        //$images = $this->loopBucket('s3Campos');
+        $images = $this->loopBucket('s3TaquaritingaDoc');
 
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
@@ -252,7 +252,7 @@ class Ups3Controller extends Controller
     {
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
-         $files = Storage::disk($Bucket)->allFiles();
+         $files = Storage::disk($Bucket)->allFiles('921E7964-0A48-40AB-84AD-A1EB3BDEE087');
          foreach ($files as $file) {
 
             if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
@@ -267,7 +267,7 @@ class Ups3Controller extends Controller
                 ];
             } 
             //Storage::disk($Bucket)->delete($file);
-            Storage::disk($Bucket)->delete($file);
+           // Storage::disk($Bucket)->delete($file);
             // Storage::disk($Bucket)->setVisibility($file, 'public');
             // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
              // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
