@@ -272,6 +272,7 @@ return [
             'host' => 'http://s3.sao01.objectstorage.service.networklayer.com/',
             'region' => 'sao01',
         ],
+
 /* EMPRESA FACIL */
 
         's3VinhedoEFAbertura' => [
@@ -334,9 +335,86 @@ return [
             'host' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
             'region' => 'sao01',
         ],
+
+
+        
+        's3ItatibaEFAbertura' => [
+            'driver' => 's3',
+            'key' => 'Y0VwzfmoBXEjqcWmuxKJ',
+            'secret' => 'Qr4VEzeqisXYFvleq8uR7eMHhbDUpBRz3VoWl4UA',
+            'version' => '2006-03-01',            
+            'bucket' =>  'da726b49-baa0-4557-a27d-93f8be8ddbf6', 
+            'endpoint' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'host' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'region' => 'sao01',
+        ],
+        's3ItatibaEFAlteracao' => [
+            'driver' => 's3',
+            'key' => 'Y0VwzfmoBXEjqcWmuxKJ',
+            'secret' => 'Qr4VEzeqisXYFvleq8uR7eMHhbDUpBRz3VoWl4UA',
+            'version' => '2006-03-01',            
+            'bucket' =>  '6f5dd620-8082-4168-bbf1-7e84085f7666', 
+            'endpoint' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'host' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'region' => 'sao01',
+        ],
+        's3ItatibaEFEncerramento' => [
+            'driver' => 's3',
+            'key' => 'Y0VwzfmoBXEjqcWmuxKJ',
+            'secret' => 'Qr4VEzeqisXYFvleq8uR7eMHhbDUpBRz3VoWl4UA',
+            'version' => '2006-03-01',            
+            'bucket' =>  '07941482-7149-4b98-83eb-6d99bc90a5c2', 
+            'endpoint' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'host' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'region' => 'sao01',
+        ],
+        's3ItatibaEFLaudos' => [
+            'driver' => 's3',
+            'key' => 'Y0VwzfmoBXEjqcWmuxKJ',
+            'secret' => 'Qr4VEzeqisXYFvleq8uR7eMHhbDUpBRz3VoWl4UA',
+            'version' => '2006-03-01',            
+            'bucket' =>  '1427937f-2ec0-4e4d-bdb6-b2d4a9ff30b9', 
+            'endpoint' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'host' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'region' => 'sao01',
+        ],
+        's3ItatibaEFLiberacao' => [
+            'driver' => 's3',
+            'key' => 'Y0VwzfmoBXEjqcWmuxKJ',
+            'secret' => 'Qr4VEzeqisXYFvleq8uR7eMHhbDUpBRz3VoWl4UA',
+            'version' => '2006-03-01',            
+            'bucket' =>  'ecd57c08-2b64-4639-b36b-53077ab078c8', 
+            'endpoint' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'host' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'region' => 'sao01',
+        ],
+        's3ItatibaEFRecadastramento' => [
+            'driver' => 's3',
+            'key' => 'Y0VwzfmoBXEjqcWmuxKJ',
+            'secret' => 'Qr4VEzeqisXYFvleq8uR7eMHhbDUpBRz3VoWl4UA',
+            'version' => '2006-03-01',            
+            'bucket' =>  'a6ffcb2d-df2b-4800-83c2-f1d2b6e57958', 
+            'endpoint' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'host' => 'http://s3.sao01.cloud-object-storage.appdomain.cloud',
+            'region' => 'sao01',
+        ],
     ],
 
 ];
+
+/*
+Abertura = 'da726b49-baa0-4557-a27d-93f8be8ddbf6';
+Alteracao = '6f5dd620-8082-4168-bbf1-7e84085f7666';
+Encerramento = '07941482-7149-4b98-83eb-6d99bc90a5c2';
+Laudo = '1427937f-2ec0-4e4d-bdb6-b2d4a9ff30b9';
+LiberacaoUsoSolo = 'ecd57c08-2b64-4639-b36b-53077ab078c8';
+Recadastramento = 'a6ffcb2d-df2b-4800-83c2-f1d2b6e57958';
+
+   define("HOST_AWS", "http://s3.sao01.cloud-object-storage.appdomain.cloud");
+   define("KEY", 'Y0VwzfmoBXEjqcWmuxKJ');
+   define("SECRET_KEY", 'Qr4VEzeqisXYFvleq8uR7eMHhbDUpBRz3VoWl4UA');
+*/ 
+
 
 /*
 70e17193-8514-4acb-8dee-9f57170debfc => Artur Nogueira
