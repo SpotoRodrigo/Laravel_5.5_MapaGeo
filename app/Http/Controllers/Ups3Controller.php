@@ -1304,24 +1304,37 @@ class Ups3Controller extends Controller
 
         foreach ($pastas as $pasta => $caminho ) {
 
-            if(!File::isDirectory($caminho)) {
-                $msg = 'Caminho não acessivél.';
-                return view('ups3.index').compact($msg); 
-            }
+            // if(!File::isDirectory($caminho)) {
+            //     $msg = 'Caminho não acessivél.';
+            //     return view('ups3.index').compact($msg); 
+            // }
 
             $files = File::allFiles($caminho);
 
             foreach ($files as $file) {
                 $subiu = false;
-                $lista = DB::connection('BDGeralItatiba')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico   , decamuDocCodigo 
-                                        FROM dbo.DECAMUDocumento 
-                                        WHERE  decamuDocNomeArquivo  = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
+
+                if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
+                    $lista = DB::connection('BDGeralItatiba')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                            FROM dbo.DECAMUDocumento 
+                                            WHERE  decamuDocNomeArquivo  = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
+                }else if($pasta == 'laudos') {
+                    $lista = DB::connection('BDGeralItatiba')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                            FROM dbo.DECAMULaudoArquivos 
+                                                                            WHERE  nomeArquivoSistema  = ?  and nomeArquivoSistemas3 is null   " ,[$file->getFilename()] );
+                }else if($pasta == 'liberacaousosolo') {
+                    $lista = DB::connection('BDGeralItatiba')->select("  SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                        FROM dbo.LiberacaoUsoSoloDocumentos 
+                                                                        WHERE  liberacaoUsoSoloDocNome  = ?  and liberacaoUsoSoloDocNomes3 is null   " ,[$file->getFilename()] );
+                }
+
+                                        
                 $subiu = false; 
                 if($lista  != []  ){ 
-                    $idd = $lista[0]->decamuDocCodigo;
+                    $idd = 0; 
                     $idUnico = $lista[0]->idUnico;
                     $subiu = true; 
-                    $this->dispatch(new ProcessItatibaEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                    // $this->dispatch(new ProcessItatibaEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
                 }
 
                 $count++;
@@ -1334,7 +1347,7 @@ class Ups3Controller extends Controller
                 ];
 
                     // INICIO ROTINA QUE PODE SER UM JOB.
-/*
+
                    $this->extensao = $file->getExtension() ; // $extensao;
                    $this->nome_completo =  $file->getFilename() ; // $nome_completo;
                    $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
@@ -1350,24 +1363,27 @@ class Ups3Controller extends Controller
                     'liberacaousosolo' => 's3ItatibaEFLiberacao' ,
                     'recadastramento' =>  's3ItatibaEFRecadastramento' 
                     );
-                        if(is_file($this->caminho_completo)){
+                        if(true){  // is_file($this->caminho_completo)
                             $conteudo  =  file_get_contents( $this->caminho_completo ) ;
                             $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome  , $conteudo );  // ['ACL' => 'public-read'] 
     
                             if ($result!==false){
                                 $subiu = true;
-                                $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao , $this->pasta   , $this->nome_completo ]); 
-    
+
+                                if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao , $this->pasta   , $this->nome_completo ]); 
+                                }else if($pasta == 'laudos') {
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistemas3 = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistema = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao  , $this->nome_completo ]); 
+                                }else if($pasta == 'liberacaousosolo') {
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNomes3 = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao   , $this->nome_completo ]); 
+                                }    
                                 if($update!==false ){
-                                    $conteudo  =  file_get_contents($this->caminho_completo) ;
-                                    Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
                                     unlink($this->caminho_completo);
                                     unset($conteudo);
                                 }else{
                                     //return false;
                                     dd('falha update banco');
                                 }
-    
                             }else{
                                 //return false;
                                 dd('falha subir S3 ');
@@ -1375,7 +1391,7 @@ class Ups3Controller extends Controller
                             
                             //return true ;
                         } // caminho_completo not is file 
- */
+ 
 
                 unset($conteudo ,$result ,$update , $subiu );
             }
