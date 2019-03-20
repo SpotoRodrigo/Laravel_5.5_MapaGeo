@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
-use App\Jobs\ProcessParaiso;
+//use App\Jobs\ProcessParaiso;
 //use App\Jobs\ProcessCampos;
 //use App\Jobs\ProcessItatiba;
 //use App\Jobs\ProcessVinhedo;
@@ -19,6 +19,7 @@ use App\Jobs\ProcessParaiso;
 //use App\Jobs\setPublicS3;
 
 //use App\Jobs\upVinhedoEmpresaFacil;
+use App\Jobs\ProcessItatibaEmpresaFacil;
 //use App\Jobs\ProcessRegistro;
 //use App\Jobs\ProcessArtur;
 //use App\Jobs\ProcessSocorro;
@@ -40,8 +41,9 @@ class Ups3Controller extends Controller
          
         //$images = $this->loopPorPasta(); 
 
-        $images = $this->loopBucket('s3TaquaritingaDoc');
+       // $images = $this->loopBucket('s3TaquaritingaDoc');
 
+       $images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
         
@@ -1284,6 +1286,106 @@ class Ups3Controller extends Controller
 
         return $images ;
     }
+
+
+    
+    private function loopPorPastaEmpresaFacilItatiba()
+    {
+        $count= 0;
+
+        $pastas = array(
+            'abertura'      =>  '/media/geoserver/transferencias/itatiba/empresafacil/abertura' ,
+            'alteracao'     =>  '/media/geoserver/transferencias/itatiba/empresafacil/alteracao',
+            'encerramento'  =>  '/media/geoserver/transferencias/itatiba/empresafacil/encerramento' ,  // 386 
+            'laudos'        =>  '/media/geoserver/transferencias/itatiba/empresafacil/laudos',
+            'liberacaousosolo'  => '/media/geoserver/transferencias/itatiba/empresafacil/liberacaousosolo' ,
+            'recadastramento'   =>  '/media/geoserver/transferencias/itatiba/empresafacil/recadastramento' ,
+        );
+
+        foreach ($pastas as $pasta => $caminho ) {
+
+            if(!File::isDirectory($caminho)) {
+                $msg = 'Caminho não acessivél.';
+                return view('ups3.index').compact($msg); 
+            }
+
+            $files = File::allFiles($caminho);
+
+            foreach ($files as $file) {
+                $subiu = false;
+                $lista = DB::connection('BDGeralItatiba')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico   , decamuDocCodigo 
+                                        FROM dbo.DECAMUDocumento 
+                                        WHERE  decamuDocNomeArquivo  = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
+                $subiu = false; 
+                if($lista  != []  ){ 
+                    $idd = $lista[0]->decamuDocCodigo;
+                    $idUnico = $lista[0]->idUnico;
+                    $subiu = true; 
+                    $this->dispatch(new ProcessItatibaEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                }
+
+                $count++;
+                $images[] = [
+                    'count' => (string) $count , 
+                    'nome' =>  $file->getFilename() ,
+                    'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                    'caminho' =>  $pasta, // $file->getRealPath(),
+                    'up'      => $subiu
+                ];
+
+                    // INICIO ROTINA QUE PODE SER UM JOB.
+/*
+                   $this->extensao = $file->getExtension() ; // $extensao;
+                   $this->nome_completo =  $file->getFilename() ; // $nome_completo;
+                   $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
+                   $this->pasta = $pasta;
+                   $this->idd = $idd;
+                   $this->novo_nome =  $idUnico .'.'.  $this->extensao  ; // $novo_nome;
+
+                   $s3 = array(
+                    'abertura' =>  's3ItatibaEFAbertura' ,
+                    'alteracao' =>  's3ItatibaEFAlteracao',
+                    'encerramento' =>  's3ItatibaEFEncerramento' ,
+                    'laudos' =>  's3ItatibaEFLaudos',
+                    'liberacaousosolo' => 's3ItatibaEFLiberacao' ,
+                    'recadastramento' =>  's3ItatibaEFRecadastramento' 
+                    );
+                        if(is_file($this->caminho_completo)){
+                            $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+                            $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome  , $conteudo );  // ['ACL' => 'public-read'] 
+    
+                            if ($result!==false){
+                                $subiu = true;
+                                $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao , $this->pasta   , $this->nome_completo ]); 
+    
+                                if($update!==false ){
+                                    $conteudo  =  file_get_contents($this->caminho_completo) ;
+                                    Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                                    unlink($this->caminho_completo);
+                                    unset($conteudo);
+                                }else{
+                                    //return false;
+                                    dd('falha update banco');
+                                }
+    
+                            }else{
+                                //return false;
+                                dd('falha subir S3 ');
+                            }
+                            
+                            //return true ;
+                        } // caminho_completo not is file 
+ */
+
+                unset($conteudo ,$result ,$update , $subiu );
+            }
+        }
+
+    
+
+        return $images ;
+    }
+
 
 
     private function loopPorPastaQuestionario()
