@@ -41,9 +41,9 @@ class Ups3Controller extends Controller
          
         //$images = $this->loopPorPasta(); 
 
-        $images = $this->loopBucket('s3ItatibaEFAbertura');
+       // $images = $this->loopBucket('s3ItatibaEFAbertura');
 
-       // $images = $this->loopPorPastaEmpresaFacilItatiba() ;
+        $images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
         
@@ -1294,12 +1294,12 @@ class Ups3Controller extends Controller
         $count= 0;
 
         $pastas = array(
-            'abertura'      =>  '/media/geoserver/transferencias/itatiba/empresafacil/abertura' ,
-            'alteracao'     =>  '/media/geoserver/transferencias/itatiba/empresafacil/alteracao',
-            'encerramento'  =>  '/media/geoserver/transferencias/itatiba/empresafacil/encerramento' ,  // 386 
-            'laudos'        =>  '/media/geoserver/transferencias/itatiba/empresafacil/laudos',
+         //   'abertura'      =>  '/media/geoserver/transferencias/itatiba/empresafacil/abertura' ,
+         //   'alteracao'     =>  '/media/geoserver/transferencias/itatiba/empresafacil/alteracao',
+         //   'encerramento'  =>  '/media/geoserver/transferencias/itatiba/empresafacil/encerramento' ,  // 386 
+         //   'laudos'        =>  '/media/geoserver/transferencias/itatiba/empresafacil/laudos',
             'liberacaousosolo'  => '/media/geoserver/transferencias/itatiba/empresafacil/liberacaousosolo' ,
-            'recadastramento'   =>  '/media/geoserver/transferencias/itatiba/empresafacil/recadastramento' ,
+         //   'recadastramento'   =>  '/media/geoserver/transferencias/itatiba/empresafacil/recadastramento' ,
         );
 
         foreach ($pastas as $pasta => $caminho ) {
@@ -1371,11 +1371,11 @@ class Ups3Controller extends Controller
                                 $subiu = true;
 
                                 if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
-                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao , $this->pasta   , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome, $this->pasta   , $this->nome_completo ]); 
                                 }else if($pasta == 'laudos') {
-                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistemas3 = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistema = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao  , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistemas3 = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistema = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
                                 }else if($pasta == 'liberacaousosolo') {
-                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNomes3 = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome .'.'. $this->extensao   , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNomes3 = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
                                 }    
                                 if($update!==false ){
                                     unlink($this->caminho_completo);
