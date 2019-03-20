@@ -1294,12 +1294,12 @@ class Ups3Controller extends Controller
         $count= 0;
 
         $pastas = array(
-         //   'abertura'      =>  '/media/geoserver/transferencias/itatiba/empresafacil/abertura' ,
-         //   'alteracao'     =>  '/media/geoserver/transferencias/itatiba/empresafacil/alteracao',
-         //   'encerramento'  =>  '/media/geoserver/transferencias/itatiba/empresafacil/encerramento' ,  // 386 
+            'abertura'      =>  '/media/geoserver/transferencias/itatiba/empresafacil/abertura' ,
+            'alteracao'     =>  '/media/geoserver/transferencias/itatiba/empresafacil/alteracao',
+            'encerramento'  =>  '/media/geoserver/transferencias/itatiba/empresafacil/encerramento' ,  // 386 
             'laudos'        =>  '/media/geoserver/transferencias/itatiba/empresafacil/laudos',
             'liberacaousosolo'  => '/media/geoserver/transferencias/itatiba/empresafacil/liberacaousosolo' ,
-         //   'recadastramento'   =>  '/media/geoserver/transferencias/itatiba/empresafacil/recadastramento' ,
+            'recadastramento'   =>  '/media/geoserver/transferencias/itatiba/empresafacil/recadastramento' ,
         );
 
         foreach ($pastas as $pasta => $caminho ) {
