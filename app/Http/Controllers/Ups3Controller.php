@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\File;
 //use App\Jobs\setPublicS3;
 
 //use App\Jobs\upVinhedoEmpresaFacil;
-use App\Jobs\ProcessItatibaEmpresaFacil;
+//use App\Jobs\ProcessItatibaEmpresaFacil;
 //use App\Jobs\ProcessRegistro;
 //use App\Jobs\ProcessArtur;
 //use App\Jobs\ProcessSocorro;
@@ -41,9 +41,9 @@ class Ups3Controller extends Controller
          
         //$images = $this->loopPorPasta(); 
 
-       // $images = $this->loopBucket('s3TaquaritingaDoc');
+        $images = $this->loopBucket('s3ItatibaEFAbertura');
 
-       $images = $this->loopPorPastaEmpresaFacilItatiba() ;
+       // $images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
         
@@ -254,7 +254,7 @@ class Ups3Controller extends Controller
     {
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
-         $files = Storage::disk($Bucket)->allFiles('921E7964-0A48-40AB-84AD-A1EB3BDEE087');
+         $files = Storage::disk($Bucket)->allFiles();
          foreach ($files as $file) {
 
             if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
