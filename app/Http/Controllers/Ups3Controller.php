@@ -37,13 +37,13 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        // $images = $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+         $images =  $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
         //$images = $this->loopPorPasta(); 
 
        // $images = $this->loopBucket('s3ItatibaEFAbertura');
 
-        $images = $this->loopPorPastaEmpresaFacilItatiba() ;
+        //$images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
         $buckets = ['s3Paraiso','s3Biri','s3Lorena','s3Itatiba','s3Artur','s3Registro','s3Socorro','s3Slserra','s3Vinhedo','s3Ibitinga'];
         
@@ -1195,9 +1195,20 @@ class Ups3Controller extends Controller
 
             foreach ($files as $file) {
                 $subiu = false;
-                $lista = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
-                                        FROM dbo.DECAMUDocumento 
-                                        WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
+                if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
+                    $lista = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
+                                                                        FROM dbo.DECAMUDocumento 
+                                                                        WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
+                }else if($pasta == 'laudos') {
+                    $lista = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                            FROM dbo.DECAMULaudoArquivos 
+                                                                            WHERE  nomeArquivoSistema  = ?  and nomeArquivoSistemas3 is null   " ,[$file->getFilename()] );
+                }else if($pasta == 'liberacaousosolo') {
+                    $lista = DB::connection('BDGeralVinhedo')->select("  SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                        FROM dbo.LiberacaoUsoSoloDocumentos 
+                                                                        WHERE  liberacaoUsoSoloDocNome  = ?  and liberacaoUsoSoloDocNomes3 is null   " ,[$file->getFilename()] );
+                }
+
 
                 if($lista  != []  ){  // &&  is_file($file->getRealPath()) 
                   //  $idd = $lista[0]->decamuDocCodigo;
@@ -1227,13 +1238,20 @@ class Ups3Controller extends Controller
     
                             if ($result!==false){
                                 $subiu = true;
-                                $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ? ,  idUnico  = CAST(? AS VARCHAR(MAX))   WHERE decamuDocNomeArquivoold = ?  and tipoArquivo is null ", [ $this->novo_nome  , $this->pasta , $idUnico   , $this->nome_completo ]); 
+                                
+                                if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
+                                    $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = ? ,  idUnico  = CAST(? AS VARCHAR(MAX))   WHERE decamuDocNomeArquivoold = ?  and tipoArquivo is null ", [ $this->novo_nome  , $this->pasta , $idUnico   , $this->nome_completo ]); 
+                                }else if($pasta == 'laudos') {
+                                    $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistemas3 = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistema = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
+                                }else if($pasta == 'liberacaousosolo') {
+                                    $update = DB::connection('BDGeralVinhedo')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNomes3 = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
+                                }
     
                                 if($update!==false ){
-                                    $conteudo  =  file_get_contents($this->caminho_completo) ;
-                                    Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                                    unlink($this->caminho_completo);
-                                    unset($conteudo);
+                                    // $conteudo  =  file_get_contents($this->caminho_completo) ;
+                                    // Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                                    // unlink($this->caminho_completo);
+                                    // unset($conteudo);
                                 }else{
                                     //return false;
                                     dd('falha update banco');
@@ -1250,21 +1268,21 @@ class Ups3Controller extends Controller
 
                 }else{  // NÃO ACHOU NO BANCO ,,,, (jã subiu ou não existe . co)
 
-                    $jasubiu  = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
-                    FROM dbo.DECAMUDocumento 
-                    WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is not null   " ,[$file->getFilename()] );
+                    // $jasubiu  = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
+                    // FROM dbo.DECAMUDocumento 
+                    // WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is not null   " ,[$file->getFilename()] );
 
-                    if($jasubiu  != []  ){
-                        $conteudo  =  file_get_contents($file->getRealPath()) ;
-                        Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                        unlink($file->getRealPath());
-                        unset($conteudo);
-                    }else{
-                        // $conteudo  =  file_get_contents($file->getRealPath()) ;
-                        // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                        // unlink($file->getRealPath());
-                        // unset($conteudo);
-                    }
+                    // if($jasubiu  != []  ){
+                    //     $conteudo  =  file_get_contents($file->getRealPath()) ;
+                    //     Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    //     unlink($file->getRealPath());
+                    //     unset($conteudo);
+                    // }else{
+                    //     // $conteudo  =  file_get_contents($file->getRealPath()) ;
+                    //     // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                    //     // unlink($file->getRealPath());
+                    //     // unset($conteudo);
+                    // }
 
                    
                 }
