@@ -1250,8 +1250,8 @@ class Ups3Controller extends Controller
                                 if($update!==false ){
                                     // $conteudo  =  file_get_contents($this->caminho_completo) ;
                                     // Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                                    // unlink($this->caminho_completo);
-                                    // unset($conteudo);
+                                    unlink($this->caminho_completo);
+                                    unset($conteudo);
                                 }else{
                                     //return false;
                                     dd('falha update banco');
@@ -1268,21 +1268,30 @@ class Ups3Controller extends Controller
 
                 }else{  // NÃO ACHOU NO BANCO ,,,, (jã subiu ou não existe . co)
 
-                    // $jasubiu  = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
-                    // FROM dbo.DECAMUDocumento 
-                    // WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is not null   " ,[$file->getFilename()] );
+                    $jasubiu  = DB::connection('BDGeralVinhedo')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico  
+                                                                            FROM dbo.DECAMUDocumento 
+                                                                            WHERE  decamuDocNomeArquivoold    = ?  and tipoArquivo is not null 
+                                                                            union 
+                                                                            SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                            FROM dbo.DECAMULaudoArquivos 
+                                                                            WHERE  nomeArquivoSistema  = ?  and nomeArquivoSistemas3 is not  null
+                                                                            union 
+                                                                            SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                            FROM dbo.LiberacaoUsoSoloDocumentos 
+                                                                            WHERE  liberacaoUsoSoloDocNome  = ?  and liberacaoUsoSoloDocNomes3 is not null
+                                                                              " ,[ $file->getFilename() , $file->getFilename() , $file->getFilename() ] );
 
-                    // if($jasubiu  != []  ){
-                    //     $conteudo  =  file_get_contents($file->getRealPath()) ;
-                    //     Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                    //     unlink($file->getRealPath());
-                    //     unset($conteudo);
-                    // }else{
-                    //     // $conteudo  =  file_get_contents($file->getRealPath()) ;
-                    //     // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
-                    //     // unlink($file->getRealPath());
-                    //     // unset($conteudo);
-                    // }
+                    if($jasubiu  != []  ){
+                        //$conteudo  =  file_get_contents($file->getRealPath()) ;
+                        //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                        unlink($file->getRealPath());
+                        unset($conteudo);
+                    }else{
+                        // $conteudo  =  file_get_contents($file->getRealPath()) ;
+                        // Storage::disk('public_web')->put('perdidoVinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                        // unlink($file->getRealPath());
+                        // unset($conteudo);
+                    }
 
                    
                 }
