@@ -254,7 +254,8 @@ class Ups3Controller extends Controller
     {
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
-         $pasta = '99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1';
+       //  $pasta = '99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1' , ;
+         $pasta = '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF';
          $files = Storage::disk($Bucket)->allFiles($pasta);
          foreach ($files as $file) {
 
