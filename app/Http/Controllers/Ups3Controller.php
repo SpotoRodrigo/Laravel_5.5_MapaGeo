@@ -255,7 +255,7 @@ class Ups3Controller extends Controller
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
          $pastas = ['99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1' , '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF'];
-         
+         $images = [];
 
          foreach ($pastas as $pasta) {
             $files = Storage::disk($Bucket)->allFiles($pasta);
@@ -264,7 +264,7 @@ class Ups3Controller extends Controller
                 if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                     $count++; 
 
-                    $images[] = [
+                    $images[] .= [
                         'count' => (string) $count ,
                         'nome' =>  $file,
                         'extensao'  => '' ,
