@@ -55,9 +55,9 @@ class Ups3Controller extends Controller
 
         $conteudo = Storage::disk('s3TaquaritingaLOG')->get('7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg');
 
-         Storage::disk('s3TaquaritingaDoc')->put( '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg' , $conteudo );
+        $result = Storage::disk('s3TaquaritingaDoc')->put( '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg' , $conteudo );
 
-     
+        dd($result);
 
         //$images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
