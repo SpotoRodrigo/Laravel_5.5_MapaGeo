@@ -254,10 +254,7 @@ class Ups3Controller extends Controller
     {
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
-         $pastas = ['99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1' , '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF'];
-         $images = [];
-
-         foreach ($pastas as $pasta) {
+         $pasta = '99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1';  //  , '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF'
 
             $files = Storage::disk($Bucket)->allFiles($pasta);
             foreach ($files as $file) {
@@ -265,7 +262,7 @@ class Ups3Controller extends Controller
                 if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                     $count++; 
 
-                    $image[] = [
+                    $images[] = [
                         'count' => (string) $count ,
                         'nome' =>  $file,
                         'extensao'  => '' ,
@@ -280,7 +277,7 @@ class Ups3Controller extends Controller
                 // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
                 // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
             }
-        }
+
 
         return $images ;
 
