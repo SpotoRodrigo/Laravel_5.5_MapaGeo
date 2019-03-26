@@ -41,7 +41,7 @@ class Ups3Controller extends Controller
          
         //$images = $this->loopPorPasta(); 
 
-        $images = $this->loopBucket('s3VinhedoEFLaudos');
+        $images = $this->loopBucket('s3TaquaritingaDoc');
 
         //$images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
@@ -250,11 +250,12 @@ class Ups3Controller extends Controller
     }
 
 
-    private function loopBucket(string $Bucket)
+    private function loopBucket(string $Bucket )
     {
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
-         $files = Storage::disk($Bucket)->allFiles();
+         $pasta = '99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1';
+         $files = Storage::disk($Bucket)->allFiles($pasta);
          foreach ($files as $file) {
 
             if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
