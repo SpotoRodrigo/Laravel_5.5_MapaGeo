@@ -258,19 +258,21 @@ class Ups3Controller extends Controller
          $images = [];
 
          foreach ($pastas as $pasta) {
+
             $files = Storage::disk($Bucket)->allFiles($pasta);
             foreach ($files as $file) {
 
                 if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
                     $count++; 
 
-                    $images[] .= [
+                    $image[] = [
                         'count' => (string) $count ,
                         'nome' =>  $file,
                         'extensao'  => '' ,
                         'caminho' => $Bucket ,
                         'up'      => $count
                     ];
+                    array_push($images,$image);
                 } 
                 //Storage::disk($Bucket)->delete($file);
             // Storage::disk($Bucket)->delete($file);
