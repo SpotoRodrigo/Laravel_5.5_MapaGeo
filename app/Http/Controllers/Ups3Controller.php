@@ -272,7 +272,7 @@ class Ups3Controller extends Controller
                         'caminho' => $Bucket ,
                         'up'      => $count
                     ];
-                    array_push($images,$image);
+                    array_push($images,$image[0]);
                 } 
                 //Storage::disk($Bucket)->delete($file);
             // Storage::disk($Bucket)->delete($file);
