@@ -269,7 +269,6 @@ class Ups3Controller extends Controller
                         'caminho' => $Bucket ,
                         'up'      => $count
                     ];
-                    array_push($images,$image[0]);
                 } 
                 //Storage::disk($Bucket)->delete($file);
             // Storage::disk($Bucket)->delete($file);
@@ -277,9 +276,7 @@ class Ups3Controller extends Controller
                 // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
                 // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
             }
-
-
-        return $images ;
+            return $images ;
 
     }
 
