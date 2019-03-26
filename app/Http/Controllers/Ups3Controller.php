@@ -41,7 +41,7 @@ class Ups3Controller extends Controller
          
         //$images = $this->loopPorPasta(); 
 
-        $images = $this->loopBucket('s3TaquaritingaDoc');
+        $images = $this->loopBucket('s3TaquaritingaLOG');
 
         //$images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
@@ -254,28 +254,32 @@ class Ups3Controller extends Controller
     {
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
-       //  $pasta = '99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1' , ;
-         $pasta = '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF';
-         $files = Storage::disk($Bucket)->allFiles($pasta);
-         foreach ($files as $file) {
+         $pastas = ['99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1' , '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF'];
+         
 
-            if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
-                $count++; 
+         foreach ($pastas as $pasta) {
+            $files = Storage::disk($Bucket)->allFiles($pasta);
+            foreach ($files as $file) {
 
-                $images[] = [
-                    'count' => (string) $count ,
-                    'nome' =>  $file,
-                    'extensao'  => '' ,
-                    'caminho' => $Bucket ,
-                    'up'      => $count
-                ];
-            } 
-            //Storage::disk($Bucket)->delete($file);
-           // Storage::disk($Bucket)->delete($file);
-            // Storage::disk($Bucket)->setVisibility($file, 'public');
-            // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
-             // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
+                if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
+                    $count++; 
+
+                    $images[] = [
+                        'count' => (string) $count ,
+                        'nome' =>  $file,
+                        'extensao'  => '' ,
+                        'caminho' => $Bucket ,
+                        'up'      => $count
+                    ];
+                } 
+                //Storage::disk($Bucket)->delete($file);
+            // Storage::disk($Bucket)->delete($file);
+                // Storage::disk($Bucket)->setVisibility($file, 'public');
+                // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
+                // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
+            }
         }
+
         return $images ;
 
     }
