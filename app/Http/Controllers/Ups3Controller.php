@@ -302,6 +302,17 @@ class Ups3Controller extends Controller
                 // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
                 // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
             }
+
+                    
+        if($count == 0 ){
+            $images[] = [
+                'count' => (string) $count ,
+                'nome' =>  'NENHUM ARQUIVO ENCONTRADO' ,
+                'extensao'  => '',
+                'caminho' => '',
+                'up'      => false
+            ];
+        }
             return $images ;
 
     }
