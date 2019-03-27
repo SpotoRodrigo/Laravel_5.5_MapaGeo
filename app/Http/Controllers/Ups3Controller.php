@@ -41,7 +41,7 @@ class Ups3Controller extends Controller
          
         //$images = $this->loopPorPasta(); 
 
-        //$images = $this->loopBucket('s3TaquaritingaLOG');
+       $images = $this->loopBucket('s3TaquaritingaDOC');
         
 
         /*
@@ -53,11 +53,11 @@ class Ups3Controller extends Controller
         
         */ 
 
-        $conteudo = Storage::disk('s3TaquaritingaLOG')->get('7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg');
+        // $conteudo = Storage::disk('s3TaquaritingaLOG')->get('7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg');
 
-        $result = Storage::disk('s3TaquaritingaDoc')->put( '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg' , $conteudo );
+        // $result = Storage::disk('s3TaquaritingaDoc')->put( '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg' , $conteudo );
 
-        dd($result);
+        // dd($result);
 
         //$images = $this->loopPorPastaEmpresaFacilItatiba() ;
 /*
@@ -271,7 +271,7 @@ class Ups3Controller extends Controller
         // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
          $count = 0;
         // $pasta = '99A62FCE-69D3-4FC4-ADAD-B8D8BF8BF2A1';  //  , '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF'
-         $pasta = '7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF'; 
+         $pasta = 'D81AEE6F-DEE6-4632-9607-27386D68218B'; 
             $files = Storage::disk($Bucket)->allFiles($pasta);
             foreach ($files as $file) {
 
