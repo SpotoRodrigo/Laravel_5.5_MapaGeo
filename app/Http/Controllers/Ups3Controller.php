@@ -41,7 +41,7 @@ class Ups3Controller extends Controller
          
         //$images = $this->loopPorPasta(); 
 
-       $images = $this->loopBucket('s3TaquaritingaDOC');
+       $images = $this->loopBucket('s3TaquaritingaDoc');
         
 
         /*
