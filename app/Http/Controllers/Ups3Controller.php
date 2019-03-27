@@ -261,6 +261,14 @@ class Ups3Controller extends Controller
                         
             }
 */
+        }else{
+            $images[] = [
+                'count' => (string) '0' ,
+                'nome' =>  'NENHUM ARQUIVO ENCONTRADO' ,
+                'extensao'  => '',
+                'caminho' => '',
+                'up'      => false
+            ];
         }
         return $images ;
     }
