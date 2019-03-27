@@ -263,9 +263,9 @@ class Ups3Controller extends Controller
 */
         }
         
-        if(empty($images)){
+        if($count == 0 ){
             $images[] = [
-                'count' => (string) '0' ,
+                'count' => (string) $count ,
                 'nome' =>  'NENHUM ARQUIVO ENCONTRADO' ,
                 'extensao'  => '',
                 'caminho' => '',
