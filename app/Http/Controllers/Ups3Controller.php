@@ -45,7 +45,7 @@ class Ups3Controller extends Controller
        $this->dispatch(new ProcessParaiso('atualiza' , 'Tudo', 'sql -> postgresql '  ));   // $file->getRealPath()     $conteudo
 
        $images[] = [
-        'count' => (string) $count ,
+        'count' => '0' ,
         'nome' =>  'SERVIÇO AGENDADO PARA EXECUÇÃO' ,
         'extensao'  => '',
         'caminho' => '',
