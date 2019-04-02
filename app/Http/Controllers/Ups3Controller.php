@@ -1433,8 +1433,10 @@ class Ups3Controller extends Controller
                 if($lista  != []  ){ 
                     $idd = 0; 
                     $idUnico = $lista[0]->idUnico;
-                    $subiu = true; 
+                    $subiu = false; 
                     // $this->dispatch(new ProcessItatibaEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                }else{
+                    $subiu = true; 
                 }
 
                 $count++;
@@ -1452,7 +1454,7 @@ class Ups3Controller extends Controller
                    $this->nome_completo =  $file->getFilename() ; // $nome_completo;
                    $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
                    $this->pasta = $pasta;
-                   $this->idd = $idd;
+                   //$this->idd = $idd;
                    $this->novo_nome =  $idUnico .'.'.  $this->extensao  ; // $novo_nome;
 
                    $s3 = array(
@@ -1463,7 +1465,7 @@ class Ups3Controller extends Controller
                     'liberacaousosolo' => 's3ItatibaEFLiberacao' ,
                     'recadastramento' =>  's3ItatibaEFRecadastramento' 
                     );
-                        if(true){  // is_file($this->caminho_completo)
+                        if(!$subiu){  // is_file($this->caminho_completo)
                             $conteudo  =  file_get_contents( $this->caminho_completo ) ;
                             $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome  , $conteudo );  // ['ACL' => 'public-read'] 
     
