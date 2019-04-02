@@ -56,7 +56,6 @@ class ProcessParaiso implements ShouldQueue
             if(!$update){
                 return false; 
             }else{
-                sleep(1);
                 unset($dono , $namefile );
                 return true;
             }
