@@ -132,9 +132,9 @@ class ProcessParaiso implements ShouldQueue
         //dd('feito');
         return true;
 
-*/
 
-        } /*else if(!$go ){
+
+        } else if(!$go ){
              return false;
              dd('NAO LOCALIZADO NO BANCO');
             
@@ -142,7 +142,9 @@ class ProcessParaiso implements ShouldQueue
         }else{
             return false;
             dd( 'ARQUIVO NÃ?O ENCONTRADO -> '.$this->caminho  );
-        }*/
+        }
+*/
+
     }
 
 
