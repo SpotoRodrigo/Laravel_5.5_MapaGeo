@@ -48,40 +48,19 @@ class ProcessParaiso implements ShouldQueue
      */
     public function handle()
     {
+        $dono = $this->extensao; 
+        $namefile = $this->nome_arquivo;
 
-        $count =0;
-        $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("SELECT  imag.CodImagem as idd ,  
-                                                                    CAST(REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) AS VARCHAR(18))  AS inscricao,
-                                                                    CAST(ImagemNome AS VARCHAR(MAX)) as namefile
-                                                                    FROM dbo.imagem as imag
-                                                                    where assunto = 'Terreno'
-                                                                    and TipoFoto = 'Foto Fachada'
-                                                                    and len(LocalArquivo) = 80 
-                                                                    and ImagemNome is not null ");
-
-   
-
-         foreach ($lista as $file) {
-            $idd = strval ($file->idd);
-            $dono = strval ($file->inscricao);
-            $namefile = strval ($file->namefile);
-            $count++;
-
-            $update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
+        $update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono   , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
 
             if(!$update){
-                dd('falha ao anexar arquivo no Banco PARAISO POSTGRESQL . <BR>'.$update);
+                return false; 
+            }else{
+                sleep(1);
+                unset($dono , $namefile );
+                return true;
             }
-         }
-
-         return true;
-
-
-
-
-
-
-
+         
 
         /*
         // BDGeralLorenaImagem

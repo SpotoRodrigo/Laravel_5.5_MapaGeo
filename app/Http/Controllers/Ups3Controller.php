@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
-//use App\Jobs\ProcessParaiso;
+use App\Jobs\ProcessParaiso;
 //use App\Jobs\ProcessCampos;
 //use App\Jobs\ProcessItatiba;
 //use App\Jobs\ProcessVinhedo;
@@ -1112,11 +1112,13 @@ class Ups3Controller extends Controller
                 'up'      => true
             ];
 
-            $update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
+            //$update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
 
-            if(!$update){
-                dd('falha ao anexar arquivo no Banco PARAISO POSTGRESQL . <BR>'.$update);
-            }
+            $this->dispatch(new ProcessParaiso( $dono  , $namefile , ''  ));  
+
+            // if(!$update){
+            //     dd('falha ao anexar arquivo no Banco PARAISO POSTGRESQL . <BR>'.$update);
+            // }
          }
       return view('ups3.index',compact('images') ); //,compact('images')
    }
