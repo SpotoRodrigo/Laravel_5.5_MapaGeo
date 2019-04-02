@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 //use App\Jobs\ProcessUpFachada;
 //use App\Jobs\ProcessLorena;
-use App\Jobs\ProcessParaiso;
+//use App\Jobs\ProcessParaiso;
 //use App\Jobs\ProcessCampos;
 //use App\Jobs\ProcessItatiba;
 //use App\Jobs\ProcessVinhedo;
@@ -37,10 +37,10 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-       //$images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+       $images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
         //$images = $this->loopPorPasta(); 
-        $images = $this->loopBancoParaiso();
+        //$images = $this->loopBancoParaiso();
 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
@@ -1109,7 +1109,7 @@ class Ups3Controller extends Controller
             $dono = strval ($file->inscricao);
             $namefile = strval ($file->namefile);
             $count++;
-            $delete =  Storage::disk('s3Paraiso')->delete($namefile );
+            //$delete =  Storage::disk('s3Paraiso')->delete($namefile );
             $images[] = [
                 'count' => (string) $count,
                 'nome' =>  $idd ,
