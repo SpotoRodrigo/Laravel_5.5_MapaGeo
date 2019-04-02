@@ -46,14 +46,6 @@ class Ups3Controller extends Controller
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
 
-        /*
-        sai do log 7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg 
-
-        entra na foto ... 
-
-    
-        
-        */ 
 
         // $conteudo = Storage::disk('s3TaquaritingaLOG')->get('7CFC5884-B3AE-4AAF-8D23-4F9E37CB99FF/0b3f6eca-5fe6-4807-ad44-66f218dc2a4f.jpg');
 
@@ -1119,6 +1111,7 @@ class Ups3Controller extends Controller
                 'caminho' => $dono ,
                 'up'      => true
             ];
+
             $update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
 
             if(!$update){
