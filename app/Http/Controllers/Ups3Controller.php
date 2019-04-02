@@ -37,20 +37,11 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        //$images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+       $images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
         //$images = $this->loopPorPasta(); 
        // $images = $this->loopBancoParaiso();
 
-       $this->dispatch(new ProcessParaiso('atualiza' , 'Tudo', 'sql -> postgresql '  ));   // $file->getRealPath()     $conteudo
-
-       $images[] = [
-        'count' => '0' ,
-        'nome' =>  'SERVIÇO AGENDADO PARA EXECUÇÃO' ,
-        'extensao'  => '',
-        'caminho' => '',
-        'up'      => false
-    ];
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
