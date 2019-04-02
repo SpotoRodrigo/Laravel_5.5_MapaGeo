@@ -1436,7 +1436,8 @@ class Ups3Controller extends Controller
                     $subiu = false; 
                     // $this->dispatch(new ProcessItatibaEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
                 }else{
-                    $subiu = true; 
+                    $subiu = true;
+                    $idUnico = $this->uuid();
                 }
 
                 $count++;
