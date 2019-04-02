@@ -49,6 +49,41 @@ class ProcessParaiso implements ShouldQueue
     public function handle()
     {
 
+        $count =0;
+        $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("SELECT  imag.CodImagem as idd ,  
+                                                                    CAST(REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) AS VARCHAR(18))  AS inscricao,
+                                                                    CAST(ImagemNome AS VARCHAR(MAX)) as namefile
+                                                                    FROM dbo.imagem as imag
+                                                                    where assunto = 'Terreno'
+                                                                    and TipoFoto = 'Foto Fachada'
+                                                                    and len(LocalArquivo) = 80 
+                                                                    and ImagemNome is not null ");
+
+   
+
+         foreach ($lista as $file) {
+            $idd = strval ($file->idd);
+            $dono = strval ($file->inscricao);
+            $namefile = strval ($file->namefile);
+            $count++;
+
+            $update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
+
+            if(!$update){
+                dd('falha ao anexar arquivo no Banco PARAISO POSTGRESQL . <BR>'.$update);
+            }
+         }
+
+         return true;
+
+
+
+
+
+
+
+
+        /*
         // BDGeralLorenaImagem
         //BDGeralLorenaImagem
         //s3Lorena
@@ -86,7 +121,7 @@ class ProcessParaiso implements ShouldQueue
                                                                             , UploadNuvemArquivoPublico = 1 
                                                                             , idUnico = ? 
                                                                             WHERE  imagemNomeAnterior = ?", [$novo_nome . '.' . $this->extensao , $novo_nome  , $this->nome_arquivo ]); 
- //print_r( $affected);       
+        //print_r( $affected);       
         DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(24,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $novo_nome . '.' . $this->extensao  ] );
 
         
@@ -96,6 +131,8 @@ class ProcessParaiso implements ShouldQueue
        // ob_flush();
         //dd('feito');
         return true;
+
+*/
 
         } /*else if(!$go ){
              return false;
