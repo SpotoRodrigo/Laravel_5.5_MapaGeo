@@ -37,9 +37,10 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-        $images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+        //$images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
         //$images = $this->loopPorPasta(); 
+        $images = loopBancoParaiso();
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -1090,7 +1091,44 @@ class Ups3Controller extends Controller
       return view('ups3.index',compact('images') ); //,compact('images')
 
     }
-    
+   
+    public function loopBancoParaiso()  
+    {
+        $count =0;
+        $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("SELECT  imag.CodImagem as idd ,  
+                                                                    CAST(REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) AS VARCHAR(18))  AS inscricao,
+                                                                    CAST(ImagemNome AS VARCHAR(MAX)) as namefile
+                                                                    FROM dbo.imagem as imag
+                                                                    where assunto = 'Terreno'
+                                                                    and TipoFoto = 'Foto Fachada'
+                                                                    and len(LocalArquivo) = 80 
+                                                                    and ImagemNome is not null ");
+
+       dd($lista );
+
+         foreach ($lista as $file) {
+            $idd = strval ($file->idd);
+            $dono = strval ($file->inscricao);
+            $namefile = strval ($file->namefile);
+            $count++;
+            $images[] = [
+                'count' => (string) $count,
+                'nome' =>  $idd ,
+                'extensao'  => $namefile , // (string) $count,
+                'caminho' => $dono ,
+                'up'      => true
+            ];
+            $update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
+
+            if(!$update){
+                dd('falha ao anexar arquivo no Banco PARAISO POSTGRESQL . <BR>'.$update);
+            }
+         }
+      return view('ups3.index',compact('images') ); //,compact('images')
+   }
+
+
+
     public function loopBancoLorena()  
     {
         $count =0;
@@ -1104,17 +1142,19 @@ class Ups3Controller extends Controller
 
          foreach ($lista as $file) {
 
-                $count++;
-                $images[] = [
-                    'nome' =>  $id ,
-                    'extensao'  => (string) $count,
-                    'caminho' => $dono ,
-                    'up'      => true
-                ];
-                DB::connection('pgsql_lorena')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '39f409a7-da21-4260-a07a-c469a22b707d/'. $novo_nome . '.' . $this->extensao  ] );
+            $dono = strval ($file->dono);
+            $count++;
+            $images[] = [
+                'nome' =>  $id ,
+                'extensao'  => (string) $count,
+                'caminho' => $dono ,
+                'up'      => true
+            ];
+            DB::connection('pgsql_lorena')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '39f409a7-da21-4260-a07a-c469a22b707d/'. $novo_nome . '.' . $this->extensao  ] );
          }
       return view('ups3.index',compact('images') ); //,compact('images')
    }
+
 
     public function loopBancoVinhedoImag()
     {
@@ -1383,15 +1423,15 @@ class Ups3Controller extends Controller
                 if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
                     $lista = DB::connection('BDGeralItatiba')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
                                             FROM dbo.DECAMUDocumento 
-                                            WHERE  decamuDocNomeArquivo  = ?  and tipoArquivo is null   " ,[$file->getFilename()] );
+                                            WHERE  decamuDocNomeArquivoOld  = ?  and decamuDocNomeArquivo is null   " ,[$file->getFilename()] );
                 }else if($pasta == 'laudos') {
                     $lista = DB::connection('BDGeralItatiba')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
                                                                             FROM dbo.DECAMULaudoArquivos 
-                                                                            WHERE  nomeArquivoSistema  = ?  and nomeArquivoSistemas3 is null   " ,[$file->getFilename()] );
+                                                                            WHERE  nomeArquivoSistemaOld  = ?  and nomeArquivoSistema is null   " ,[$file->getFilename()] );
                 }else if($pasta == 'liberacaousosolo') {
                     $lista = DB::connection('BDGeralItatiba')->select("  SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
                                                                         FROM dbo.LiberacaoUsoSoloDocumentos 
-                                                                        WHERE  liberacaoUsoSoloDocNome  = ?  and liberacaoUsoSoloDocNomes3 is null   " ,[$file->getFilename()] );
+                                                                        WHERE  liberacaoUsoSoloDocNomeOld  = ?  and liberacaoUsoSoloDocNome is null   " ,[$file->getFilename()] );
                 }
 
                                         
@@ -1437,11 +1477,11 @@ class Ups3Controller extends Controller
                                 $subiu = true;
 
                                 if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
-                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome, $this->pasta   , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivoOld = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome, $this->pasta   , $this->nome_completo ]); 
                                 }else if($pasta == 'laudos') {
-                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistemas3 = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistema = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistema = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistemaOld = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
                                 }else if($pasta == 'liberacaousosolo') {
-                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNomes3 = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNomeOld = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
                                 }    
                                 if($update!==false ){
                                     unlink($this->caminho_completo);
