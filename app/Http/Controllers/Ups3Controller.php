@@ -1088,14 +1088,19 @@ class Ups3Controller extends Controller
     public function loopBancoParaiso()  
     {
         $count =0;
-        $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("SELECT  imag.CodImagem as idd ,  
-                                                                    CAST(REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) AS VARCHAR(18))  AS inscricao,
-                                                                    CAST(ImagemNome AS VARCHAR(MAX)) as namefile
-                                                                    FROM dbo.imagem as imag
-                                                                    where assunto = 'Terreno'
-                                                                    and TipoFoto = 'Foto Fachada'
-                                                                    and len(LocalArquivo) = 80 
-                                                                    and ImagemNome is not null ");
+        // $lista =  DB::connection('BDGeralSSebastiaoImagem')->select("SELECT  imag.CodImagem as idd ,  
+        //                                                             CAST(REPLACE(SUBSTRING(imagemNomeAnterior,1,18),'_','.' ) AS VARCHAR(18))  AS inscricao,
+        //                                                             CAST(ImagemNome AS VARCHAR(MAX)) as namefile
+        //                                                             FROM dbo.imagem as imag
+        //                                                             where assunto = 'Terreno'
+        //                                                             and TipoFoto = 'Foto Fachada'
+        //                                                             and len(LocalArquivo) = 80 
+        //                                                             and ImagemNome is not null ");
+
+        $lista =  DB::connection('pgsql_paraiso')->select("SELECT replace(d24.padrao_valor,'ca800d52-3770-4a68-9f84-63a71b9b57c0/','') as namefile  , d24.descricao as inscricao , d24.id as idd
+                                                                    from apgv.dimensao as d24 LEFT JOIN apgv.dimensao as d25 ON d24.descricao = d25.descricao and d24.padrao_valor = d25.padrao_valor and d25.dimensao_tipo_id = 25
+                                                                    WHERE d24.dimensao_tipo_id = 24 
+                                                                    AND d25.id is null  ");
 
    
 
@@ -1104,17 +1109,21 @@ class Ups3Controller extends Controller
             $dono = strval ($file->inscricao);
             $namefile = strval ($file->namefile);
             $count++;
+            $delete =  Storage::disk('s3Paraiso')->delete($namefile );
             $images[] = [
                 'count' => (string) $count,
                 'nome' =>  $idd ,
                 'extensao'  => $namefile , // (string) $count,
                 'caminho' => $dono ,
-                'up'      => true
+                'up'      => $delete
             ];
+
+
+            
 
             //$update = DB::connection('pgsql_paraiso')->select("SELECT apgv.anexafile(25,?,?,false ) " ,[ $dono , 'ca800d52-3770-4a68-9f84-63a71b9b57c0/'. $namefile  ] );
 
-            $this->dispatch(new ProcessParaiso( $dono  , $namefile , ''  ));  
+            //$this->dispatch(new ProcessParaiso( $dono  , $namefile , ''  ));  
 
             // if(!$update){
             //     dd('falha ao anexar arquivo no Banco PARAISO POSTGRESQL . <BR>'.$update);
