@@ -37,10 +37,10 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-       $images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+       //$images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
         //$images = $this->loopPorPasta(); 
-       // $images = $this->loopBancoParaiso();
+        $images = $this->loopBancoParaiso();
 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
