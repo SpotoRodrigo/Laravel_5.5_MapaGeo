@@ -42,7 +42,7 @@ class Ups3Controller extends Controller
         //$images = $this->loopPorPasta(); 
         $images = $this->loopBancoParaiso();
 
-        //$images = $this->loopBucket('s3TaquaritingaDoc');
+        //$images = $this->loopBucket('s3TaquaritingaDoc');s
         
 
         /*
@@ -1104,7 +1104,7 @@ class Ups3Controller extends Controller
                                                                     and len(LocalArquivo) = 80 
                                                                     and ImagemNome is not null ");
 
-       dd($lista );
+   
 
          foreach ($lista as $file) {
             $idd = strval ($file->idd);
