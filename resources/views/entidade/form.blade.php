@@ -1,10 +1,10 @@
 @extends('adminlte::page')
 
-@section('title', 'Entidade')
+@section('title', 'Entidade criação')
+@section('content')
 
 <!-- @extends('layouts.app') -->
 
-@section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -26,11 +26,9 @@
                         <label for="url">LOGO</label>
                         <input type="file" name="url" id="url"  value="{{''}}" />
                         <br>
-                        @if (count( isset($entidade->logo)) === 1)
+                      
                             <img src="/img/{{ $entidade->logo or 'sem-foto.gif' }}" alt="Logo"  height="60" width="60" > 
-                        @else
-                            <br><br>
-                        @endif
+                        <!-- <img src="/img/sem-foto.gif" alt="Logo"  height="60" width="60" >  -->
                         <br>
                         <!-- <a type="submit" >Enviar</a>  -->
                         <!-- class="btn btn-success"  role="button"  -->

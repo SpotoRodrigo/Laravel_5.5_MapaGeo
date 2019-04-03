@@ -18,7 +18,7 @@ Route::group(['prefix'=>'/'],function(){
     }); 
 });
 
-Route::group(['prefix'=>'/entidade' , 'middleware'=>['auth','can:is-admin'] ],function(){
+Route::group(['prefix'=>'/entidade' ],function(){   ///, 'middleware'=>['auth','can:is-admin']
     Route::get('/novo', 'EntidadeController@novo' );
     Route::get('/novo/{id?}', 'EntidadeController@novo' );
     Route::post('/salvar', 'EntidadeController@salvar' );  
@@ -30,6 +30,11 @@ Route::group(['prefix'=>'/entidade' , 'middleware'=>['auth','can:is-admin'] ],fu
 Route::group(['prefix'=>'/mapa'],function(){
     Route::get('/{cidade?}', 'MapaController@index' );    
 });
+
+
+Route::resource('depositos', 'DepositoController')->middleware('auth');
+
+
 
 
 Auth::routes();
@@ -47,3 +52,5 @@ Route::resource('ups3', 'Ups3Controller')->except([
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+

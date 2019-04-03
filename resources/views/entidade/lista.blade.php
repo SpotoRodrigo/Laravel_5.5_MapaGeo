@@ -47,7 +47,7 @@
                         <th></th>
                     </tr>
                     <pre>
-                    {{var_dump($entidades)}}
+                    <!-- {{var_dump($entidades)}} -->
                     </pre>
 
                     @endforelse

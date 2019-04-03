@@ -22,9 +22,9 @@ class EntidadeController extends Controller
             // $entidade['itens'][0] = Entidade::find($id);
             $entidade = Entidade::all();
         }
-        if(\Gate::denies('update-entidade',$entidade) ){
-            abort(403,'Usuario não permitido.');
-        }
+        // if(\Gate::denies('update-entidade',$entidade) ){
+        //     abort(403,'Usuario não permitido.');
+        // }
 
         return view('entidade.lista')->with('entidades',$entidade);
     }
@@ -57,69 +57,21 @@ class EntidadeController extends Controller
         $entidade->nome_abrev = $request->nome_abrev;
         $arquivo = $request->file('url');
 
-        $original_name = $arquivo->getClientOriginalName();
-        $file_path = $arquivo->getPathName();
-
         $ext = ['jpg','jpeg','gif','bmp','png'];
+
         if(!is_null($arquivo) and  $arquivo->isValid() and in_array($arquivo->extension(),$ext) ){
+            $original_name = $arquivo->getClientOriginalName();
+            $file_path = $arquivo->getPathName();
             $aux_ext = $arquivo->extension();
-
             $imageFileName = time() . '.' . $arquivo->getClientOriginalExtension();
-
-
             $novo_name = (string) (new \DateTime())->format('YmdHisu') . '.' . $aux_ext ;
-            $novo_name = 'TESTE' . '.' . $aux_ext ;
-            
             $arquivo->storeAs('img', $novo_name );
-           // Storage::disk('s3')->put($novo_name, 'TESTE');
+            Storage::disk('public_web')->put( 'img/'. $novo_name   , file_get_contents($arquivo)  , ['ACL' => 'public-read'] );
             $entidade->logo = $novo_name ;
-
-           // $exists = Storage::disk('s3')->exists($novo_name);
-
-
-                $client = S3Client::factory([
-                    'credentials' => [
-                        'key'    => 'nZwcZUh8lVyTPTr6bAtI',
-                        'secret'  => 'liEJn5bXKrjw46ZmStVJBV0GAcfpSkVxxRsRpxRJ',
-                        
-                    ],
-                    'region' => 'sao01',
-                    'version' => '2006-03-01',
-                    'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
-                    'sslEnabled'=> true
-                ]);
-                
-                $adapter = new AwsS3Adapter($client, 'da65f4fe-e1c8-4aaa-a8df-ef17a7d03462', '');
-
-                $filesystem = new Filesystem($adapter ); // ['visibility' => 'public']
-                
-
-                //$exists = $filesystem->has('70B922B0-431D-425A-805E-473FE75C7144.JPG');             
-                //dd($exists);
-
-                  //   dd($arquivo);
-
-                 $response = $filesystem->put($novo_name ,    file_get_contents($arquivo) , ['ACL' => 'public-read']  );
-
-
-
-                $exists = $filesystem->has($novo_name);   
-
-                if($exists){
-                    $response = $filesystem->getSize($novo_name);
-                    dd($novo_name.$response);
-                }
-
-              //  $response = $filesystem->getSize('641a99d4-5186-4438-8326-e888098452ef.JPG');
-                
-             //   dd($response);
-
-             //  http://s3.sao01.objectstorage.softlayer.net/da65f4fe-e1c8-4aaa-a8df-ef17a7d03462/70B922B0-431D-425A-805E-473FE75C7144.JPG
+            $exists = Storage::disk('public_web')->exists($novo_name);
 
         }
 
-
-  
 
         if( !is_null($entidade->nome)  and !is_null($entidade->nome_abrev) ){
             $entidade->save();

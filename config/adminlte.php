@@ -124,8 +124,8 @@ return [
             'label_color' => 'success',
         ],
         [
-            'text'        => 'Repartição',
-            'url'         => 'reparticao',
+            'text'        => 'Deposito',
+            'url'         => 'depositos',
             'icon'        => 'map',
             'label'       =>  '0',
             'label_color' => 'danger',
