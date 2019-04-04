@@ -1626,11 +1626,11 @@ class Ups3Controller extends Controller
                                 $subiu = true;
 
                                 if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
-                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivoOld = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome, $this->pasta   , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivoS3 = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome, $this->pasta   , $this->nome_completo ]); 
                                 }else if($pasta == 'laudos') {
-                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistema = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistemaOld = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistemaS3 = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistema = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
                                 }else if($pasta == 'liberacaousosolo') {
-                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNomeOld = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
+                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNomeS3 = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
                                 }    
                                 if($update!==false ){
                                     unlink($this->caminho_completo);
