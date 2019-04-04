@@ -37,9 +37,9 @@ class Ups3Controller extends Controller
     
     public function index()
     {
-       $images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
+       //$images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        //$images = $this->loopPorPasta(); 
+        $images = $this->loopPorPastaEmpresaFacilBirigui(); 
         //$images = $this->loopBancoParaiso();
 
 
@@ -96,6 +96,7 @@ class Ups3Controller extends Controller
 */
         return view('ups3.index',compact('images') ); //,compact('images')
 
+      
     }
 
 
@@ -168,33 +169,53 @@ class Ups3Controller extends Controller
 
     private function loopPorPasta()
     {
+        
         //$directory = "/media/geoserver/transferencias/campos/fotosfachada" ;
         //$directory = "/media/geoserver/transferencias/campos/teste" ;
-        $directory = "/media/geoserver/transferencias/paraiso/";
+        $directory = "C:\\Users\\spoto.rodrigo\\Desktop\\recad\\recad";
         $count= 0;
-       
+      
         // dd('falta banco de s�o lourenco.');
         //$directory = "/media/geoserver/transferencias/saolourenco/Fotos de Fachada";
 
 
         if(!File::isDirectory($directory)) {
             $msg = 'Caminho não acessivél.';
-            return view('ups3.index').compact($msg); 
+            return $msg ; 
+            dd('nao chegou akki ');
         }
+
+        dd('nao chegou akki ');
         $files = File::allFiles($directory);
 
         foreach ($files as $file) {
             $count++;
+
+
+            $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
+            $conteudo  =  file_get_contents(  $file->getRealPath() ) ;
+            $result =  Storage::disk('s3VinhedoServ')->put(   $this->novo_nome   , $conteudo  );
+
+            if(!$result){
+                dd('FALHA NO UPLOAD DE ARQUIVO');
+            }
+            
+            if(!Storage::disk('s3VinhedoServ')->exists($this->novo_nome)  ){
+                dd('ARQUIVO N�O EXISTE !!');
+            }
+
             $images[] = [
                 'count' => (string) $count ,
-                'nome' =>  $file->getFilename() ,
+                'nome' =>   $this->novo_nome ,
                 'extensao'  => $file->getExtension(),
                 'caminho' => $file->getRealPath(),
-                'up'      => true
+                'up'      => $result
             ];
+            
+
 
            // if(is_file($file->getRealPath()) ){
-                   $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
+                  // $this->dispatch(new ProcessParaiso($file->getExtension() , $file->getFilename() , $file->getRealPath()  ));   // $file->getRealPath()     $conteudo
                   //$this->dispatch(new ProcessCampos($file->getExtension() , $file->getFilename() , $file->getRealPath()  ,  $this->uuid() ));   // $file->getRealPath()     $conteudo
            // }
 /*          
@@ -258,6 +279,8 @@ class Ups3Controller extends Controller
         }
         
         if($count == 0 ){
+
+            dd('chegou aki ');
             $images[] = [
                 'count' => (string) $count ,
                 'nome' =>  'NENHUM ARQUIVO ENCONTRADO' ,
@@ -1490,6 +1513,124 @@ class Ups3Controller extends Controller
                                     $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistema = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistemaOld = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
                                 }else if($pasta == 'liberacaousosolo') {
                                     $update = DB::connection('BDGeralItatiba')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNomeOld = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
+                                }    
+                                if($update!==false ){
+                                    unlink($this->caminho_completo);
+                                    unset($conteudo);
+                                }else{
+                                    //return false;
+                                    dd('falha update banco');
+                                }
+                            }else{
+                                //return false;
+                                dd('falha subir S3 ');
+                            }
+                            
+                            //return true ;
+                        } // caminho_completo not is file 
+ 
+
+                unset($conteudo ,$result ,$update , $subiu );
+            }
+        }
+
+    
+
+        return $images ;
+    }
+
+
+    
+    private function loopPorPastaEmpresaFacilBirigui()
+    {
+        $count= 0;
+
+        $pastas = array(
+            'abertura'      =>  '/media/geoserver/transferencias/birigui/empresafacil/abertura' ,
+            'alteracao'     =>  '/media/geoserver/transferencias/birigui/empresafacil/alteracao',
+            'encerramento'  =>  '/media/geoserver/transferencias/birigui/empresafacil/encerramento' ,  // 386 
+            'laudos'        =>  '/media/geoserver/transferencias/birigui/empresafacil/laudos',
+            'liberacaousosolo'  => '/media/geoserver/transferencias/birigui/empresafacil/liberacaousosolo' ,
+            'recadastramento'   =>  '/media/geoserver/transferencias/birigui/empresafacil/recadastramento' ,
+        );
+
+        foreach ($pastas as $pasta => $caminho ) {
+
+            // if(!File::isDirectory($caminho)) {
+            //     $msg = 'Caminho não acessivél.';
+            //     return view('ups3.index').compact($msg); 
+            // }
+
+            $files = File::allFiles($caminho);
+
+            foreach ($files as $file) {
+                $subiu = false;
+
+                if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
+                    $lista = DB::connection('BDGeralBirigui')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                            FROM dbo.DECAMUDocumento 
+                                            WHERE  decamuDocNomeArquivo  = ?  and decamuDocNomeArquivoS3 is null   " ,[$file->getFilename()] );
+                }else if($pasta == 'laudos') {
+                    $lista = DB::connection('BDGeralBirigui')->select(" SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                            FROM dbo.DECAMULaudoArquivos 
+                                                                            WHERE  nomeArquivoSistema  = ?  and nomeArquivoSistemaS3 is null   " ,[$file->getFilename()] );
+                }else if($pasta == 'liberacaousosolo') {
+                    $lista = DB::connection('BDGeralBirigui')->select("  SELECT cast(idUnico as  VARCHAR(MAX) ) as idUnico    
+                                                                        FROM dbo.LiberacaoUsoSoloDocumentos 
+                                                                        WHERE  liberacaoUsoSoloDocNome  = ?  and liberacaoUsoSoloDocNomeS3 is null   " ,[$file->getFilename()] );
+                }
+
+                                        
+                $subiu = false; 
+                if($lista  != []  ){ 
+                    $idd = 0; 
+                    $idUnico = $lista[0]->idUnico;
+                    $subiu = false; 
+                    // $this->dispatch(new ProcessItatibaEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+                }else{
+                    $subiu = true;
+                    $idUnico = $this->uuid();
+                }
+
+                $count++;
+                $images[] = [
+                    'count' => (string) $count , 
+                    'nome' =>  $file->getFilename() ,
+                    'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                    'caminho' =>  $pasta, // $file->getRealPath(),
+                    'up'      => $subiu
+                ];
+
+                    // INICIO ROTINA QUE PODE SER UM JOB.
+
+                   $this->extensao = $file->getExtension() ; // $extensao;
+                   $this->nome_completo =  $file->getFilename() ; // $nome_completo;
+                   $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
+                   $this->pasta = $pasta;
+                   //$this->idd = $idd;
+                   $this->novo_nome =  $idUnico .'.'.  $this->extensao  ; // $novo_nome;
+
+                   $s3 = array(
+                    'abertura' =>  's3BiriguiEFAbertura' ,
+                    'alteracao' =>  's3BiriguiEFAlteracao',
+                    'encerramento' =>  's3BiriguiEFEncerramento' ,
+                    'laudos' =>  's3BiriguiEFLaudos',
+                    'liberacaousosolo' => 's3BiriguiEFLiberacao' ,
+                    'recadastramento' =>  's3BiriguiEFRecadastramento' 
+                    );
+                        if(!$subiu){  // is_file($this->caminho_completo)
+                            $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+                            $result =  Storage::disk($s3[$this->pasta])->put( $this->novo_nome  , $conteudo );  // ['ACL' => 'public-read'] 
+    
+                            if ($result!==false){
+                                $subiu = true;
+
+                                if($pasta != 'laudos' && $pasta != 'liberacaousosolo' ){
+                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.DECAMUDocumento  SET decamuDocNomeArquivo = CAST(? AS VARCHAR(MAX)) , tipoArquivo = CAST(? AS CHAR(10))   WHERE decamuDocNomeArquivoOld = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome, $this->pasta   , $this->nome_completo ]); 
+                                }else if($pasta == 'laudos') {
+                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.DECAMULaudoArquivos  SET nomeArquivoSistema = CAST(? AS VARCHAR(MAX))   WHERE nomeArquivoSistemaOld = CAST(? AS VARCHAR(MAX))", [$this->novo_nome , $this->nome_completo ]); 
+                                }else if($pasta == 'liberacaousosolo') {
+                                    $update = DB::connection('BDGeralBirigui')->update(" UPDATE dbo.LiberacaoUsoSoloDocumentos  SET liberacaoUsoSoloDocNome = CAST(? AS VARCHAR(MAX))    WHERE liberacaoUsoSoloDocNomeOld = CAST(? AS VARCHAR(MAX))", [ $this->novo_nome  , $this->nome_completo ]); 
                                 }    
                                 if($update!==false ){
                                     unlink($this->caminho_completo);

@@ -10,7 +10,7 @@
                 <div class="panel-heading">ENTIDADES CADASTRADAS   
                     <a type="button" class="btn btn-primary" href="entidade/novo" >NOVA</a> 
                 </div>
-                <table style="width:100%; vertical-align: center;   text-align: center;  padding: 5px;  vertical-align: center; " >
+                <table  id="myTable" class="table table-striped table-bordered" style="width:90%">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -60,6 +60,13 @@
         </div>
     </div>
 </div>
+
+<script> 
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        } ); 
+    </script>
+
 @endsection
 
 

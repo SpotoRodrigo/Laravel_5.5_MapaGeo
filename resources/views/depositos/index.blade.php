@@ -4,23 +4,29 @@
 
 @section('content')
 
-@foreach($servicos as $servico)
+    <!-- <a type="button" class="btn btn-info  btn-sm" >Sincronizar</a> -->
 
-    <h4>{{$servico}}  </h4>
+    <form id='form' action="/depositos/sincronizar" method='post'>
+        {{csrf_field()}}
+        
+        <select  form="form" id="select" name="select" class="form-control">
+            @foreach($servicos as $key => $servico  )
+                <option value={{$key}} > {{$servico}} </option>
+            @endforeach
+        </select>
+        <input type="submit" value="Sincronizar">
+    </form>
 
-@endforeach
 
 
-
-
-    <table>
+    <table id="myTable" class="table table-striped table-bordered" style="width:90%">
     <thead>
     <th> SERVICO </th>
     <th> IDENTIFICACAO </th>
     <th> DATA_OBJETO </th>
     <th> OBJETO </th>
     </thead>
-    <tbody id="myTable">
+    <tbody>
     @foreach($depositos as $deposito)
 
         <tr>
@@ -33,6 +39,14 @@
     @endforeach
     </tbody>
     </table>
+
+
+
+    <script> 
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        } ); 
+    </script>
 @stop
 
 @section('css')

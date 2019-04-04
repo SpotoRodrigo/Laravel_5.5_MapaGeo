@@ -80,12 +80,12 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Mapa Geo Mitra Sistemas
+                    WebGeo Mitra Sistemas
                 </div>
 
                 <div class="links">
                     <a href="http://www.mitrasistemas.com.br/">A Empresa</a>
-                    <a href="www.mapas.mitracidadesinteligentes.com.br/">Outros Mapas</a>
+                    <a href="https://mapas.mitraonline.com.br/">Outros Mapas</a>
                     <!-- <a href="https://laravel-news.com">News</a> -->
                     <a href="http://www.mitrasistemas.com.br/?m=Relacionamento&s=contato">Fale Conosco</a>
                     <a href="https://github.com/SpotoRodrigo/Laravel_5.5_MapaGeo">GitHub</a>

@@ -32,9 +32,10 @@ Route::group(['prefix'=>'/mapa'],function(){
 });
 
 
-Route::resource('depositos', 'DepositoController')->middleware('auth');
+//Route::resource('depositos', 'DepositoController')->middleware('auth');
 
-
+Route::get('/depositos', 'DepositoController@index' );
+Route::post('/depositos/sincronizar', 'DepositoController@sincronizar' );
 
 
 Auth::routes();

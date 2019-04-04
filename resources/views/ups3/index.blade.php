@@ -5,14 +5,17 @@
 
 @section('content')
 
-    <table>
+@if( !is_array ($images) )
+    <h1>{{$images}}</h1>
+@else
+    <table  id="myTable" class="table table-striped table-bordered" style="width:90%">
     <thead>
     <th> COUNT </th>
     <th> ARQUIVO </th>
     <th> EXTENSAO </th>
     <th> CAMINHO </th>
     </thead>
-    <tbody id="myTable">
+    <tbody>
     @foreach($images as $image)
 
         <tr>
@@ -31,6 +34,17 @@
     @endforeach
     </tbody>
     </table>
+@endif
+
+
+
+    
+    <script> 
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        } ); 
+    </script>
+
 @stop
 
 @section('css')

@@ -341,6 +341,18 @@ return [
            'sticky'    => true,
         ],
 
+        'BDGeralBirigui' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_MITRA_HOST1', '10.150.199.233'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralBirigui',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+        ],
+
     ],
             // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral
             ///'charset'  => 'cp1252', //  and also latin1 and utf8

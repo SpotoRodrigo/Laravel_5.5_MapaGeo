@@ -5,7 +5,7 @@
 
 @section('content')
 
-<iframe src="http://mapas.mitracidadesinteligentes.com.br/index_free.php" width="100%" height="700"></iframe>
+<iframe src="https://mapas.mitraonline.com.br/index.php" width="100%" height="100%"></iframe>
 
 @stop
 

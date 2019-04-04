@@ -16,7 +16,8 @@ class DepositoController extends Controller
     {
         $deposito = Deposito::orderBy('created_at', 'desc')->paginate(20);
         $servicos = Deposito::SERVICOS;
-        return view('depositos.index',['depositos' => $deposito  , 'servicos' => $servicos]);
+
+        return view('depositos.index',['depositos' => $deposito  , 'servicos' => $servicos ]);
     }
 
     /**
@@ -101,4 +102,23 @@ class DepositoController extends Controller
         $deposito->delete();
         return redirect()->route('depositos.index')->with('alert-success','deposito deletado com sucesso!');
     }
+
+
+    private function uuid()
+    {
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+    }
+
+    public function sincronizar(Request $Request)
+    {
+        dd( Deposito::SERVICOS[$Request->input('select')]);
+    }
+
 }
+
