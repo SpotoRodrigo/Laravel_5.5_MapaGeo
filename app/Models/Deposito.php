@@ -12,10 +12,14 @@ class Deposito extends Model
 
 
     const SERVICOS = [
+        -1=> 'TODOS', 
         0 => 'TB_SETOR',
         1 => 'TB_BAIRRO',
         2 => 'TB_EDIFICIO',
-        3 => 'TB_QUADRA'
+        3 => 'TB_QUADRA',
+        4 => 'TB_LOGRADOURO',
+        5 => 'TB_FACE',
+
 ];
 
 

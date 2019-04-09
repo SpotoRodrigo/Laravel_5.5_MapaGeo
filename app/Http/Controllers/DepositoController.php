@@ -16,97 +16,14 @@ class DepositoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $Request)
     {
-        $deposito = Deposito::orderBy('created_at', 'desc')->paginate(20);
+        $deposito = Deposito::orderBy('updated_at', 'desc')->paginate(20);
         $servicos = Deposito::SERVICOS;
-
         return view('depositos.index',['depositos' => $deposito  , 'servicos' => $servicos ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('depositos.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $deposito = new Deposito;
-        $deposito->servico       = $request->servico;
-        $deposito->identificacao = $request->identificacao;
-        $deposito->data_objeto   = $request->data_objeto;
-        $deposito->objeto        = $request->objeto;
-        $deposito->save();
-        return redirect()->route('depositos.index')->with('message', 'deposito criado com sucesso !');
    
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Deposito  $deposito
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Deposito $deposito)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Deposito  $deposito
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Deposito $deposito)
-    {
-        $deposito = Deposito::findOrFail($deposito->id);
-        return view('depositos.edit',compact('deposito'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Deposito  $deposito
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Deposito $deposito)
-    {
-        $deposito = Deposito::findOrFail($deposito->id);
-        $deposito->name        = $request->servico;
-        $deposito->description = $request->identificacao;
-        $deposito->quantity    = $request->data_objeto;
-        $deposito->price       = $request->objeto;
-        $deposito->save();
-        return redirect()->route('depositos.index')->with('message', 'deposito atualizado com sucesso!');
-    
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Deposito  $deposito
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Deposito $deposito)
-    {
-        $deposito = Product::findOrFail($deposito->id);
-        $deposito->delete();
-        return redirect()->route('depositos.index')->with('alert-success','deposito deletado com sucesso!');
-    }
-
 
     private function uuid()
     {
@@ -121,13 +38,43 @@ class DepositoController extends Controller
 
     public function sincronizar(Request $Request)
     {
-        // dd( Deposito::SERVICOS[$Request->input('select')]);
+        $servico = Deposito::SERVICOS[$Request->input('select')];
+        $token = session('token4R',$this->loginIntegrador4R() );
+        $identificacao = 1;
+        $continua = true ;
 
-       // $token = $this->postRequest()->{'access_token'} ;
-       //  dd( $this->getRequest($token)  );
+        if($servico=='TODOS'){
+            //dd('TEM CERTEZA ? ISTO GERARÁ UM GRANDE CARGA NOS SERVIDORES, IMPLEMENTAÇÃO AINDA NÃO REALIZADA, ');
+            return redirect()->route('depositos');
+        }
 
-       $this->teste();
+        do {
+            $retorno = $this->getRequest($token,$servico,$identificacao);
+            if($retorno->sucesso){
+             //  $deposito = Deposito::where('servico','=', $servico)->where('identificacao','=', $identificacao ) ; // ?  Deposito::find($identificacao) :  new Deposito() ; 
+                
+                $deposito = Deposito::where('servico','=', $servico)->where('identificacao','=', $identificacao )->first() ;
 
+                if(!$deposito){
+                    $deposito = new Deposito();
+                }
+
+                $deposito->servico = $servico;
+                $deposito->identificacao = $identificacao;
+                $data = isset($retorno->{'resposta'}->{'audit_AtualizadoEm'}) ? $retorno->{'resposta'}->{'audit_AtualizadoEm'} : date("Y-m-d h:i:s a", time()) ;
+                $deposito->data_objeto =  $data;
+                $deposito->objeto = json_encode($retorno->{'resposta'} );
+
+               // dd($deposito);
+                $deposito->save();
+                $continua = true ;
+            }else{
+                $continua = false ;
+            }
+            $identificacao++;
+        } while ($continua == true);
+
+        return redirect()->route('depositos');
     }
 
 
@@ -139,9 +86,11 @@ class DepositoController extends Controller
  {"key":"password","value":"1q2w3e4r5t","description":"","type":"text","enabled":true}]
 */
 
-    public function postRequest()
+    public function loginIntegrador4R()
     {
         $client = new \GuzzleHttp\Client();
+
+
         $response = $client->request('POST', 'http://integrador4r.4rsistemas.com.br:91/oauth/access_token', [
             'form_params' => [
                 'client_id' => '200b04dcdde546049e11054d6ce95f7a',
@@ -152,23 +101,51 @@ class DepositoController extends Controller
             ]
         ]);
         $response = $response->getBody()->getContents();
-        
-        return json_decode($response);
+        $token = json_decode($response)->{'access_token'};
+        session(['token4R' => $token]);
+
+        return $token;
     }
 
-    public function getRequest(string $token)
+    public function getRequest(string $token , string $servico , string $identificacao )
     {
-        $client = new \GuzzleHttp\Client();
 
-        $request = $client->get('http://integrador4r.4rsistemas.com.br:91/rest/tb_bairro/1',[
+        $client = new \GuzzleHttp\Client();
+      
+        $request = $client->get('http://integrador4r.4rsistemas.com.br:91/rest/'. strtolower($servico) .'/'.$identificacao,[
             'headers' => [
                 'Authorization' => 'OAuth ' . $token,        
                 'Accept'        => 'application/json',
-            ]
-        ]);  // strtolower(servico)
-        $response = $request->getBody()->getContents();
+            ] , 'exceptions' => false,
+        ]);
+        $statuscode = $request->getStatusCode();
+        $retorno = new \stdClass();
 
-        return json_decode($response);        
+        switch ($statuscode) {
+            case 200: // Successful operation
+                $response = $request->getBody()->getContents();
+                $retorno->resposta = json_decode($response);
+                $retorno->sucesso = true;
+                $retorno->mensagem =   $request->getReasonPhrase() ;
+                break;
+            case 404: //'Data with the specified key could not be found'
+                $retorno->mensagem =  $request->getReasonPhrase() ;
+                $retorno->sucesso = false;
+                break;
+            case 400: //'Bad request'
+                $retorno->mensagem =  $request->getReasonPhrase() ;
+                $retorno->sucesso = false;
+                break;
+            case 500:  //'Internal server error'
+                $retorno->mensagem = $request->getReasonPhrase()  ;
+                $retorno->sucesso = false;
+                break;
+            case 201:  //"Created"
+                $retorno->mensagem = $request->getReasonPhrase()  ;
+                $retorno->sucesso = false;
+                break;                
+        }
+        return $retorno;   
     }
 
     public function teste()

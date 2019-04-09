@@ -14,7 +14,7 @@ class CreateDepositosTable extends Migration
     public function up()
     {
         Schema::create('depositos', function (Blueprint $table) {
-            $table->integer('id')->unsigned();
+            $table->increments('id');
             $table->string('servico', 30 )->unsigned();;
             $table->char('identificacao', 20 )->unsigned();;
             $table->dateTime('data_objeto');
@@ -22,6 +22,8 @@ class CreateDepositosTable extends Migration
             $table->timestamps();
             $table->softDeletes();	
 
+
+            $table->dropPrimary("id");
             $table->primary(array('servico', 'identificacao'));
         });
     }
