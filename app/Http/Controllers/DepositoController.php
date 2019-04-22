@@ -49,7 +49,7 @@ class DepositoController extends Controller
         }
 
         do {
-            $retorno = $this->getRequest($token,$servico,$identificacao);
+            $retorno = $this->getRequest($token,$servico, (string) $identificacao);
             if($retorno->sucesso){
              //  $deposito = Deposito::where('servico','=', $servico)->where('identificacao','=', $identificacao ) ; // ?  Deposito::find($identificacao) :  new Deposito() ; 
                 
