@@ -353,6 +353,48 @@ return [
             'prefix' => '',
         ],
 
+            
+        'BDGeralIbitinga' => [
+            'driver' => 'sqlsrv',
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.233'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralIbitinga',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+            'pooling' => false,
+        'sticky'    => true,
+        ],
+
+        'BDGeralIbitingaHomologacao' => [
+            'driver' => 'sqlsrv',
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.226'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralIbitinga',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+            'pooling' => false,
+        'sticky'    => true,
+        ],
+
+        'BDServicoIbitinga' => [
+            'driver' => 'sqlsrv',
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.233'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDServicoIbitinga',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+            'pooling' => false,
+        'sticky'    => true,
+        ],
     ],
             // 10.150.199.248 //169.57.159.46 Vinhedo BDGeral
             ///'charset'  => 'cp1252', //  and also latin1 and utf8

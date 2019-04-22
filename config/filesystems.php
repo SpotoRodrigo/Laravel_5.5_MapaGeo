@@ -149,6 +149,17 @@ return [
             'region' => 'sao01',
         ],
 
+        's3IbitingaServ' => [
+            'driver' => 's3',
+            'key' => '70SmxT4SS6xriO3Lk5QV',
+            'secret' => 'n9LqLlGelWxJql1TQ9sYji0bTIbbLculx6V1LSF0',
+            'version' => '2006-03-01',            
+            'bucket' => 'a4ebc5c0933531e3b018dc54c9ad709b',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
+
         's3Slserra' => [
             'driver' => 's3',
             'key' => 'nZwcZUh8lVyTPTr6bAtI',

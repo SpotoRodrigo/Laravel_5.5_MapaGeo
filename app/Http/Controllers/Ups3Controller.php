@@ -39,9 +39,9 @@ class Ups3Controller extends Controller
     {
        //$images =  $this->loopPorPastaEmpresaFacilItatiba();  //  $this->loopPorPastaHabitacao();    //  $this->loopPorPastaQuestionario();    // $this->loopPorPastaEmpresaFacil();  //  $this->loopPorPasta(); 
          
-        $images = $this->loopPorPastaEmpresaFacilBirigui(); 
+       // $images = $this->loopPorPastaEmpresaFacilBirigui(); 
         //$images = $this->loopBancoParaiso();
-
+        $images = $this->loopPorPastaNotificacao();
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -1864,6 +1864,102 @@ class Ups3Controller extends Controller
 
         return $images ;
     }
+
+
+
+    private function loopPorPastaNotificacao()
+    {
+
+        $directory = "/media/geoserver/transferencias/ibitinga/notificacao";
+        $count= 0;
+
+        if(!File::isDirectory($directory)) {
+            $msg = 'Caminho não acessivél.';
+            return view('ups3.index').compact($msg); 
+        }
+
+        $files = File::allFiles($directory);
+
+        foreach ($files as $file) {
+            $subiu = false;
+            $lista = DB::connection('BDGeralIbitinga')->select("  SELECT  (select servicoIdentificadorUnico from  BDServicoIbitinga.organizacao.Servico  WHERE servicoIndetificador = 1 ) as idServico
+                                                                        , cast(rec.recadastramentoIdentificadorUnico  as  VARCHAR(MAX) ) as idrecad  
+                                                                        , substring ( recadDocumentoLocalOld , CHARINDEX('.',recadDocumentoLocalOld) +1 , len(recadDocumentoLocalOld)) as extensao
+                                                                        , doc.recadDocumentoCodigo as  id_update
+                                                                    FROM cc.Recadastramento as rec
+                                                                        , cc.RecadastramentoDocumentos  as doc
+                                                                    WHERE rec.recadastramentoIdentificador = doc.recadDocumetoRecadastramentoId
+                                                                    AND recadDocumentoLocalOld like (?) " ,[ '%'.$file->getFilename()] );
+
+            if($lista  != []  ){
+                $idd = $lista[0]->id_update;
+                $idUnico = $this->uuid(); // $lista[0]->idfile;
+                $idrecad = $lista[0]->idrecad;
+                $idServico = $lista[0]->idServico;
+
+
+            //    $this->dispatch(new upVinhedoEmpresaFacil( $file->getExtension() , $file->getFilename() , $file->getRealPath() , $pasta  , $idd  , $idUnico ));  
+
+                // INICIO ROTINA QUE PODE SER UM JOB.
+
+                $this->extensao = $file->getExtension() ; // $extensao;
+                $this->nome_completo =   $file->getFilename() ; // $nome_completo;
+                $this->caminho_completo = $file->getRealPath() ; // $caminho_completo;
+                $this->idd = $idd;
+                $this->novo_nome = $idServico  .'/'.  $idrecad .'/'.   $idUnico   .'.'. $file->getExtension() ; 
+
+
+                if(is_file($this->caminho_completo)){
+                    $conteudo  =  file_get_contents( $this->caminho_completo ) ;
+                    $result =  Storage::disk('s3IbitingaServ')->put( $this->novo_nome    , $conteudo );  // ['ACL' => 'public-read'] 
+
+                    if ($result!==false){
+                        $subiu = true;
+                        $update = DB::connection('BDGeralIbitinga')->update(" UPDATE cc.RecadastramentoDocumentos SET recadDocumentoLocal = CAST(? AS VARCHAR(MAX))   WHERE recadDocumentoCodigo = ? ", [ $this->novo_nome   , $this->idd ]); 
+                        DB::connection('BDGeralIbitingaHomologacao')->update(" UPDATE cc.RecadastramentoDocumentos SET recadDocumentoLocal = CAST(? AS VARCHAR(MAX))   WHERE recadDocumentoCodigo = ? ", [ $this->novo_nome   , $this->idd ]); 
+
+                        if($update!==false ){
+                            unlink($this->caminho_completo);
+                        }else{
+                            //return false;
+                            dd('falha update banco');
+                        }
+
+                    }else{
+                        //return false;
+                        dd('falha subir S3 ');
+                    }
+                    
+                    //return true ;
+                }
+
+
+            }else{
+                //$conteudo  =  file_get_contents($file->getRealPath()) ;
+                //Storage::disk('public_web')->put('vinhedo/'.$pasta .'/'. $file->getFilename()   , $conteudo , ['ACL' => 'public-read'] );
+                //unlink($file->getRealPath());
+                //unset($conteudo);
+            }
+
+
+            $count++;
+            $images[] = [
+                'count' => (string) $count , 
+                'nome' =>  $file->getFilename() ,
+                'extensao'  =>  $file->getExtension() ,  //  File::extension( $file->getRealPath()),
+                'caminho' => $file->getRealPath(),
+                'up'      => $subiu
+            ];
+            unset($conteudo ,$result ,$update , $subiu );
+
+        }
+        
+
+
+
+        return $images ;
+    }
+
 
     private function uuid()
     {
