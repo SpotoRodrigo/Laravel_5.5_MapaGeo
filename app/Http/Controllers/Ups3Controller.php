@@ -1908,7 +1908,7 @@ class Ups3Controller extends Controller
                 $this->idd = $idd;
                 $this->novo_nome = $idServico  .'/'.  $idrecad .'/'.   $idUnico   .'.'. $file->getExtension() ; 
 
-
+                dd($this->novo_nome  ); 
                 if(is_file($this->caminho_completo)){
                     $conteudo  =  file_get_contents( $this->caminho_completo ) ;
                     $result =  Storage::disk('s3IbitingaServ')->put( $this->novo_nome    , $conteudo );  // ['ACL' => 'public-read'] 
