@@ -1916,7 +1916,7 @@ class Ups3Controller extends Controller
                     if ($result!==false){
                         $subiu = true;
                         $update = DB::connection('BDGeralIbitinga')->update(" UPDATE cc.RecadastramentoDocumentos SET recadDocumentoLocal = CAST(? AS VARCHAR(MAX))   WHERE recadDocumentoCodigo = ? ", [ $this->novo_nome   , $this->idd ]); 
-                        DB::connection('BDGeralIbitingaHomologacao')->update(" UPDATE cc.RecadastramentoDocumentos SET recadDocumentoLocal = CAST(? AS VARCHAR(MAX))   WHERE recadDocumentoLocalOld = like (?) ", [ $this->novo_nome   , $this->nome_completo ]); 
+                        DB::connection('BDGeralIbitingaHomologacao')->update(" UPDATE cc.RecadastramentoDocumentos SET recadDocumentoLocal = CAST(? AS VARCHAR(MAX))   WHERE recadDocumentoLocalOld = like (?) ", [ $this->novo_nome   , '%'.$this->nome_completo ]); 
 
                         if($update!==false ){
                             unlink($this->caminho_completo);
