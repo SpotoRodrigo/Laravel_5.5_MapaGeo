@@ -370,7 +370,7 @@ return [
 
         'BDGeralIbitingaHomologacao' => [
             'driver' => 'sqlsrv',
-            'host' =>   env('DB_MITRA_HOST2', '10.150.199.226'),
+            'host' =>   env('DB_MITRA_HOST2', '10.150.199.202'),
             'port' => env('DB_MITRA_PORT', '1433'),
             'database' => 'BDGeralIbitinga',
             'username' => env('DB_MITRA_USER', 'scaes'),
