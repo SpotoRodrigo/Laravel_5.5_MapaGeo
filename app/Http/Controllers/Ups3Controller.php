@@ -1882,7 +1882,7 @@ class Ups3Controller extends Controller
 
         foreach ($files as $file) {
             $subiu = false;
-            $lista = DB::connection('BDGeralIbitinga')->select("  SELECT  (select servicoIdentificadorUnico from  BDServicoIbitinga.organizacao.Servico  WHERE servicoIndetificador = 1 ) as idServico
+            $lista = DB::connection('BDGeralIbitinga')->select("  SELECT  (select  cast(servicoIdentificadorUnico as  VARCHAR(MAX) ) from  BDServicoIbitinga.organizacao.Servico  WHERE servicoIndetificador = 1 ) as idServico
                                                                         , cast(rec.recadastramentoIdentificadorUnico  as  VARCHAR(MAX) ) as idrecad  
                                                                         , substring ( recadDocumentoLocalOld , CHARINDEX('.',recadDocumentoLocalOld) +1 , len(recadDocumentoLocalOld)) as extensao
                                                                         , doc.recadDocumentoCodigo as  id_update
