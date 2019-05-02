@@ -1960,81 +1960,76 @@ class Ups3Controller extends Controller
     
     public function loopBancoPlantaOnline()
     {
+        $streamSSL = stream_context_create(array(
+            "ssl"=>array(
+                "verify_peer"=> false,
+                "verify_peer_name"=> false
+            )
+        ));
+
         $count =0;
-        $lista =  DB::connection('BDGeralItatiba')->select("SELECT  'RecadastramentoDocumentos' as tab ,  recadDocumentoNome  , count(distinct recadDocumetoRecadastramentoId) as qtde , SUBSTRING( recadDocumentoNome , CHARINDEX('.',recadDocumentoNome)+1  , 4 ) as ext  
+        $lista =  DB::connection('BDGeralItatiba')->select("SELECT 'ComuniqueseDocumento' as tab , nome , count(distinct codigoComuniquese) as qtde , SUBSTRING( nome , CHARINDEX('.',nome)+1  , 4 ) as ext  
+                                                            FROM  imobiliario.ComuniqueseDocumento
+                                                            WHERE CHARINDEX('.',nome) <> 0  AND nome is not null AND nome = nomeOld 
+                                                            GROUP BY nome 
+                                                            
+                                                            UNION ALL
+                                                            
+                                                            SELECT  'RecadastramentoDocumentos' as tab ,  recadDocumentoNome as nome , count(distinct recadDocumetoRecadastramentoId) as qtde , SUBSTRING( recadDocumentoNome , CHARINDEX('.',recadDocumentoNome)+1  , 4 ) as ext  
                                                             FROM cc.RecadastramentoDocumentos
-                                                            WHERE recadDocumentoNome IS NOT NULL  AND CHARINDEX('.',recadDocumentoNome) <> 0 
-                                                            GROUP BY recadDocumentoNome 
-                                                            HAVING count(distinct recadDocumetoRecadastramentoId)  >= 1 
-                                                            ORDER BY 2 DESC " );  // AND cpf.imagemS3 is null
+                                                            WHERE recadDocumentoNome IS NOT NULL  AND CHARINDEX('.',recadDocumentoNome) <> 0  AND recadDocumentoNomeOld = recadDocumentoNome 
+                                                            GROUP BY recadDocumentoNome " );  // AND cpf.imagemS3 is null
 
         dd($lista);
-    //header('Content-Type: image/x-bmp');
-    //echo $lista->imagemFoto;
+
 
          foreach ($lista as $file) {
 
-            $conteudo  =   base64_encode($file->imagemFoto) ;
+            //$conteudo  =   base64_encode($file->imagemFoto) ;
             //dd($conteudo);
-            Storage::disk('s3ItatibaDocumento')->put($conteudo  , ['ACL' => 'public-read'] );
-            dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" />` );
+            //Storage::disk('s3ItatibaDocumento')->put($conteudo  , ['ACL' => 'public-read'] );
+
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
-            $id  = intval($file->idd) ; 
-            $dono = strval ($file->dono);
-            $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. str_replace(  ' ' , '%20' , $file->imagem); 
+            $ext  = intval($file->ext) ; 
+            $nome = strval ($file->nome);
+            $tab = strval ($file->tab);
+            $aux = 'https://www.sisegov.com.br/itatiba/plantaonline/documentos/'. str_replace(  ' ' , '%20' , $file->recadDocumentoNome); 
             $url_image = strval ( $aux ); //$file->url_image
 
-/*
-            $file_headers = @get_headers($url_image);
+            $file_headers = @get_headers($url_image );
             if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
                 $exists = false;
+                $result = false;
             }
             else {
                 $exists = true;
             }
-*/
-            $exists = true;
+
 
             if($exists){
-
                 $count++;
-                $images[] = [
-                    'nome' =>  $id ,
-                    'extensao'  => (string) $count,
-                    'caminho' => $dono ,
-                    'up'      => true
-                ];
-
                 $novo_nome = $this->uuid();
 
-                $extensao = strtolower(substr($url_image, -4 ));
+                $nome_completo = $novo_nome . $ext ;
 
-                $nome_completo =  $dono . '/' . $novo_nome . $extensao ;
-
-                if($file->imagemS3 !== '' ){
-                    Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+                $conteudo  =  file_get_contents( $url_image ) ;
+                      
+                $result =  Storage::disk('s3ItatibaDocumento')->put(  $nome_completo  , $conteudo ); 
+                $update = false ; 
+                if ($result!==false && $tab== 'RecadastramentoDocumentos' ){
+                    $update =DB::connection('BDGeralItatiba')->update(" UPDATE  cc.RecadastramentoDocumentos SET recadDocumentoNome = CAST(? AS VARCHAR(MAX)) ,  recadDocumentoIdUnico = CAST(? AS VARCHAR(MAX)) WHERE recadDocumentoNomeOld = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
+                }else if ($result!==false && $tab== 'ComuniqueseDocumento' ){
+                    $update =DB::connection('BDGeralItatiba')->update(" UPDATE  imobiliario.ComuniqueseDocumento SET nome = CAST(? AS VARCHAR(MAX)) ,  IdUnico = CAST(? AS VARCHAR(MAX)) WHERE nomeOld = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
                 }
-                // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+                $images[] = [
+                    'nome' =>  $nome ,
+                    'extensao'  => (string) $count,
+                    'caminho' => $url_image ,
+                    'up'      => $update
+                ];
 
-                
-                 $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image , strval($file->tabela) ));  
-
-/*
-              $novo_nome = $this->uuid();
-
-              $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
-      
-              $conteudo  =  file_get_contents( $url_image ) ;
-                
-              //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
-      
-              $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
-              
-              if ($result!==false){
-                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $nome_completo , $id ]); 
-              }
-*/
+                dd('update-> ' . $update  , 'result-> '.$result); 
             }
 
          }
