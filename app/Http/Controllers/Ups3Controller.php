@@ -1991,7 +1991,7 @@ class Ups3Controller extends Controller
             $ext  = intval($file->ext) ; 
             $nome = strval ($file->nome);
             $tab = strval ($file->tab);
-            $aux = 'https://www.sisegov.com.br/itatiba/plantaonline/documentos/'. str_replace(  ' ' , '%20' , $file->recadDocumentoNome); 
+            $aux = 'https://www.sisegov.com.br/itatiba/plantaonline/documentos/'. str_replace(  ' ' , '%20' , $file->nome); 
             $url_image = strval ( $aux ); //$file->url_image
 
             $file_headers = @get_headers($url_image );
