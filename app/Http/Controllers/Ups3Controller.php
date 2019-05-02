@@ -1981,13 +1981,6 @@ class Ups3Controller extends Controller
                                                             GROUP BY recadDocumentoNome " );  // AND cpf.imagemS3 is null
 
          foreach ($lista as $file) {
-
-            //$conteudo  =   base64_encode($file->imagemFoto) ;
-            //dd($conteudo);
-            //Storage::disk('s3ItatibaDocumento')->put($conteudo  , ['ACL' => 'public-read'] );
-
-
-           //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
             $ext  = strval ($file->ext) ; 
             $nome = strval ($file->nome);
             $tab = strval ($file->tab);
@@ -2025,10 +2018,7 @@ class Ups3Controller extends Controller
                     'caminho' => $url_image ,
                     'up'      => $update
                 ];
-
-                dd('update-> ' . $update  , 'result-> '.$result ,  'tab -> '.$tab , $images ); 
             }
-
          }
 
       return view('ups3.index',compact('images') ); //,compact('images')
