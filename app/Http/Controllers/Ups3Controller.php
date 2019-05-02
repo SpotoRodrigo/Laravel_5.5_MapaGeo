@@ -1988,7 +1988,7 @@ class Ups3Controller extends Controller
 
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
-            $ext  = intval($file->ext) ; 
+            $ext  = strval ($file->ext) ; 
             $nome = strval ($file->nome);
             $tab = strval ($file->tab);
             $aux = 'https://www.sisegov.com.br/itatiba/plantaonline/documentos/'. str_replace(  ' ' , '%20' , $file->nome); 
@@ -2008,7 +2008,7 @@ class Ups3Controller extends Controller
                 $count++;
                 $novo_nome = $this->uuid();
 
-                $nome_completo = $novo_nome . $ext ;
+                $nome_completo = $novo_nome .'.'. $ext ;
 
                 $conteudo  =  file_get_contents( $url_image ,  false, $streamSSL  ) ;
                       
@@ -2026,7 +2026,7 @@ class Ups3Controller extends Controller
                     'up'      => $update
                 ];
 
-                dd('update-> ' . $update  , 'result-> '.$result); 
+                dd('update-> ' . $update  , 'result-> '.$result ,  'tab -> '.$tab , $images ); 
             }
 
          }
