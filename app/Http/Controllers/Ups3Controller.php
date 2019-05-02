@@ -1953,7 +1953,7 @@ class Ups3Controller extends Controller
             unset($conteudo ,$result ,$update , $subiu );
 
         }
-        dd($images);
+       
         return $images ;
     }
 
@@ -2013,16 +2013,17 @@ class Ups3Controller extends Controller
                 }else if ($result!==false && $tab== 'ComuniqueseDocumento' ){
                     $update =DB::connection('BDGeralItatiba')->update(" UPDATE  imobiliario.ComuniqueseDocumento SET nome = CAST(? AS VARCHAR(MAX)) ,  IdUnico = CAST(? AS VARCHAR(MAX)) WHERE nomeOld = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
                 }
-                $images[] = [
-                    'count' => (string) $count , 
-                    'nome' =>  $nome ,
-                    'extensao'  => (string) $count,
-                    'caminho' => $url_image ,
-                    'up'      => $update
-                ];
             }
+            $images[] = [
+                'count' => (string) $count , 
+                'nome' =>  $nome ,
+                'extensao'  => (string) $count,
+                'caminho' => $url_image ,
+                'up'      => $update
+            ];
          }
 
+         dd($images);
       return view('ups3.index',compact('images') ); //,compact('images')
     }
 
