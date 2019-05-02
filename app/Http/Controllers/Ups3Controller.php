@@ -41,7 +41,7 @@ class Ups3Controller extends Controller
          
        // $images = $this->loopPorPastaEmpresaFacilBirigui(); 
         //$images = $this->loopBancoParaiso();
-        $images = $this->loopPorPastaNotificacao();
+        $images = $this->loopBancoPlantaOnline();
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -1953,11 +1953,93 @@ class Ups3Controller extends Controller
             unset($conteudo ,$result ,$update , $subiu );
 
         }
-        
-
-
-
         return $images ;
+    }
+
+
+    
+    public function loopBancoPlantaOnline()
+    {
+        $count =0;
+        $lista =  DB::connection('BDGeralItatiba')->select("SELECT  'RecadastramentoDocumentos' as tab ,  recadDocumentoNome  , count(distinct recadDocumetoRecadastramentoId) as qtde , SUBSTRING( recadDocumentoNome , CHARINDEX('.',recadDocumentoNome)+1  , 4 ) as ext  
+                                                            FROM cc.RecadastramentoDocumentos
+                                                            WHERE recadDocumentoNome IS NOT NULL  AND CHARINDEX('.',recadDocumentoNome) <> 0 
+                                                            GROUP BY recadDocumentoNome 
+                                                            HAVING count(distinct recadDocumetoRecadastramentoId)  >= 1 
+                                                            ORDER BY 2 DESC " );  // AND cpf.imagemS3 is null
+
+        dd($lista);
+    //header('Content-Type: image/x-bmp');
+    //echo $lista->imagemFoto;
+
+         foreach ($lista as $file) {
+
+            $conteudo  =   base64_encode($file->imagemFoto) ;
+            //dd($conteudo);
+            Storage::disk('s3Vinhedo')->put($conteudo  , ['ACL' => 'public-read'] );
+            dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" />` );
+
+           //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;
+            $id  = intval($file->idd) ; 
+            $dono = strval ($file->dono);
+            $aux = 'https://www.mitraonline.com.br/central/modulos/atendimento/arquivos/'. str_replace(  ' ' , '%20' , $file->imagem); 
+            $url_image = strval ( $aux ); //$file->url_image
+
+/*
+            $file_headers = @get_headers($url_image);
+            if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
+                $exists = false;
+            }
+            else {
+                $exists = true;
+            }
+*/
+            $exists = true;
+
+            if($exists){
+
+                $count++;
+                $images[] = [
+                    'nome' =>  $id ,
+                    'extensao'  => (string) $count,
+                    'caminho' => $dono ,
+                    'up'      => true
+                ];
+
+                $novo_nome = $this->uuid();
+
+                $extensao = strtolower(substr($url_image, -4 ));
+
+                $nome_completo =  $dono . '/' . $novo_nome . $extensao ;
+
+                if($file->imagemS3 !== '' ){
+                    Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+                }
+                // Storage::disk('s3Vinhedo')->delete($file->imagemS3 );
+
+                
+                 $this->dispatch(new upVinhedoDoc($id, $nome_completo ,$url_image , strval($file->tabela) ));  
+
+/*
+              $novo_nome = $this->uuid();
+
+              $nome_completo =  $dono . '/' . $novo_nome . '.jpg' ;
+      
+              $conteudo  =  file_get_contents( $url_image ) ;
+                
+              //$conteudo  =  fopen($this->caminho , 'r+') ; // metodo indicado para arquivos maiores
+      
+              $result =  Storage::disk('s3Vinhedo')->put(  $nome_completo  , $conteudo );  // ['ACL' => 'public-read'] 
+              
+              if ($result!==false){
+                  DB::connection('BDServicoVinhedo')->update(" UPDATE  documentos.Ctps SET imagemS3 = CAST(? AS VARCHAR(MAX)) WHERE CtpsIdentificador = ? ", [ $nome_completo , $id ]); 
+              }
+*/
+            }
+
+         }
+
+      return view('ups3.index',compact('images') ); //,compact('images')
     }
 
 
