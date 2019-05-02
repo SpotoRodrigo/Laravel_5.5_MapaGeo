@@ -1976,7 +1976,7 @@ class Ups3Controller extends Controller
 
             $conteudo  =   base64_encode($file->imagemFoto) ;
             //dd($conteudo);
-            Storage::disk('s3Vinhedo')->put($conteudo  , ['ACL' => 'public-read'] );
+            Storage::disk('s3ItatibaDocumento')->put($conteudo  , ['ACL' => 'public-read'] );
             dd(  `<img src="data:image/jpg;base64,<?=$conteudo?>" />` );
 
            //$nome =  substr($file->descricao , strripos($file->descricao , '/') - strlen($file->descricao) +1   ) ;

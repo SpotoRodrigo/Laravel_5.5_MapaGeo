@@ -104,6 +104,16 @@ return [
             'region' => 'sao01',
         ],
 
+        's3ItatibaDocumento' => [
+            'driver' => 's3',
+            'key' => 'LEQThIYmsdpLj2edx2nO',
+            'secret' => 's3XmGFBsP3gMyk2yEtvY8KoOx0Jwpk2Sw2MeXJXj',
+            'version' => '2006-03-01',            
+            'bucket' => '538a5cc0-7019-43d5-8094-0dd7c0b4b146',
+            'endpoint' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'host' => 'http://s3.sao01.objectstorage.softlayer.net/',
+            'region' => 'sao01',
+        ],
 
         's3Artur' => [
             'driver' => 's3',
