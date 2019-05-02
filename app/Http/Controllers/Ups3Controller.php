@@ -1980,9 +1980,6 @@ class Ups3Controller extends Controller
                                                             WHERE recadDocumentoNome IS NOT NULL  AND CHARINDEX('.',recadDocumentoNome) <> 0  AND recadDocumentoNomeOld = recadDocumentoNome 
                                                             GROUP BY recadDocumentoNome " );  // AND cpf.imagemS3 is null
 
-        dd($lista);
-
-
          foreach ($lista as $file) {
 
             //$conteudo  =   base64_encode($file->imagemFoto) ;
@@ -2013,7 +2010,7 @@ class Ups3Controller extends Controller
 
                 $nome_completo = $novo_nome . $ext ;
 
-                $conteudo  =  file_get_contents( $url_image ) ;
+                $conteudo  =  file_get_contents( $url_image ,  false, $streamSSL  ) ;
                       
                 $result =  Storage::disk('s3ItatibaDocumento')->put(  $nome_completo  , $conteudo ); 
                 $update = false ; 
