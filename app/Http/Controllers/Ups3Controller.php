@@ -1953,6 +1953,7 @@ class Ups3Controller extends Controller
             unset($conteudo ,$result ,$update , $subiu );
 
         }
+        dd($images);
         return $images ;
     }
 
