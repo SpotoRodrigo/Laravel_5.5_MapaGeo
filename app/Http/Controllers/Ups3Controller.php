@@ -2013,6 +2013,7 @@ class Ups3Controller extends Controller
                     $update =DB::connection('BDGeralItatiba')->update(" UPDATE  imobiliario.ComuniqueseDocumento SET nome = CAST(? AS VARCHAR(MAX)) ,  IdUnico = CAST(? AS VARCHAR(MAX)) WHERE nomeOld = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
                 }
                 $images[] = [
+                    'count' => (string) $count , 
                     'nome' =>  $nome ,
                     'extensao'  => (string) $count,
                     'caminho' => $url_image ,
