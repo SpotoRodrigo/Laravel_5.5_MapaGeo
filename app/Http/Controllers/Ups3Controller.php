@@ -313,11 +313,11 @@ class Ups3Controller extends Controller
     public function loopBancoLorenco()  
     {
         $count =0;
-        $lista =  DB::connection('BDGeralSLourenco')->select(" select ImagemNome ,  LocalArquivo , ImagemNomeAnterior , uploads3 , count(*) as total 
+        $lista =  DB::connection('BDGeralSLourenco')->select(" select  uploads3 , count(*) as total 
         from dbo.imagem 
                 WHERE  uploads3 = 1
                 AND imagemNomeAnterior LIKE '01_0187.%' 
-        group by ImagemNome ,  LocalArquivo , ImagemNomeAnterior , uploads3 ");
+        group by  uploads3 ");
 
         if($lista){
             echo 'tem';
