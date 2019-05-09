@@ -43,7 +43,8 @@ class Ups3Controller extends Controller
         //$images = $this->loopBancoParaiso();
         // $images = $this->loopBancoPlantaOnline();
 
-        $this->loopPorPasta(); 
+        $this->DeleteBucket('s3Slserra');
+        //$this->loopPorPasta(); 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -210,7 +211,9 @@ class Ups3Controller extends Controller
             if(!$update){
                 // deleta imagem
                 Storage::disk('s3Slserra')->delete($this->novo_nome );
-                dd('falha no UPDATE do banco. ' , $file->getRealPath()  , $this->novo_nome );
+              //  dd('falha no UPDATE do banco. ' , $file->getRealPath()  , $this->novo_nome );
+            }else{
+                unlink($file->getRealPath() );
             }
 
             // if(!Storage::disk('s3Slserra')->exists($this->novo_nome)  ){
@@ -348,6 +351,45 @@ class Ups3Controller extends Controller
     }
 
 
+
+    private function DeleteBucket(string $Bucket )
+    {
+        // LOOP FOR BUCKET  LIMPANDO, (setando PUBLIC)  
+         $count = 0;
+            $files = Storage::disk($Bucket)->allFiles();
+            foreach ($files as $file) {
+
+                if ( /*Storage::disk('s3Biri')->exists($file) &&  Storage::disk($Bucket)->getVisibility($file) !=='public'  */ true  ){
+                    $count++; 
+                    $dekete = Storage::disk($Bucket)->delete($file); 
+                    $images[] = [
+                        'count' => (string) $count ,
+                        'nome' =>  $file,
+                        'extensao'  => '' ,
+                        'caminho' => $Bucket ,
+                        'up'      => $dekete
+                    ];
+                } 
+                
+            // Storage::disk($Bucket)->delete($file);
+                // Storage::disk($Bucket)->setVisibility($file, 'public');
+                // DB::connection('BDGeralRegistro')->update("UPDATE dbo.spoto SET  verificada =   'S' WHERE  arquivo = ?", [$file  ]); 
+                // DB::connection('BDGeralSocorro')->insert(" INSERT INTO dbo.spoto  values(? , ? ) ",  [  $count  , $file  ]); 
+            }
+
+                    
+        if($count == 0 ){
+            $images[] = [
+                'count' => (string) $count ,
+                'nome' =>  'NENHUM ARQUIVO ENCONTRADO' ,
+                'extensao'  => '',
+                'caminho' => '',
+                'up'      => false
+            ];
+        }
+            return $images ;
+
+    }
     
     private function loopPorPastaDocumento()
     {
