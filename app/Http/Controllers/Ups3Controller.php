@@ -199,7 +199,7 @@ class Ups3Controller extends Controller
             if(!$result){
                 dd('FALHA NO UPLOAD DE ARQUIVO');
             }else{
-                $update = DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
+                $update = DB::connection('BDGeralSLourenco')->update("UPDATE dbo.Imagem  
                     SET  ImagemNome = CAST(  ? as varchar(MAX))
                     , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d'
                     , ImagemFoto = null
