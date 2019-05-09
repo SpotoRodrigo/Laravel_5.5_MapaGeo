@@ -44,7 +44,7 @@ class Ups3Controller extends Controller
         // $images = $this->loopBancoPlantaOnline();
 
         //$images = $this->DeleteBucket('s3Slserra');
-        $images = $this->loopBancoLorenco(); 
+        $images = $this->loopPorPasta(); 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -192,31 +192,46 @@ class Ups3Controller extends Controller
         foreach ($files as $file) {
             $count++;
 
-
-            
-
-            $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
-            $conteudo  =  file_get_contents(  $file->getRealPath() ) ;
-            $result =  Storage::disk('s3Slserra')->put(   $this->novo_nome   , $conteudo , ['ACL' => 'public-read']   );
-
-            if(!$result){
-                dd('FALHA NO UPLOAD DE ARQUIVO');
-            }else{
-                $update = DB::connection('BDGeralSLourenco')->update("UPDATE dbo.Imagem  
-                    SET  ImagemNome = CAST(  ? as varchar(MAX))
-                    , LocalArquivo = CAST( 'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d' as varchar(MAX))
-                    , ImagemFoto = null
-                    , uploads3 = 1 
-                    WHERE  imagemNomeAnterior = ?", [ $this->novo_nome ,   $file->getFilename() ]); 
-            }
-            
-            if(!$update){
-                // deleta imagem
-                Storage::disk('s3Slserra')->delete($this->novo_nome );
-              //  dd('falha no UPDATE do banco. ' , $file->getRealPath()  , $this->novo_nome );
-            }else{
+            $lista =  DB::connection('BDGeralSLourenco')->select(" select  uploads3 , count(*) as total 
+            from dbo.imagem 
+                    WHERE  uploads3 = 1
+                    AND imagemNomeAnterior = ?
+            group by  uploads3 ", [ $file->getFilename() ] );
+    
+            if($lista){
+                echo $file->getFilename().' tem<BR>';
+                $update = false;
                 unlink($file->getRealPath() );
+            }else{
+                echo $file->getFilename().'não tem<BR>';
+                $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
+                $conteudo  =  file_get_contents(  $file->getRealPath() ) ;
+                $result =  Storage::disk('s3Slserra')->put(   $this->novo_nome   , $conteudo , ['ACL' => 'public-read']   );
+    
+                if(!$result){
+                    dd('FALHA NO UPLOAD DE ARQUIVO');
+                }else{
+                    $update = DB::connection('BDGeralSLourenco')->update("UPDATE dbo.Imagem  
+                        SET  ImagemNome = CAST(  ? as varchar(MAX))
+                        , LocalArquivo = CAST( 'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d' as varchar(MAX))
+                        , ImagemFoto = null
+                        , uploads3 = 1 
+                        WHERE  imagemNomeAnterior = ?", [ $this->novo_nome ,   $file->getFilename() ]); 
+                }
+                
+                if(!$update){
+                    // deleta imagem
+                    Storage::disk('s3Slserra')->delete($this->novo_nome );
+                  //  dd('falha no UPDATE do banco. ' , $file->getRealPath()  , $this->novo_nome );
+                }else{
+                    unlink($file->getRealPath() );
+                }
+    
             }
+
+    
+            
+
 
 
             // if(!Storage::disk('s3Slserra')->exists($this->novo_nome)  ){
