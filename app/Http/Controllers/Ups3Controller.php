@@ -43,8 +43,8 @@ class Ups3Controller extends Controller
         //$images = $this->loopBancoParaiso();
         // $images = $this->loopBancoPlantaOnline();
 
-        //$this->DeleteBucket('s3Slserra');
-        $this->loopPorPasta(); 
+        //$images = $this->DeleteBucket('s3Slserra');
+        $images = $this->loopPorPasta(); 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -295,8 +295,6 @@ class Ups3Controller extends Controller
         }
         
         if($count == 0 ){
-
-            dd('chegou aki ');
             $images[] = [
                 'count' => (string) $count ,
                 'nome' =>  'NENHUM ARQUIVO ENCONTRADO' ,
