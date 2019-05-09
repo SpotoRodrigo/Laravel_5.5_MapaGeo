@@ -201,7 +201,7 @@ class Ups3Controller extends Controller
             }else{
                 $update = DB::connection('BDGeralSLourenco')->update("UPDATE dbo.Imagem  
                     SET  ImagemNome = CAST(  ? as varchar(MAX))
-                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d'
+                    , LocalArquivo = CAST( 'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d' as varchar(MAX))
                     , ImagemFoto = null
                     , uploads3 = 1 
                     WHERE  imagemNomeAnterior = ?", [ $this->novo_nome ,   $file->getRealPath() ]); 
@@ -210,7 +210,7 @@ class Ups3Controller extends Controller
             if(!$update){
                 // deleta imagem
                 Storage::disk('s3Slserra')->delete($this->novo_nome );
-                dd('falha no upload ' ,$update);
+                dd('falha no UPDATE do banco. ' , $file->getRealPath()  , $this->novo_nome );
             }
 
             // if(!Storage::disk('s3Slserra')->exists($this->novo_nome)  ){
