@@ -44,7 +44,7 @@ class Ups3Controller extends Controller
         // $images = $this->loopBancoPlantaOnline();
 
         //$images = $this->DeleteBucket('s3Slserra');
-        $images = $this->loopPorPasta(); 
+        $images = $this->loopBancoLorenco(); 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -193,6 +193,8 @@ class Ups3Controller extends Controller
             $count++;
 
 
+            
+
             $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
             $conteudo  =  file_get_contents(  $file->getRealPath() ) ;
             $result =  Storage::disk('s3Slserra')->put(   $this->novo_nome   , $conteudo , ['ACL' => 'public-read']   );
@@ -215,6 +217,7 @@ class Ups3Controller extends Controller
             }else{
                 unlink($file->getRealPath() );
             }
+
 
             // if(!Storage::disk('s3Slserra')->exists($this->novo_nome)  ){
             //     dd('ARQUIVO NÃO EXISTE !!');
@@ -305,6 +308,39 @@ class Ups3Controller extends Controller
         }
         return $images ;
     }
+
+    
+    public function loopBancoLorenco()  
+    {
+        $count =0;
+        $lista =  DB::connection('BDGeralSLourenco')->select(" select ImagemNome ,  LocalArquivo , ImagemNomeAnterior , uploads3 , count(*) as total 
+        from dbo.imagem 
+                WHERE  uploads3 = 1
+                AND imagemNomeAnterior LIKE '01_0187.%' 
+        group by ImagemNome ,  LocalArquivo , ImagemNomeAnterior , uploads3 ");
+
+        if($lista){
+            echo 'tem';
+        }else{
+            'não tem';
+        }
+       dd($lista );
+
+
+         foreach ($lista as $file) {
+
+            $dono = strval ($file->dono);
+            $count++;
+            $images[] = [
+                'nome' =>  $file->CodImagem ,
+                'extensao'  => (string) $count,
+                'caminho' => $dono ,
+                'up'      => true
+            ];
+            //DB::connection('pgsql_lorena')->select("SELECT apgv.anexafile(17,?,?,false ) " ,[ $dono , '39f409a7-da21-4260-a07a-c469a22b707d/'. $novo_nome . '.' . $this->extensao  ] );
+         }
+      return view('ups3.index',compact('images') ); //,compact('images')
+   }
 
 
     private function loopBucket(string $Bucket )
