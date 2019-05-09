@@ -204,7 +204,7 @@ class Ups3Controller extends Controller
                     , LocalArquivo = CAST( 'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d' as varchar(MAX))
                     , ImagemFoto = null
                     , uploads3 = 1 
-                    WHERE  imagemNomeAnterior = ?", [ $this->novo_nome ,   $file->getRealPath() ]); 
+                    WHERE  imagemNomeAnterior = ?", [ $this->novo_nome ,   $file->getFilename() ]); 
             }
             
             if(!$update){
