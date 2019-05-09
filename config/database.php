@@ -209,6 +209,20 @@ return [
            // 'sticky'    => true,
         ],
 
+
+        'BDGeralSLourenco' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_MITRA_HOST1', '10.150.199.226'),
+            'port' => env('DB_MITRA_PORT', '1433'),
+            'database' => 'BDGeralSLourenco',
+            'username' => env('DB_MITRA_USER', 'scaes'),
+            'password' => env('DB_MITRA_PASS', 'sql08081972'),
+            'charset' =>' cp1252',
+            'collation'=> 'Latin1_General_CI_AS',
+            'prefix' => '',
+          //  'pooling' => false
+           // 'sticky'    => true,
+        ],
         
         'BDServicoTaquaritinga' => [
             'driver' => 'sqlsrv',

@@ -41,7 +41,9 @@ class Ups3Controller extends Controller
          
        // $images = $this->loopPorPastaEmpresaFacilBirigui(); 
         //$images = $this->loopBancoParaiso();
-        $images = $this->loopBancoPlantaOnline();
+        // $images = $this->loopBancoPlantaOnline();
+
+        $this->loopPorPasta(); 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -172,20 +174,18 @@ class Ups3Controller extends Controller
         
         //$directory = "/media/geoserver/transferencias/campos/fotosfachada" ;
         //$directory = "/media/geoserver/transferencias/campos/teste" ;
-        $directory = "C:\\Users\\spoto.rodrigo\\Desktop\\recad\\recad";
+        //$directory = "C:\\Users\\spoto.rodrigo\\Desktop\\recad\\recad";
         $count= 0;
       
         // dd('falta banco de são lourenco.');
-        //$directory = "/media/geoserver/transferencias/saolourenco/Fotos de Fachada";
+       $directory = "/media/geoserver/transferencias/saolourenco/Fotos de Fachada";
 
 
         if(!File::isDirectory($directory)) {
             $msg = 'Caminho nÃ£o acessivÃ©l.';
             return $msg ; 
-            dd('nao chegou akki ');
         }
 
-        dd('nao chegou akki ');
         $files = File::allFiles($directory);
 
         foreach ($files as $file) {
@@ -194,22 +194,35 @@ class Ups3Controller extends Controller
 
             $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
             $conteudo  =  file_get_contents(  $file->getRealPath() ) ;
-            $result =  Storage::disk('s3VinhedoServ')->put(   $this->novo_nome   , $conteudo  );
+            $result =  Storage::disk('s3Slserra')->put(   $this->novo_nome   , $conteudo , ['ACL' => 'public-read']   );
 
             if(!$result){
                 dd('FALHA NO UPLOAD DE ARQUIVO');
+            }else{
+                $update = DB::connection('BDGeralCamposImagem')->update("UPDATE dbo.Imagem  
+                    SET  ImagemNome = CAST(  ? as varchar(MAX))
+                    , LocalArquivo = 'http://s3.sao01.objectstorage.softlayer.net/aa7bd982-f24d-448d-bdcf-1cc7f02f169d'
+                    , ImagemFoto = null
+                    , uploads3 = 1 
+                    WHERE  imagemNomeAnterior = ?", [ $this->novo_nome ,   $file->getRealPath() ]); 
             }
             
-            if(!Storage::disk('s3VinhedoServ')->exists($this->novo_nome)  ){
-                dd('ARQUIVO NÃO EXISTE !!');
+            if(!$update){
+                // deleta imagem
+                Storage::disk('s3Slserra')->delete($this->novo_nome );
+                dd('falha no upload ' ,$update);
             }
+
+            // if(!Storage::disk('s3Slserra')->exists($this->novo_nome)  ){
+            //     dd('ARQUIVO NÃO EXISTE !!');
+            // }
 
             $images[] = [
                 'count' => (string) $count ,
                 'nome' =>   $this->novo_nome ,
                 'extensao'  => $file->getExtension(),
                 'caminho' => $file->getRealPath(),
-                'up'      => $result
+                'up'      => $update
             ];
             
 
