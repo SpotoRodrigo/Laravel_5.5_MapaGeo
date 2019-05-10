@@ -202,6 +202,7 @@ class Ups3Controller extends Controller
                 //echo $file->getFilename().' tem<BR>';
                 $update = false;
                 unlink($file->getRealPath() );
+                $this->novo_nome = $file->getFilename()  ;
             }else{
                 //echo $file->getFilename().'não tem<BR>';
                 $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
@@ -228,11 +229,6 @@ class Ups3Controller extends Controller
                 }
     
             }
-
-    
-            
-
-
 
             // if(!Storage::disk('s3Slserra')->exists($this->novo_nome)  ){
             //     dd('ARQUIVO NÃO EXISTE !!');
