@@ -179,7 +179,7 @@ class Ups3Controller extends Controller
         $count= 0;
       
         // dd('falta banco de são lourenco.');
-       $directory = "/media/geoserver/transferencias/saolourenco/Fotos de Fachada";
+       $directory = "/media/geoserver/transferencias/saolourenco/Desmembramentos";
 
 
         if(!File::isDirectory($directory)) {
@@ -199,11 +199,11 @@ class Ups3Controller extends Controller
             group by  uploads3 ", [ $file->getFilename() ] );
     
             if($lista){
-                echo $file->getFilename().' tem<BR>';
+                //echo $file->getFilename().' tem<BR>';
                 $update = false;
                 unlink($file->getRealPath() );
             }else{
-                echo $file->getFilename().'não tem<BR>';
+                //echo $file->getFilename().'não tem<BR>';
                 $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
                 $conteudo  =  file_get_contents(  $file->getRealPath() ) ;
                 $result =  Storage::disk('s3Slserra')->put(   $this->novo_nome   , $conteudo , ['ACL' => 'public-read']   );
