@@ -201,8 +201,9 @@ class Ups3Controller extends Controller
             if($lista){
                 //echo $file->getFilename().' tem<BR>';
                 $update = false;
-                unlink($file->getRealPath() );
                 $this->novo_nome = $file->getFilename()  ;
+                unlink($file->getRealPath() );
+                
             }else{
                 //echo $file->getFilename().'não tem<BR>';
                 $this->novo_nome = $this->uuid() .'.'.$file->getExtension()  ;
