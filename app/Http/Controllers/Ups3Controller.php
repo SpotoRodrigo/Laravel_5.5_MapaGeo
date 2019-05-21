@@ -41,10 +41,10 @@ class Ups3Controller extends Controller
          
        // $images = $this->loopPorPastaEmpresaFacilBirigui(); 
         //$images = $this->loopBancoParaiso();
-        // $images = $this->loopBancoPlantaOnline();
+        $images = $this->loopBancoPlantaOnline();
 
         //$images = $this->DeleteBucket('s3Slserra');
-        $images = $this->loopPorPasta(); 
+        //$images = $this->loopPorPasta(); 
 
         //$images = $this->loopBucket('s3TaquaritingaDoc');
         
@@ -2070,17 +2070,9 @@ class Ups3Controller extends Controller
         ));
 
         $count =0;
-        $lista =  DB::connection('BDGeralItatiba')->select("SELECT 'ComuniqueseDocumento' as tab , nome , count(distinct codigoComuniquese) as qtde , SUBSTRING( nome , CHARINDEX('.',nome)+1  , 4 ) as ext  
-                                                            FROM  imobiliario.ComuniqueseDocumento
-                                                            WHERE CHARINDEX('.',nome) <> 0  AND nome is not null AND nome = nomeOld 
-                                                            GROUP BY nome 
-                                                            
-                                                            UNION ALL
-                                                            
-                                                            SELECT  'RecadastramentoDocumentos' as tab ,  recadDocumentoNome as nome , count(distinct recadDocumetoRecadastramentoId) as qtde , SUBSTRING( recadDocumentoNome , CHARINDEX('.',recadDocumentoNome)+1  , 4 ) as ext  
-                                                            FROM cc.RecadastramentoDocumentos
-                                                            WHERE recadDocumentoNome IS NOT NULL  AND CHARINDEX('.',recadDocumentoNome) <> 0  AND recadDocumentoNomeOld = recadDocumentoNome 
-                                                            GROUP BY recadDocumentoNome " );  // AND cpf.imagemS3 is null
+        $lista =  DB::connection('BDGeralItatiba')->select("SELECT   'RecadastramentoMensagem' as tab ,  anexoNome as nome , count(distinct codigo) as qtde, SUBSTRING( anexoNome , CHARINDEX('.',anexoNome)+1  , 4 ) as ext  
+                                                            FROM  cc.RecadastramentoMensagem where isnull(nomeNew,anexoNome)  =  anexoNome and anexoNome is not null
+                                                            GROUP BY anexoNome " );  // AND cpf.imagemS3 is null
 
          foreach ($lista as $file) {
             $ext  = strval ($file->ext) ; 
@@ -2110,9 +2102,11 @@ class Ups3Controller extends Controller
                 $result =  Storage::disk('s3ItatibaDocumento')->put(  $nome_completo  , $conteudo ); 
                 $update = false ; 
                 if ($result!==false && $tab== 'RecadastramentoDocumentos' ){
-                    $update =DB::connection('BDGeralItatiba')->update(" UPDATE  cc.RecadastramentoDocumentos SET recadDocumentoNome = CAST(? AS VARCHAR(MAX)) ,  recadDocumentoIdUnico = CAST(? AS VARCHAR(MAX)) WHERE recadDocumentoNomeOld = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
+                    $update =DB::connection('BDGeralItatiba')->update(" UPDATE  cc.RecadastramentoDocumentos SET recadDocumentoNomenew = CAST(? AS VARCHAR(MAX)) ,  recadDocumentoIdUnico = CAST(? AS VARCHAR(MAX)) WHERE recadDocumentoNome = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
                 }else if ($result!==false && $tab== 'ComuniqueseDocumento' ){
-                    $update =DB::connection('BDGeralItatiba')->update(" UPDATE  imobiliario.ComuniqueseDocumento SET nome = CAST(? AS VARCHAR(MAX)) ,  IdUnico = CAST(? AS VARCHAR(MAX)) WHERE nomeOld = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
+                    $update =DB::connection('BDGeralItatiba')->update(" UPDATE  imobiliario.ComuniqueseDocumento SET nomenew = CAST(? AS VARCHAR(MAX)) ,  IdUnico = CAST(? AS VARCHAR(MAX)) WHERE nome = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
+                }else if ($result!==false && $tab== 'RecadastramentoMensagem' ){
+                    $update =DB::connection('BDGeralItatiba')->update(" UPDATE  cc.RecadastramentoMensagem SET nomeNew = CAST(? AS VARCHAR(MAX)) ,  IdUnico = CAST(? AS VARCHAR(MAX)) WHERE anexoNome = ? ", [ $nome_completo , $novo_nome , $nome  ]); 
                 }
             }
             $images[] = [
