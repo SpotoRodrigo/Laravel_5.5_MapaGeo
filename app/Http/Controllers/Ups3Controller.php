@@ -2070,9 +2070,23 @@ class Ups3Controller extends Controller
         ));
 
         $count =0;
-        $lista =  DB::connection('BDGeralItatiba')->select("SELECT   'RecadastramentoMensagem' as tab ,  anexoNome as nome , count(distinct codigo) as qtde, SUBSTRING( anexoNome , CHARINDEX('.',anexoNome)+1  , 4 ) as ext  
+        $lista =  DB::connection('BDGeralItatiba')->select("SELECT 'ComuniqueseDocumento' as tab , nome , count(distinct codigoComuniquese) as qtde , SUBSTRING( nome , CHARINDEX('.',nome)+1  , 4 ) as ext  
+                                                            FROM  imobiliario.ComuniqueseDocumento
+                                                            WHERE CHARINDEX('.',nome) <> 0  AND nome is not null AND isnull(nomenew,nome)  = nome 
+                                                            GROUP BY nome 
+                                                                                                                        
+                                                            UNION ALL
+                                                                                                                        
+                                                            SELECT  'RecadastramentoDocumentos' as tab ,  recadDocumentoNome as nome , count(distinct recadDocumetoRecadastramentoId) as qtde , SUBSTRING( recadDocumentoNome , CHARINDEX('.',recadDocumentoNome)+1  , 4 ) as ext  
+                                                            FROM cc.RecadastramentoDocumentos
+                                                            WHERE recadDocumentoNome IS NOT NULL  AND CHARINDEX('.',recadDocumentoNome) <> 0  AND isnull(recadDocumentoNomenew,recadDocumentoNome)  =  recadDocumentoNome 
+                                                            GROUP BY recadDocumentoNome 
+                                                            
+                                                            UNION ALL
+                                                            
+                                                            SELECT   'RecadastramentoMensagem' as tab ,  anexoNome as nome , count(distinct codigo) as qtde, SUBSTRING( anexoNome , CHARINDEX('.',anexoNome)+1  , 4 ) as ext  
                                                             FROM  cc.RecadastramentoMensagem where isnull(nomeNew,anexoNome)  =  anexoNome and anexoNome is not null
-                                                            GROUP BY anexoNome " );  // AND cpf.imagemS3 is null
+                                                            GROUP BY anexoNome  " );  // AND cpf.imagemS3 is null
 
          foreach ($lista as $file) {
             $ext  = strval ($file->ext) ; 
@@ -2118,7 +2132,7 @@ class Ups3Controller extends Controller
             ];
          }
 
-         dd($images);
+        // dd($images);
       return view('ups3.index',compact('images') ); //,compact('images')
     }
 
