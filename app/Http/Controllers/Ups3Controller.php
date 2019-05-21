@@ -2094,7 +2094,7 @@ class Ups3Controller extends Controller
             $tab = strval ($file->tab);
             $aux = 'https://www.sisegov.com.br/itatiba/plantaonline/documentos/'. str_replace(  ' ' , '%20' , $file->nome); 
             $url_image = strval ( $aux ); //$file->url_image
-
+            $update = false ; 
             $file_headers = @get_headers($url_image );
             if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found') {
                 $exists = false;
