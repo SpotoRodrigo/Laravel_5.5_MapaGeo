@@ -2072,7 +2072,7 @@ class Ups3Controller extends Controller
         $count =0;
         $lista =  DB::connection('BDGeralItatiba')->select("  SELECT  'ComuniqueseMensagem' as tab , anexoNome as nome , count(distinct codigo) as qtde, SUBSTRING( anexoNome , CHARINDEX('.',anexoNome)+1  , 4 ) as ext  
         FROM            imobiliario.ComuniqueseMensagem
-        WHERE idUnico is null 
+        WHERE idUnico is null  and anexoNome is not null
         GROUP BY anexoNome " );  
 
 
